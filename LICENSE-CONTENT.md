@@ -6,7 +6,7 @@ You are free to:
 - **Share** — copy and redistribute the material in any medium or format
 
 Under the following terms:
-- **Attribution** — You must give appropriate credit to the author (Akmal Chaudhri), provide a link to the license, and indicate if changes were made
+- **Attribution** — You must give appropriate credit to the author (Akmal Chaudhri), provide a link to the license and indicate if changes were made
 - **NonCommercial** — You may not use the material for commercial purposes
 - **NoDerivatives** — If you remix, transform or build upon the material, you may not distribute the modified material
 
