@@ -1,0 +1,6 @@
+streamlit==1.47.1
+mysqlclient==2.2.7
+pandas==2.3.1
+plotly==6.2.0
+sqlalchemy==2.0.42
+singlestoredb==1.15.0
