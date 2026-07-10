@@ -1,0 +1,3 @@
+CREATE DATABASE IF NOT EXISTS feast_db;
+
+USE feast_db;
