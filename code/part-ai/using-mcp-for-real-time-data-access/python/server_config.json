@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "stock-analyzer": {
+      "command": "python3",
+      "args": ["/absolute/path/to/stock-analyzer-mcp/main.py"]
+    },
+    "singlestore-mcp-server": {
+      "command": "/absolute/path/to/.local/bin/uvx",
+      "args": ["singlestore-mcp-server", "start"]
+    }
+  }
+}
