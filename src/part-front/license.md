@@ -36,7 +36,7 @@ The full license text is available at:
 
 [apache.org/licenses/LICENSE-2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
-This distinction means that the book's written content is protected under the Creative Commons license, while the accompanying code remains freely available for use, modification and integration into your own projects.
+> This distinction means that the book's written content is protected under the Creative Commons license, while the accompanying code remains freely available for use, modification and integration into your own projects.
 
 ## Trademarks
 
