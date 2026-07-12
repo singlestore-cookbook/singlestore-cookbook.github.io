@@ -40,8 +40,6 @@ Using `rpy2`, we'll be to enable the `%%R` cell magic in Jupyter, allowing us to
 First, we'll read the dataset:
 
 ```r
-%%R
-
 agri_csv_url <- ...
 
 agri_df <- read.csv(agri_csv_url, stringsAsFactors = FALSE)
@@ -68,8 +66,6 @@ Example output:
 In the next step, we'll clean and prepare the dataset for analysis. The `year` column is first converted to an integer and then to an ordered factor, ensuring that visualizations display the years in ascending order rather than alphabetically. The `crop` column is converted to a factor so that crop names are treated as categorical values. Finally, we'll filter the dataset to focus on six major crops, creating a smaller dataset that is ready for plotting.
 
 ```r
-%%R
-
 agri_df$year <- as.integer(agri_df$year)
 
 agri_df$year <- factor(agri_df$year, levels = sort(unique(agri_df$year)))
@@ -83,8 +79,6 @@ plot_df <- agri_df %>% filter(crop %in% major_crops)
 Next, let's creates a density plot showing the distribution of rainfall for each major crop in the dataset.
 
 ```r
-%%R
-
 ggplot(plot_df, aes(x = rainfall, fill = crop)) +
     geom_density(alpha = 0.4) +
     theme(
@@ -112,8 +106,6 @@ In the density plot, the y-axis represents the probability density of rainfall v
 Next, let's creates a violin plot showing the distribution of soil pH for each major crop.
 
 ```r
-%%R
-
 ggplot(plot_df, aes(x = reorder(crop, soil_ph, FUN = median), y = soil_ph, fill = crop)) +
     geom_violin(trim = FALSE, show.legend = FALSE) +
     theme(
@@ -138,9 +130,6 @@ Example output is shown in Figure 14-2.
 Now, let's look at yield per crop.
 
 ```r
-%%R
-
-# Boxplots per crop
 ggplot(plot_df, aes(x = reorder(crop, yield, FUN = median), y = yield, fill = crop)) +
     geom_violin(trim = FALSE, show.legend = FALSE) +
     theme(
@@ -165,8 +154,6 @@ Example output is shown in Figure 14-3.
 Next, let's look at the average yield for top crops.
 
 ```r
-%%R
-
 ggplot(plot_df, aes(x = year, y = yield, color = crop, group = crop)) +
     stat_summary(fun = mean, geom = "line", linewidth = 1.2) +
     theme(
@@ -193,8 +180,6 @@ Example output shown in Figure 14-4.
 Finally, let's look at yield across provinces.
 
 ```r
-%%R
-
 ggplot(agri_df, aes(x = longitude, y = latitude, color = yield)) +
     geom_point(alpha = 0.7) +
     scale_color_gradient(low = "yellow", high = "darkgreen") +
@@ -221,8 +206,6 @@ Example output is shown in Figure 14-5.
 Next, let create a machine learning model. First, we'll create the train/test split:
 
 ```r
-%%R
-
 set.seed(42)
 
 train_index <- sample(seq_len(nrow(agri_df)), size = 0.8 * nrow(agri_df))
@@ -233,9 +216,6 @@ test <- agri_df[-train_index, ]
 and then we'll use Random Forest because it is a robust, flexible machine learning algorithm for both classification and regression. It combines many decision trees to improve predictive accuracy, reduce overfitting and handle complex, non-linear relationships in the data, such as the interactions between crop yields, rainfall and soil properties.
 
 ```r
-%%R
-
-# Train Random Forest
 rf_model <- randomForest(
     yield ~ latitude + longitude + rainfall + soil_ph + crop + year,
     data = train,
@@ -261,8 +241,6 @@ No. of variables tried at each split: 2
 Now, we'll predict and evaluate:
 
 ```r
-%%R
-
 pred <- predict(rf_model, newdata = test)
 
 correlation <- cor(pred, test$yield)
@@ -288,8 +266,6 @@ These metrics show that the Random Forest model predicts crop yields very accura
 We can visualize actual versus predicted:
 
 ```r
-%%R
-
 ggplot(data.frame(actual = test$yield, predicted = pred), aes(x = actual, y = predicted)) +
     geom_point(alpha = 0.6, color = "darkgreen") +
     geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
@@ -314,8 +290,6 @@ Example output is shown in Figure 14-6.
 Let's look feature importance.
 
 ```r
-%%R
-
 importance_df <- as.data.frame(importance(rf_model))
 importance_df$feature <- rownames(importance_df)
 importance_df <- importance_df %>% arrange(desc(IncNodePurity))
@@ -346,27 +320,20 @@ The plot shows the feature importance from the Random Forest model, measured by 
 We'll now predict on the full dataset.
 
 ```r
-%%R
-
 agri_df$predicted_yield <- predict(rf_model, newdata = agri_df)
 ```
 
 and then create a leaflet map:
 
 ```r
-%%R
-
-# Assume agri_df has lat, lon, year, predicted_yield
 agri_df <- agri_df %>%
     mutate(
         year = as.integer(as.character(year)),
         predicted_yield = as.numeric(predicted_yield)
     )
 
-# Define a high-contrast palette
 pal <- colorFactor(rainbow(length(unique(agri_df$crop))), domain = agri_df$crop)
 
-# Create leaflet map with layers for each year
 m <- leaflet() %>% addTiles()
 
 for (yr in sort(unique(agri_df$year))) {
@@ -391,7 +358,6 @@ for (yr in sort(unique(agri_df$year))) {
         )
 }
 
-# Add legend + layer control
 m <- m %>%
     addLegend(
         pal = pal,
@@ -404,7 +370,6 @@ m <- m %>%
         options = layersControlOptions(collapsed = FALSE)
     )
 
-# Save to a local file
 crop_map <- "crop_map.html"
 saveWidget(m, crop_map, selfcontained = TRUE)
 ```
@@ -431,11 +396,8 @@ Example output shown in Figure 14-8.
 We'll now save the DataFrame to SingleStore. First, we'll create a function to set up the JDBC driver and then a function to create the connection from R:
 
 ```r
-%%R
-
 setup_driver <- function() {
-    # URL for downloading the SingleStore JDBC client JAR
-    driver_url <- "https://repo1.maven.org/maven2/com/singlestore/singlestore-jdbc-client/1.2.8/singlestore-jdbc-client-1.2.8.jar"
+    driver_url <- "https://repo1.maven.org/maven2/com/singlestore/singlestore-jdbc-client/..."
 
     driver <- "com.singlestore.jdbc.Driver"
 
@@ -478,8 +440,6 @@ The value for password would be saved in Secrets after creating the workspace.
 Now we'll use the two functions defined earlier and connect to SingleStore from R:
 
 ```r
-%%R
-
 drv <- setup_driver()
 conn <- connect_db(drv, host, port, database, user, password)
 ```
@@ -487,8 +447,6 @@ conn <- connect_db(drv, host, port, database, user, password)
 and then write the DataFrame:
 
 ```r
-%%R
-
 dbWriteTable(conn, "agriculture", agri_df, overwrite = TRUE)
 ```
 
