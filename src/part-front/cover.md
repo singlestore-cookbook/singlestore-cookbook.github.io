@@ -1,1 +1,1 @@
-<img src="/cover-media/image1.png" alt="Cover" style="width:100%;"/>
+<img src="/part-front/cover-media/image1.png" alt="Cover" style="width:100%;"/>
