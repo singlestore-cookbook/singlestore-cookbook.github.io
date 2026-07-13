@@ -614,12 +614,10 @@ bakerloo_line_buff.to_crs(3857).plot(
     zorder = 2
 )
 
-# Compute scaled linewidths
 min_width, max_width = 3, 15
 crime_min = bakerloo_sections.crime_per_m.min()
 crime_max = bakerloo_sections.crime_per_m.max()
 
-# Avoid division by zero
 if crime_max != crime_min:
     linewidths = min_width + (bakerloo_sections.crime_per_m - crime_min) / (crime_max - crime_min) * (max_width - min_width)
 else:
@@ -790,16 +788,12 @@ if "longitude" not in crimes.columns or "latitude" not in crimes.columns:
 Next, we'll build a regression model to predict how many crimes will occur at each Bakerloo Line station for a given month and crime type. We'll assign each recorded crime to its nearest station, then aggregate monthly crime counts per station and crime type. Next, we'll split the data by time, using January to November 2024 as training data, December 2024 as validation and January 2025 as the prediction target. Station names and crime types will be one-hot encoded as categorical features and we'll train a Random Forest Regressor to learn patterns in crime frequency. We'll evaluate the model's accuracy on the December data using R² and RMSE and then use the model to forecast January 2025 crime counts for each station–crime type pair.
 
 ``` python
-# Predict crime frequency per Bakerloo station (regression)
-
-# Join each crime to nearest station
 crimes_nearest = gpd.sjoin_nearest(
     crimes,
     bakerloo_stops[["station_name", "geometry"]],
     distance_col = "dist_to_station"
 )
 
-# Aggregate monthly crime counts per station and type
 agg = (
     crimes_nearest
     .groupby(["month", "station_name", "crime_type"])
@@ -808,13 +802,11 @@ agg = (
     .reset_index()
 )
 
-# Split train/val/pred
 train_months = [f"2024-{m:02d}" for m in range(1, 12)]
 train = agg[agg["month"].isin(train_months)]
 val = agg[agg["month"] == "2024-12"]
 pred = agg[agg["month"] == "2025-01"]
 
-# One-hot encode station_name and crime_type
 encoder = OneHotEncoder(sparse_output = False, handle_unknown = "ignore")
 
 X_train = encoder.fit_transform(train[["station_name", "crime_type"]])
@@ -825,20 +817,16 @@ y_val = val["crime_count"].values
 
 X_pred = encoder.transform(pred[["station_name", "crime_type"]])
 
-# Train regression model
 rf = RandomForestRegressor(n_estimators = 200, random_state = SEED)
 rf.fit(X_train, y_train)
 
-# Evaluate on Dec 2024
 y_val_pred = rf.predict(X_val)
 rmse = np.sqrt(mean_squared_error(y_val, y_val_pred))
 r2 = r2_score(y_val, y_val_pred)
 print(f"Validation Dec 2024: R² = {r2:.4f}, RMSE = {rmse:.2f}")
 
-# Predict for Jan 2025
 pred["predicted_crime_count"] = rf.predict(X_pred)
 
-# Show results
 pred.head()
 ```
 
@@ -853,8 +841,6 @@ The model is performing very well on the validation set, producing predictions t
 Next, let's compare the model's predictions to the real observed values for Baker Street in January 2025, visualizing them side by side to see how accurate the predictions are.
 
 ``` python
-# Visualize predicted vs actual crime counts at Baker Street - Jan 2025
-
 baker_street = pred[pred["station_name"] == "Baker Street"].sort_values("predicted_crime_count")
 
 x = np.arange(len(baker_street))
@@ -900,8 +886,6 @@ Example output is shown in Figure 15-10.
 We can also extend this to the entire Bakerloo Line.
 
 ``` python
-# Aggregate predicted and actual crime counts for all Bakerloo Line stations - Jan 2025
-
 agg = pred.groupby("crime_type")[["crime_count", "predicted_crime_count"]].sum().reset_index()
 agg = agg.sort_values("crime_count")
 
@@ -950,36 +934,27 @@ This is an aggregate accuracy check by crime type.
 Next, let's build a classification model to predict the type of crime likely to occur at a Bakerloo Line station, given only the station name and the month as input features. Let's see if the spatial (station) and temporal (month) patterns are strong enough to let the model predict the most likely crime type at a given station/month combination.
 
 ``` python
-# Predict crime type at a Bakerloo station (classification)
-
-# Spatial join to assign nearest station to each crime
 crimes_nearest = gpd.sjoin_nearest(
     crimes,
     bakerloo_stops[["station_name", "geometry"]],
     distance_col = "dist_to_station"
 )
 
-# Features are station_name + month
 X = crimes_nearest[["station_name", "month"]]
 
-# One-hot encode categorical features
 encoder = OneHotEncoder(sparse_output = False, handle_unknown = "ignore")
 X_encoded = encoder.fit_transform(X)
 
-# Target is crime_type
 le = LabelEncoder()
 y = le.fit_transform(crimes_nearest["crime_type"])
 
-# Train/test split
 X_train, X_test, y_train, y_test = train_test_split(
     X_encoded, y, test_size = 0.3, random_state = SEED
 )
 
-# Train Random Forest classifier
 clf = RandomForestClassifier(n_estimators = 200, random_state = SEED)
 clf.fit(X_train, y_train)
 
-# Predict and evaluate
 y_pred = clf.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Accuracy: {accuracy:.4f}")
@@ -1017,19 +992,14 @@ The model's accuracy is very low and most classes have near-zero precision and r
 Finally, let's use KMeans clustering. We'll identify spatial clusters of crimes within the Bakerloo Line's surrounding buffer area. We'll merge all the buffer polygons into one shape and select only the crimes and stations that fall inside it. Then we'll run a KMeans clustering algorithm on the latitude/longitude coordinates of these crimes, grouping them into 10 clusters based purely on geographic proximity. We'll give each cluster a centroid point and calculate the size of each cluster (number of crimes). Finally, we'll plot the Bakerloo buffer, line and stations on a map and overlay the clusters as colored points sized by the number of crimes they contain. This helps visually reveal geographic hotspots of crime near the Bakerloo Line.
 
 ``` python
-# Crime clusters within Bakerloo buffer
-
-# Merge all buffer polygons into a single union
 buffer_union = bakerloo_line_buff.unary_union
 
-# Filter crimes within Bakerloo buffer
 crimes_in_buffer = crimes[crimes["geometry"].apply(lambda g: g.within(buffer_union))].copy()
 
 stations_in_buffer = bakerloo_stops[
     bakerloo_stops["geometry"].apply(lambda g: g.within(buffer_union))
 ].copy()
 
-# KMeans clustering
 coords = crimes_in_buffer[["latitude", "longitude"]].to_numpy()
 n_clusters = 10
 kmeans = KMeans(n_clusters = n_clusters, random_state = SEED)
@@ -1045,10 +1015,8 @@ centroids_gdf = gpd.GeoDataFrame(
 )
 centroids_gdf["count"] = cluster_counts["count"].values
 
-# Plot
 fig, ax = plt.subplots(figsize = (12, 12))
 
-# Bakerloo buffer
 gpd.GeoSeries([buffer_union], crs = 4326).to_crs(3857).plot(
     ax = ax,
     color = "lightgrey",
@@ -1057,7 +1025,6 @@ gpd.GeoSeries([buffer_union], crs = 4326).to_crs(3857).plot(
     zorder = 2
 )
 
-# Bakerloo line sections
 bakerloo_sections.to_crs(3857).plot(
     ax=ax,
     color = "#B36305",
@@ -1065,7 +1032,6 @@ bakerloo_sections.to_crs(3857).plot(
     zorder = 3
 )
 
-# Stations
 stations_in_buffer.to_crs(3857).plot(
     ax = ax,
     color = "black",
@@ -1073,7 +1039,6 @@ stations_in_buffer.to_crs(3857).plot(
     zorder = 4
 )
 
-# KMeans clusters with multiple colors
 cmap = plt.get_cmap("tab10")
 scatter_handles = []
 
@@ -1083,7 +1048,6 @@ for i, row in centroids_sorted.iterrows():
     ax.scatter(row.geometry.x, row.geometry.y, s = row["count"]*5, color = color, alpha = 0.5, zorder = 5)
     scatter_handles.append(mpatches.Patch(color = color, label = f"Cluster {row['cluster']} ({row['count']})"))
 
-# Legend: clusters first, then buffer, line, stations
 ax.legend(
     handles=scatter_handles + [
         mpatches.Patch(color = "lightgrey", label = "Bakerloo Buffer"),
@@ -1094,7 +1058,6 @@ ax.legend(
     fontsize = 10
 )
 
-# Basemap
 cx.add_basemap(ax, source=cx.providers.CartoDB.VoyagerNoLabels, attribution = "", zorder = 1)
 
 ax.set_axis_off()
@@ -1118,7 +1081,6 @@ Before running any queries, we'll first ensure that we load the Bakerloo Line bu
 buffers = list(db["bakerloo_line_buff"].find({}))
 
 def crime_in_buffers_filter():
-    # returns a $or filter: crimes within any of the buffer polygons
     return {
         "$or": [
             {"geometry": {"$geoWithin": {"$geometry": buf["geometry"]}}}
@@ -1396,7 +1358,6 @@ British Transport Police: 1603
 Next, let's write a query to identify the 10 crimes closest to the center near Elephant & Castle, all located within the Bakerloo line buffer.
 
 ``` python
-# Haversine function (distance in km)
 def haversine(lon1, lat1, lon2, lat2):
     R = 6371.0
     dlon = radians(lon2 - lon1)
@@ -1405,13 +1366,10 @@ def haversine(lon1, lat1, lon2, lat2):
     c = 2 * atan2(sqrt(a), sqrt(1-a))
     return R * c
 
-# Center near Elephant & Castle
 center_lon, center_lat = -0.1005, 51.4965
 
-# Get all crimes within the Bakerloo buffer
 crimes_cursor = db.crimes.find(crime_in_buffers_filter())
 
-# Compute distance and store
 crimes_with_dist = []
 for c in crimes_cursor:
     geom = c.get("geometry")
@@ -1421,11 +1379,9 @@ for c in crimes_cursor:
         c["distance_km"] = dist
         crimes_with_dist.append(c)
 
-# Sort by distance and take top 10 closest
 top_crimes = sorted(crimes_with_dist, key = lambda x: x["distance_km"])[:10]
 
 if top_crimes:
-    # Count crime types in the top 10
     crime_counts = Counter([c.get("crime_type", "Unknown") for c in top_crimes])
 
 
@@ -1506,7 +1462,6 @@ Each crime is reported with its type and location. Limiting to 10 keeps the outp
 Now, let's write a query to return up to 10 crimes that are strictly within the Bakerloo line buffer and also fall inside a defined polygon. The polygon roughly covers a small central area in London.
 
 ``` python
-# Polygon of interest
 polygon = {
     "type": "Polygon",
     "coordinates": [[
@@ -1518,7 +1473,6 @@ polygon = {
     ]]
 }
 
-# Combined filter strictly Bakerloo AND intersects polygon
 combined_filter = {
     "$and": [
         {
@@ -1580,21 +1534,18 @@ bakerloo_line_buff = gpd.GeoDataFrame(
     crs = 4326
 ).drop(columns = ["_id"])
 
-# Polygon of interest
 polygon_coords = [
-    [-0.136, 51.498], # SW
-    [-0.108, 51.498], # SE
-    [-0.108, 51.516], # NE
-    [-0.136, 51.516], # NW
-    [-0.136, 51.498]  # back to SW
+    [-0.136, 51.498],
+    [-0.108, 51.498],
+    [-0.108, 51.516],
+    [-0.136, 51.516],
+    [-0.136, 51.498]
 ]
 polygon = Polygon(polygon_coords)
 polygon_area = gpd.GeoDataFrame({"name": ["Area"]}, geometry = [polygon], crs = 4326)
 
-# Plot
 fig, ax = plt.subplots(figsize = (10, 10))
 
-# Bakerloo buffer
 bakerloo_line_buff.to_crs(3857).plot(
     ax = ax,
     color = "lightgrey",
@@ -1626,7 +1577,6 @@ polygon_area.to_crs(3857).plot(
     zorder = 5
 )
 
-# Add basemap
 cx.add_basemap(ax, source = cx.providers.CartoDB.VoyagerNoLabels, attribution = "", zorder = 1)
 
 ax.set_axis_off()
@@ -1643,13 +1593,10 @@ Example output is shown in Figure 15-13.
 Finally, we'll find crimes within two disjoint polygons.
 
 ``` python
-# Elephant & Castle coordinates
 elephant_castle = [-0.1005, 51.4965]
 
-# Harrow & Wealdstone coordinates
 harrow_wealdstone = [-0.337, 51.592]
 
-# Create square buffers (~500m) around each location
 def create_square_buffer(center, size_deg=0.0045 / 2):
     lon, lat = center
     return {
