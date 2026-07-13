@@ -1,5 +1,7 @@
 # Chapter 24: Conclusions
 
+## Introduction
+
 When we started this book, we set out a simple premise: rather than stitching together multiple specialized systems to support a modern, data-intensive application, SingleStore could serve as the single, unified platform underneath it all. Over the preceding chapters, we put that premise to the test across time series, geospatial, JSON, full-text and vector data, streaming pipelines, machine learning workflows and, finally, AI and agentic systems. Looking back across all of it, the premise holds up well.
 
 ## What We Covered
