@@ -417,7 +417,7 @@ As for services, Apple Inc. offers:
 These products and services are some of the most well-known and widely used among consumers, making them the most popular offerings from Apple Inc.
 ```
 
-## Chapter Summary
+## Summary
 
 In this chapter, we explored how to build a simple RAG system using locally-hosted language models. We began by installing and configuring Ollama, setting up the necessary environment variables to run models without requiring root privileges or cloud services.
 
