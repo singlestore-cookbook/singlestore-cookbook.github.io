@@ -404,7 +404,6 @@ Assistant: On the last date in the provided data (2015-11-24), the symbol BBRQ-F
 Finally, let's query structured data as JSON documents. We'll retrieve the most recent stock prices from the database, convert each row into a JSON document and index with LlamaIndex. We'll then ask a natural language question and the LLM will filter and sort the JSON documents to return the answer ordered alphabetically.
 
 ```python
-# Load sample tick data from SingleStore
 df = pd.read_sql(
     """
     SELECT symbol
@@ -415,22 +414,17 @@ df = pd.read_sql(
     db_connection
 )
 
-# Convert each row into a Document
 documents = [Document(text = row.to_json()) for _, row in df.iterrows()]
 
-# Create a ListIndex over the JSON documents
 json_index = ListIndex.from_documents(documents)
 
-# Convert the DataFrame to a JSON list for deterministic querying
 json_data = df.to_dict(orient = "records")
 
-# Deterministic processing to extract tickers and sort alphabetically
 tickers = sorted([row["symbol"] for row in json_data])
 
 print("Tickers from last 10 seconds with close > 500:")
 print(tickers)
 
-# Query example
 query = (
     "Using the latest timestamp in the tick table as the reference, "
     "return all tickers from the 10 seconds before that timestamp "
