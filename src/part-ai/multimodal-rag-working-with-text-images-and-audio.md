@@ -1367,15 +1367,15 @@ def visualize_graph(db_connection, max_entities = 50):
     )
 
     color_map = {
-        "CONCEPT": "#FF0000",      # Red
-        "PROCESS": "#FF7F00",      # Orange
-        "METRIC": "#FFFF00",       # Yellow
-        "LOCATION": "#00FF00",     # Green
-        "ORGANIZATION": "#00FFFF", # Cyan
-        "IMPACT": "#0000FF",       # Blue
-        "PERSON": "#8B00FF",       # Violet
-        "SECTOR": "#FF00FF",       # Magenta
-        "UNKNOWN": "#000000"       # Black
+        "CONCEPT": "#FF0000",
+        "PROCESS": "#FF7F00",
+        "METRIC": "#FFFF00",
+        "LOCATION": "#00FF00",
+        "ORGANIZATION": "#00FFFF",
+        "IMPACT": "#0000FF",
+        "PERSON": "#8B00FF",
+        "SECTOR": "#FF00FF",
+        "UNKNOWN": "#000000"
     }
 
     normalized_types = {}
