@@ -8,7 +8,7 @@
 
 [Chapter 1: Getting Started with SingleStore](part-front/getting-started-with-singlestore.md)
 
-- Part 1: Multi-Model
+# Part 1: Multi-Model
 
     - [Chapter 2: Time Series Data](part-multi-model/time-series-data.md)
     - [Chapter 3: Geospatial Data](part-multi-model/geospatial-data.md)
@@ -16,13 +16,13 @@
     - [Chapter 5: Full-Text Index and Search](part-multi-model/full-text-index-and-search.md)
     - [Chapter 6: Vector Data](part-multi-model/vector-data.md)
 
-- Part 2: Streaming and Big Data Pipelines
+# Part 2: Streaming and Big Data Pipelines
 
     - [Chapter 7: Apache Spark](part-spark-and-kafka/apache-spark.md)
     - [Chapter 8: Apache Kafka](part-spark-and-kafka/apache-kafka.md)
     - [Chapter 9: Change Data Capture](part-spark-and-kafka/change-data-capture.md)
 
-- Part 3: Machine Learning
+# Part 3: Machine Learning
 
     - [Chapter 10: Building Predictive Analytics for Loan Approvals](part-ml/building-predictive-analytics-for-loan-approvals.md)
     - [Chapter 11: Fraud Detection](part-ml/fraud-detection.md)
@@ -33,7 +33,7 @@
     - [Chapter 16: Running Sentiment Analysis inside the Database with WebAssembly](part-ml/running-sentiment-analysis-inside-the-database-with-webassembly.md)
     - [Chapter 17: Feature Store with Feast](part-ml/feature-store-with-feast.md)
 
-- Part 4: AI and Agentic Frameworks
+# Part 4: AI and Agentic Frameworks
 
     - [Chapter 18: Using LangChain to Build Intelligent Data Applications](part-ai/using-langchain-to-build-intelligent-data-applications.md)
     - [Chapter 19: Using LlamaIndex Workflows](part-ai/using-llamaindex-workflows.md)
