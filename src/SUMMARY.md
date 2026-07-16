@@ -5,6 +5,9 @@
 - [Cover](part-front/cover.md)
 - [License](part-front/license.md)
 - [About the Author](part-front/about-the-author.md)
+
+# Introduction
+
 - [Chapter 1: Getting Started with SingleStore](part-front/getting-started-with-singlestore.md)
 
 # Part 1: Multi-Model
