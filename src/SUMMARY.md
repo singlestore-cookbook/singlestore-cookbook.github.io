@@ -1,12 +1,11 @@
 # Summary
 
-[Cover](part-front/cover.md)
+# Front Matter
 
-[License](part-front/license.md)
-
-[About the Author](part-front/about-the-author.md)
-
-[Chapter 1: Getting Started with SingleStore](part-front/getting-started-with-singlestore.md)
+- [Cover](part-front/cover.md)
+- [License](part-front/license.md)
+- [About the Author](part-front/about-the-author.md)
+- [Chapter 1: Getting Started with SingleStore](part-front/getting-started-with-singlestore.md)
 
 # Part 1: Multi-Model
 
@@ -41,5 +40,4 @@
 - [Chapter 21: Running Local LLMs with Ollama](part-ai/running-local-llms-with-ollama.md)
 - [Chapter 22: Using MCP for Real-Time Data Access](part-ai/using-mcp-for-real-time-data-access.md)
 - [Chapter 23: Agentic Patterns with SingleStore](part-ai/agentic-patterns-with-singlestore.md)
-
-[Chapter 24: Conclusions](part-back/conclusions.md)
+- [Chapter 24: Conclusions](part-back/conclusions.md)
