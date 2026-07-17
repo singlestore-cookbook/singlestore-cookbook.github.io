@@ -20,7 +20,7 @@ In the SingleStore Portal, let's use the **SQL Editor** to create a new database
 CREATE DATABASE IF NOT EXISTS agriculture_db;
 ```
 
-## Fill in the Notebook
+## Fill out the Notebook
 
 We'll need to install R. We'll do this using Conda, as follows:
 
