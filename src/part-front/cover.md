@@ -1,1 +1,1 @@
-<img src="/part-front/cover-media/image1.png" alt="Cover" style="width:100%;"/>
+![](cover-media/image1.png)
