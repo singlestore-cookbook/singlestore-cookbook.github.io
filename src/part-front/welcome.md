@@ -14,6 +14,6 @@ Chaudhri, A. (2026). *The SingleStore Cookbook: Recipes for Multi-Model, Machine
   title     = {The SingleStore Cookbook: Recipes for Multi-Model, Machine Learning and AI Data Engineering},
   year      = {2026},
   url       = {https://singlestore-cookbook.github.io/},
-  note      = {Accessed: \today}
+  note      = {Online; accessed July 2026}
 }
 ```
