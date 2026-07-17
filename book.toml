@@ -6,6 +6,7 @@ title = "The SingleStore Cookbook"
 description = "Recipes for Multi-Model, Machine Learning and AI Data Engineering"
 
 [output.html]
+hash-files = true
 git-repository-url = "https://github.com/singlestore-cookbook/singlestore-cookbook.github.io"
 edit-url-template = "https://github.com/singlestore-cookbook/singlestore-cookbook.github.io/edit/main/{path}"
 no-section-label = true
