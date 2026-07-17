@@ -1,0 +1,861 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Chapter 4: JSON Data - The SingleStore Cookbook</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Recipes for Multi-Model, Machine Learning and AI Data Engineering">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-0392ca55.css">
+        <link rel="stylesheet" href="../css/chrome-fc474251.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-7ad5f1bc.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-e2854824.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The SingleStore Cookbook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/singlestore-cookbook/singlestore-cookbook.github.io" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/singlestore-cookbook/singlestore-cookbook.github.io/edit/main/src/part-multi-model/json-data.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="chapter-4-json-data"><a class="header" href="#chapter-4-json-data">Chapter 4: JSON Data</a></h1>
+<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<p>In this chapter, we’ll discuss SingleStore’s support for JavaScript Object Notation (JSON) data. JSON is a popular data format today and can be extremely useful for applications that need to capture information about objects that may vary in their attributes. JSON would be particularly useful for applications such as e-commerce or a library, where we may be storing a range of products that have quite different characteristics from each other. We’ll look at some examples of this shortly.</p>
+<p>We’ll build a small inventory system to manage a library’s collection of books, journals and multimedia materials. This example is inspired by an excellent tutorial by Noman Ur Rehman available on DigitalOcean<sup class="footnote-reference" id="fr-1-1"><a href="#footnote-1">1</a></sup>. We’ll see that it is effortless to store, retrieve and query JSON data using SingleStore. We’ll also build a quick visual front-end to our inventory system using Laravel and PHP.</p>
+<h2 id="create-the-database-and-tables"><a class="header" href="#create-the-database-and-tables">Create the Database and Tables</a></h2>
+<p>In the SingleStore Portal, let’s use the <strong>SQL Editor</strong> to create a new database. Call this <code>library_db</code>, as follows:</p>
+<pre><code class="language-sql">CREATE DATABASE IF NOT EXISTS library_db;
+</code></pre>
+<p>We’ll also create several tables, as follows:</p>
+<pre><code class="language-sql">USE library_db;
+
+DROP TABLE IF EXISTS authors;
+CREATE TABLE IF NOT EXISTS authors (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    nationality VARCHAR(50)
+);
+
+DROP TABLE IF EXISTS publishers;
+CREATE TABLE IF NOT EXISTS publishers (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    location VARCHAR(100)
+);
+
+DROP TABLE IF EXISTS items;
+CREATE TABLE IF NOT EXISTS items (
+    id INT PRIMARY KEY,
+    title VARCHAR(200),
+    item_type VARCHAR(50),
+    publisher_id INT,
+    metadata JSON NOT NULL
+);
+</code></pre>
+<p>There is a one-to-many (1:m) relationship between <code>publishers</code> and <code>items</code>, where each publisher can produce multiple books, journals or multimedia content. The schema uses a flexible <code>metadata</code> column to store item-specific attributes in JSON format. By using <code>NOT NULL</code> on the column, SingleStore will raise an error if there is an attempt to store invalid JSON.</p>
+<h2 id="populate-database-tables"><a class="header" href="#populate-database-tables">Populate Database Tables</a></h2>
+<p>Let’s now populate the tables. First, the <code>authors</code> table:</p>
+<pre><code class="language-sql">INSERT INTO authors (id, name, nationality) VALUES
+(1, 'Clara Penrose', 'British'),
+(2, 'Dmitri Ivanov', 'Russian'),
+(3, 'Mei-Ling Zhang', 'Chinese');
+</code></pre>
+<p>Next, the <code>publishers</code> table:</p>
+<pre><code class="language-sql">INSERT INTO publishers (id, name, location) VALUES
+(1, 'Aurora Press', 'London, UK'),
+(2, 'Maple Leaf Publishing', 'Toronto, Canada'),
+(3, 'Lotus House', 'Beijing, China');
+</code></pre>
+<p>Finally, the <code>items</code> table:</p>
+<h3 id="books"><a class="header" href="#books">Books</a></h3>
+<p>First, let’s load the data for Books:</p>
+<pre><code class="language-sql">-- Books (flat JSON)
+INSERT INTO items (id, title, item_type, publisher_id, metadata) VALUES
+(1, 'The Quantum Garden', 'book', 1, '{"isbn": "978-0-123456-47-2", "pages": 320, "language": "English", "author_id": 1}'),
+(2, 'Empire of Winds', 'book', 2, '{"isbn": "978-1-234567-89-3", "pages": 290, "language": "English", "author_id": 2}'),
+(3, 'Pathways to Silk', 'book', 3, '{"isbn": "978-9-876543-21-0", "pages": 350, "language": "Chinese", "author_id": 3}'),
+(4, 'Under Northern Lights', 'book', 1, '{"isbn": "978-0-111222-33-4", "pages": 400, "language": "English", "author_id": 1}'),
+(5, 'Siberian Dreams', 'book', 2, '{"isbn": "978-8-765432-10-9", "pages": 275, "language": "Russian", "author_id": 2}');
+</code></pre>
+<p>We have no nested documents or arrays but a flat JSON structure. For example:</p>
+<pre><code class="language-json">{
+  "isbn": "978-0-123456-47-2",
+  "pages": 320,
+  "language": "English",
+  "author_id": 1
+}
+</code></pre>
+<h3 id="journals"><a class="header" href="#journals">Journals</a></h3>
+<p>Next, let’s load the data for Journals:</p>
+<pre><code class="language-sql">-- Journals (JSON with array of article titles)
+INSERT INTO items (id, title, item_type, publisher_id, metadata) VALUES
+(6, 'Journal of Advanced Robotics - Vol 12', 'journal', 2,
+ '{"volume": 12, "year": 2022, "editor": "Dr. Helen Moritz", "articles": [
+     "Autonomous Drones in Urban Spaces",
+     "Swarm Intelligence in Rescue Missions",
+     "Adaptive Control in Humanoid Robots",
+     "Robot Learning from Demonstration"
+ ]}'),
+(7, 'Neuroscience Frontier - Issue 8', 'journal', 1,
+ '{"volume": 8, "year": 2023, "editor": "Prof. Alan Greene", "articles": [
+     "Neural Plasticity in Adults"
+ ]}'),
+(8, 'Cultural History Review - Q3 Edition', 'journal', 3,
+ '{"volume": 21, "year": 2023, "editor": "Dr. Olivia Chen", "articles": [
+     "Myth &amp; Memory in East Asia",
+     "Oral Traditions and Digital Preservation",
+     "Historical Narratives in Postcolonial Societies"
+ ]}'),
+(9, 'GreenTech Journal - April', 'journal', 2,
+ '{"volume": 9, "year": 2022, "editor": "Samuel Takahashi", "articles": [
+     "Vertical Farming Breakthroughs",
+     "Sustainable Batteries for Grid Storage",
+     "AI in Climate Modeling",
+     "Smart Irrigation Systems",
+     "Eco-Friendly Construction Materials"
+ ]}'),
+(10, 'Modern Linguistics Digest - Spring', 'journal', 1,
+ '{"volume": 6, "year": 2023, "editor": "Dr. Sara König", "articles": [
+     "Semantic Drift in Digital Age",
+     "Code-Switching Patterns in Bilingual Youth"
+ ]}');
+</code></pre>
+<p>We have an array structure for article titles. For example:</p>
+<pre><code class="language-json">{
+  "volume": 12,
+  "year": 2022,
+  "editor": "Dr. Helen Moritz",
+  "articles": [
+    "Autonomous Drones in Urban Spaces",
+    "Swarm Intelligence in Rescue Missions",
+    "Adaptive Control in Humanoid Robots",
+    "Robot Learning from Demonstration"
+  ]
+}
+</code></pre>
+<h3 id="multimedia"><a class="header" href="#multimedia">Multimedia</a></h3>
+<p>Finally, let’s load the data for Multimedia:</p>
+<pre><code class="language-sql">-- Multimedia (JSON with nested contributor)
+INSERT INTO items (id, title, item_type, publisher_id, metadata) VALUES
+(11, 'Ocean Deep - A Documentary', 'multimedia', 3,
+ '{"format": "DVD", "duration_min": 92, "language": "English", 
+   "contributors": {
+      "narrator": "David Stone",
+      "director": "Lisa Wong",
+      "editor": "James Patel"
+   }
+ }'),
+(12, 'Symphony No. 9 Performance', 'multimedia', 1,
+ '{"format": "Blu-Ray", "duration_min": 78, "language": "German", 
+   "contributors": {
+      "conductor": "Klaus Berger",
+      "violinist": "Maria Rossi"
+   }
+ }'),
+(13, 'Machine Learning Explained', 'multimedia', 2,
+ '{"format": "MP4", "duration_min": 60, "language": "English", 
+   "contributors": {
+      "presenter": "Anna Dupont",
+      "animator": "John Kim",
+      "scriptwriter": "Elena Grant"
+   }
+ }'),
+(14, 'The Story of Silk Road', 'multimedia', 3,
+ '{"format": "DVD", "duration_min": 85, "language": "Mandarin", 
+   "contributors": {
+      "host": "Ming Zhao",
+      "director": "Yuki Nakamura",
+      "translator": "Akira Tanaka",
+      "composer": "Minji Park"
+   }
+ }'),
+(15, 'Astrophysics Today', 'multimedia', 2,
+ '{"format": "Blu-Ray", "duration_min": 70, "language": "English", 
+   "contributors": {
+      "presenter": "Neil Quinn",
+      "editor": "Farah Idris",
+      "consultant": "Liam Becker"
+   }
+ }');
+</code></pre>
+<p>We have nested contributors. For example:</p>
+<pre><code class="language-json">{
+  "format": "DVD",
+  "duration_min": 92,
+  "language": "English",
+  "contributors": {
+    "narrator": "David Stone",
+    "director": "Lisa Wong",
+    "editor": "James Patel"
+  }
+}
+</code></pre>
+<p>From these examples, we can see that we may need to store our JSON data in various ways and the structure of the data may vary depending upon the attributes we wish to store. SingleStore can handle these different requirements and comes with a wide range of JSON functions<sup class="footnote-reference" id="fr-2-1"><a href="#footnote-2">2</a></sup> that can help.</p>
+<h2 id="example-queries"><a class="header" href="#example-queries">Example Queries</a></h2>
+<p>Now that our data are safely inside SingleStore, let’s look at ways to query that data.</p>
+<p>First, let’s see what SingleStore returns for the metadata column using <code>JSON_GET_TYPE</code>:</p>
+<pre><code class="language-sql">SELECT JSON_GET_TYPE(metadata)
+FROM items;
+</code></pre>
+<p>The result should be:</p>
+<pre><code class="language-text">+-------------------------+
+| JSON_GET_TYPE(metadata) |
++-------------------------+
+| object                  |
+| object                  |
+| object                  |
+| object                  |
+| object                  |
+| object                  |
+| object                  |
+| object                  |
+| object                  |
+| object                  |
+| object                  |
+| object                  |
+| object                  |
+| object                  |
+| object                  |
++-------------------------+
+</code></pre>
+<p>All the rows are JSON objects.</p>
+<p>Now let’s select all books and extract the ISBN and language from metadata:</p>
+<pre><code class="language-sql">SELECT
+    id,
+    title,
+    metadata::$isbn AS isbn,
+    metadata::$language AS language
+FROM items
+WHERE item_type = 'book'
+ORDER BY id;
+</code></pre>
+<p>Notice that we can use the double-colon (::) to specify a path to the specific attribute that we’re interested in. Example output:</p>
+<pre><code class="language-text">+----+-----------------------+-------------------+----------+
+| id | title                 | isbn              | language |
++----+-----------------------+-------------------+----------+
+|  1 | The Quantum Garden    | 978-0-123456-47-2 | English  |
+|  2 | Empire of Winds       | 978-1-234567-89-3 | English  |
+|  3 | Pathways to Silk      | 978-9-876543-21-0 | Chinese  |
+|  4 | Under Northern Lights | 978-0-111222-33-4 | English  |
+|  5 | Siberian Dreams       | 978-8-765432-10-9 | Russian  |
++----+-----------------------+-------------------+----------+
+</code></pre>
+<p>Next, let’s get all journals, showing the editor and the number of articles:</p>
+<pre><code class="language-sql">SELECT
+    id,
+    title,
+    metadata::$editor AS editor,
+    JSON_LENGTH(metadata::$articles) AS article_count
+FROM items
+WHERE item_type = 'journal';
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+----+---------------------------------------+-------------------+---------------+
+| id | title                                 | editor            | article_count |
++----+---------------------------------------+-------------------+---------------+
+|  6 | Journal of Advanced Robotics - Vol 12 | Dr. Helen Moritz  |             4 |
+|  9 | GreenTech Journal - April             | Samuel Takahashi  |             5 |
+|  7 | Neuroscience Frontier - Issue 8       | Prof. Alan Greene |             1 |
+|  8 | Cultural History Review - Q3 Edition  | Dr. Olivia Chen   |             3 |
+| 10 | Modern Linguistics Digest - Spring    | Dr. Sara König    |             2 |
++----+---------------------------------------+-------------------+---------------+
+</code></pre>
+<p>Next, let’s query multimedia items and get contributors as JSON objects. We’ll limit the output to avoid word-wrap:</p>
+<pre><code class="language-sql">SELECT
+    SUBSTRING(metadata::$contributors, 1, 60) AS contributors
+FROM items
+WHERE item_type = 'multimedia';
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+--------------------------------------------------------------+
+| contributors                                                 |
++--------------------------------------------------------------+
+| {"consultant":"Liam Becker","editor":"Farah Idris","presente |
+| {"conductor":"Klaus Berger","violinist":"Maria Rossi"}       |
+| {"director":"Lisa Wong","editor":"James Patel","narrator":"D |
+| {"composer":"Minji Park","director":"Yuki Nakamura","host":" |
+| {"animator":"John Kim","presenter":"Anna Dupont","scriptwrit |
++--------------------------------------------------------------+
+</code></pre>
+<p>We’ll now join books with authors by <code>author_id</code> extracted from the JSON metadata:</p>
+<pre><code class="language-sql">SELECT
+    b.id,
+    b.title,
+    a.name AS author_name,
+    a.nationality
+FROM items b
+JOIN authors a ON a.id = CAST(b.metadata::$author_id AS SIGNED)
+WHERE b.item_type = 'book';
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+----+-----------------------+----------------+-------------+
+| id | title                 | author_name    | nationality |
++----+-----------------------+----------------+-------------+
+|  3 | Pathways to Silk      | Mei-Ling Zhang | Chinese     |
+|  1 | The Quantum Garden    | Clara Penrose  | British     |
+|  5 | Siberian Dreams       | Dmitri Ivanov  | Russian     |
+|  2 | Empire of Winds       | Dmitri Ivanov  | Russian     |
+|  4 | Under Northern Lights | Clara Penrose  | British     |
++----+-----------------------+----------------+-------------+
+</code></pre>
+<p>Let’s now search journals where any article title contains “AI”:</p>
+<pre><code class="language-sql">SELECT
+    i.id,
+    i.title,
+    i.metadata::$editor AS editor,
+    a.table_col AS article
+FROM items AS i
+JOIN TABLE(JSON_TO_ARRAY(i.metadata::articles)) AS a
+WHERE i.item_type = 'journal' AND a.table_col LIKE '%AI%';
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+----+---------------------------+------------------+--------------------------+
+| id | title                     | editor           | article                  |
++----+---------------------------+------------------+--------------------------+
+|  9 | GreenTech Journal - April | Samuel Takahashi | "AI in Climate Modeling" |
++----+---------------------------+------------------+--------------------------+
+</code></pre>
+<p>Now, we’ll add a new JSON field called <code>edition</code> to a book’s metadata:</p>
+<pre><code class="language-sql">UPDATE items
+SET metadata::$edition = 'Second'
+WHERE id = 1 AND item_type = 'book';
+</code></pre>
+<p>To check that this was added correctly, we can run the following:</p>
+<pre><code class="language-sql">SELECT metadata::edition
+FROM items
+WHERE id = 1 AND item_type = 'book';
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+-------------------+
+| metadata::edition |
++-------------------+
+| "Second"          |
++-------------------+
+</code></pre>
+<p>Finally, let’s remove the <code>language</code> field from a book’s metadata:</p>
+<pre><code class="language-sql">UPDATE items
+SET metadata = JSON_DELETE_KEY(metadata, 'language')
+WHERE id = 1 AND item_type = 'book';
+</code></pre>
+<p>To check that this was correctly removed, we can run the following:</p>
+<pre><code class="language-sql">SELECT metadata::language
+FROM items
+WHERE id = 1 AND item_type = 'book';
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+--------------------+
+| metadata::language |
++--------------------+
+| NULL               |
++--------------------+
+</code></pre>
+<p>SingleStore supports an extensive set of functions<sup class="footnote-reference" id="fr-3-1"><a href="#footnote-3">3</a></sup> that can be used with JSON data.</p>
+<h2 id="visualization-using-laravel-and-php"><a class="header" href="#visualization-using-laravel-and-php">Visualization using Laravel and PHP</a></h2>
+<p>Running the commands in the previous sections using the SQL Editor in our SingleStore Portal account is a great way to test our code and quickly view the results. However, we can go a step further and build a simple web interface that allows us to see the data and perform some data management operations. In this first application development iteration, we’ll focus on Read, Update and Delete operations.</p>
+<p>We’ll delete the existing database and recreate it to have the original dataset.</p>
+<h3 id="install-the-required-software"><a class="header" href="#install-the-required-software">Install the Required Software</a></h3>
+<p>We’ll build our web interface using Laravel and PHP. Before continuing, ensure that the following software is installed on your system:</p>
+<ul>
+<li>PHP 8.2 or later</li>
+<li>The PHP XML extension</li>
+<li>A MySQL-compatible PHP database driver</li>
+<li>Composer</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> This project has been tested with PHP 8.2 and Composer 2.x on Linux.</p>
+</blockquote>
+<p>The installation process varies depending on your operating system. Linux users can typically install these packages using their distribution’s package manager, as follows:</p>
+<pre><code class="language-shell">sudo apt update
+sudo add-apt-repository ppa:ondrej/php
+sudo apt update
+sudo apt install php8.2-cli php8.2-xml php8.2-mysql
+</code></pre>
+<p>macOS and Windows users should follow the installation instructions provided by their preferred package management tools or installers.</p>
+<p>Your environment may also need other packages.</p>
+<p>To install Composer, we’ll follow the instructions on the download page<sup class="footnote-reference" id="fr-4-1"><a href="#footnote-4">4</a></sup>. On Linux, we’ll move Composer to the <code>bin</code> directory:</p>
+<pre><code class="language-shell">sudo mv composer.phar /usr/local/bin/composer
+</code></pre>
+<p>Next, we’ll create a project called <code>e-library</code>, as follows:</p>
+<pre><code class="language-shell">composer create-project laravel/laravel e-library
+</code></pre>
+<p>and then change to the project directory:</p>
+<pre><code class="language-shell">cd e-library
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> If you downloaded or cloned the completed project from the book’s GitHub repository, extract the archive, open a terminal in the project directory and install the dependencies:</p>
+<ul>
+<li>composer install</li>
+<li>php artisan key:generate</li>
+</ul>
+</blockquote>
+<p>We’ll now edit the <code>.env</code> file in the e-library directory:</p>
+<pre><code class="language-text">DB_CONNECTION=mysql
+DB_HOST=&lt;host&gt;
+DB_PORT=3306
+DB_DATABASE=library_db
+DB_USERNAME="admin"
+DB_PASSWORD="&lt;password&gt;"
+
+SESSION_DRIVER=file
+</code></pre>
+<p>The <code>&lt;host&gt;</code> and <code>&lt;password&gt;</code> should be replaced with the values obtained from the SingleStore Portal when creating a cluster. Note also the use of double-quotes (“) for <code>DB_USERNAME</code> and <code>DB_PASSWORD</code>. We’ll also ensure that <code>SESSION_DRIVER</code> is set to <code>file</code>, as shown.</p>
+<blockquote>
+<p><strong>Note:</strong> If you downloaded or cloned the completed project from the book’s GitHub repository, the following files have already been created and you can skip this step.</p>
+</blockquote>
+<h3 id="create-files"><a class="header" href="#create-files">Create Files</a></h3>
+<p>The following commands are only required when starting from a clean Laravel installation:</p>
+<pre><code class="language-shell">php artisan make:model -a Author
+php artisan make:model -a Publisher
+php artisan make:model -a Item
+</code></pre>
+<p>For each of <strong>Author</strong>, <strong>Publisher</strong> and <strong>Item</strong>, we obtain:</p>
+<ul>
+<li>
+<p>A migration in <code>database/migrations</code></p>
+</li>
+<li>
+<p>A model in <code>app/Models</code></p>
+</li>
+<li>
+<p>A controller in <code>app/Http/Controllers</code></p>
+</li>
+<li>
+<p>A seeder in <code>database/seeders</code></p>
+</li>
+</ul>
+<h3 id="migrations-databasemigrations"><a class="header" href="#migrations-databasemigrations">Migrations (database/migrations)</a></h3>
+<p>We’ll edit the <strong>Author</strong> migration file, so that we have the following:</p>
+<pre><code class="language-php">public function up(): void
+{
+    Schema::create('authors', function (Blueprint $table) {
+        $table-&gt;id();
+        $table-&gt;string('name');
+        $table-&gt;string('nationality');
+        $table-&gt;timestamps();
+    });
+}
+</code></pre>
+<p>the <strong>Publisher</strong> migration file, so that we have the following:</p>
+<pre><code class="language-php">public function up(): void
+{
+    Schema::create('publishers', function (Blueprint $table) {
+        $table-&gt;id();
+        $table-&gt;string('name');
+        $table-&gt;string('location');
+        $table-&gt;timestamps();
+    });
+}
+</code></pre>
+<p>and the <strong>Product</strong> migration file, so that we have the following:</p>
+<pre><code class="language-php">public function up(): void
+{
+    Schema::create('items', function (Blueprint $table) {
+        $table-&gt;id();
+        $table-&gt;string('title');
+        $table-&gt;string('item_type');
+        $table-&gt;unsignedInteger('publisher_id');
+        $table-&gt;json('metadata');
+        $table-&gt;timestamps();
+    });
+}
+</code></pre>
+<h3 id="models-appmodels"><a class="header" href="#models-appmodels">Models (app/Models)</a></h3>
+<p>We’ll edit the <strong>Publisher</strong> model file, so that we have the 1:m relationship with <strong>Item</strong>:</p>
+<pre><code class="language-php">class Publisher extends Model
+{
+    /** @use HasFactory&lt;\Database\Factories\PublisherFactory&gt; */
+    use HasFactory;
+
+    // A publisher has many items
+
+    public function items()
+    {
+        return $this-&gt;hasMany('Item');
+    }
+}
+</code></pre>
+<p>and the <strong>Item</strong> model file so that we can access the JSON data by casting the attributes to an array and create the relationship with <strong>Publisher</strong>:</p>
+<pre><code class="language-php">class Item extends Model
+{
+    /** @use HasFactory&lt;\Database\Factories\ItemFactory&gt; */
+    use HasFactory;
+
+    public $timestamps = false;
+
+    // Cast metadata JSON to array
+    protected $casts = [
+        'metadata' =&gt; 'array'
+    ];
+
+    // Each item has a publisher
+    public function publisher()
+    {
+        return $this-&gt;belongsTo('Publisher');
+    }
+
+    protected $fillable = ['title', 'item_type', 'publisher_id', 'metadata'];
+}
+</code></pre>
+<h3 id="controllers-apphttpcontrollers"><a class="header" href="#controllers-apphttpcontrollers">Controllers (app/Http/Controllers)</a></h3>
+<p>For the the web application, let’s focus on the <code>ItemController</code>. At the top of the file, we’ll add the following:</p>
+<pre><code class="language-php">use App\Models\Author;
+use App\Models\Publisher;
+use App\Models\Item;
+use Illuminate\Http\Request;
+</code></pre>
+<h4 id="index"><a class="header" href="#index">index()</a></h4>
+<p>We need to retrieve all the item data for the items index page and ensure that we have each item’s publisher name. This will require joins across the respective tables. We’ll also control the output by showing just five records per page using <code>simplePaginate()</code>.</p>
+<pre><code class="language-php">public function index()
+{
+    $items = Item::select('items.*', 'publishers.name as publisher_name')
+        -&gt;join('publishers', 'publishers.id', '=', 'items.publisher_id')
+        -&gt;orderBy('items.id')
+        -&gt;simplePaginate(5);
+
+    return view('admin.index', compact('items'));
+}
+</code></pre>
+<h4 id="show"><a class="header" href="#show">show()</a></h4>
+<p>To show a single item, we’ll perform a query similar to the query for <code>index()</code> but we’ll use <code>first()</code> to get an individual item record.</p>
+<pre><code class="language-php">public function show(Item $item)
+{
+    $one_item = Item::select('items.*', 'publishers.name as publisher_name')
+        -&gt;join('publishers', 'publishers.id', '=', 'items.publisher_id')
+        -&gt;where('items.id', $item-&gt;id)
+        -&gt;first();
+ 
+    return view('admin.show', compact('one_item'));
+}
+</code></pre>
+<h4 id="edit"><a class="header" href="#edit">edit()</a></h4>
+<p>To edit an existing item, we’ll need to find the item to edit and we’ll also need to get all the publishers to be offered in a drop-down menu if the user wishes to change this item attribute.</p>
+<pre><code class="language-php">public function edit($id)
+{
+    $item = Item::findOrFail($id);
+    $publishers = Publisher::orderBy('id')-&gt;get();
+
+    return view('admin.edit', compact('item', 'publishers'));
+}
+</code></pre>
+<h4 id="update"><a class="header" href="#update">update()</a></h4>
+<p>We’ll allow updates to the item name, publisher and the JSON attributes in this first application development iteration.</p>
+<pre><code class="language-php">public function update(Request $request, $id)
+{
+    $item = Item::findOrFail($id);
+
+    $item-&gt;title = $request-&gt;input('title');
+    $item-&gt;item_type = $request-&gt;input('item_type');
+    $item-&gt;publisher_id = $request-&gt;input('publisher_id');
+
+    $metadata = $request-&gt;input('metadata', []);
+    foreach ($metadata as $key =&gt; &amp;$value) {
+        // Only decode if the value is a JSON string (array/dictionary format)
+        if (is_string($value) &amp;&amp; (str_starts_with($value, '{') || str_starts_with($value, '['))) {
+            $decodedValue = json_decode($value, true);
+            // Check if decoding was successful, else retain original string
+            $value = json_last_error() === JSON_ERROR_NONE ? $decodedValue : $value;
+        }
+    }
+    // Assign the processed attributes back to the item
+    $item-&gt;metadata = $metadata;
+    $item-&gt;save();
+
+    return redirect()-&gt;route('items.index')-&gt;with('success', 'Item updated successfully');
+}
+</code></pre>
+<h4 id="destroy"><a class="header" href="#destroy"> destroy()</a></h4>
+<p>We can remove an item very easily by just using <code>delete()</code>.</p>
+<pre><code class="language-php">public function destroy($id)
+{
+    $item = Item::findOrFail($id);
+    $item-&gt;delete();
+
+    return redirect('/items')-&gt;with('success', 'Item has been deleted');
+}
+</code></pre>
+<h3 id="routes-routeswebphp"><a class="header" href="#routes-routeswebphp">Routes (routes/web.php)</a></h3>
+<p>In the <code>web.php</code> file in the <code>routes</code> directory, we’ll add the following at the top:</p>
+<pre><code class="language-php">use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\PublisherController;
+use App\Http\Controllers\ItemController;
+</code></pre>
+<p>and this code further down:</p>
+<pre><code class="language-php">Route::resource(
+    'authors',
+     AuthorController::class
+);
+
+Route::resource(
+    'publishers',
+    PublisherController::class
+);
+
+Route::resource(
+    'items',
+    ItemsController::class
+);
+</code></pre>
+<h3 id="views-resourcesviewsadmin"><a class="header" href="#views-resourcesviewsadmin">Views (resources/views/admin)</a></h3>
+<p>The three blade files for the <strong>index</strong> page, <strong>show</strong> page and <strong>edit</strong> page can be found on GitHub. In those files, there will be code for formatting the data using HTML, presentation and editing using PHP. Also, from the GitHub repo we’ll copy the <code>index.blade.php</code> file to <code>resources/views</code>.</p>
+<h3 id="run-the-code"><a class="header" href="#run-the-code">Run the Code</a></h3>
+<p>We’ll run the application from the e-library directory, as follows:</p>
+<pre><code class="language-shell">php artisan serve
+</code></pre>
+<p>In a web browser, we’ll enter the following:</p>
+<pre><code class="language-text">http://localhost:8000/items
+</code></pre>
+<p>The output should be similar to Figure 4-1:</p>
+<p><img src="json-data-media/image1.png" alt=""></p>
+<p><em>Figure 4-1. Index Page.</em></p>
+<p>We can see the Items data correctly displayed for each item. The metadata is in JSON format. If we select <strong>Show</strong>, we can view the details about an item on a single page, as shown in Figure 4-2.</p>
+<p><img src="json-data-media/image2.png" alt=""></p>
+<p><em>Figure 4-2. Show Individual Item.</em></p>
+<p>From the index page, if we select <strong>Edit</strong>, we can edit an item, as shown in Figure 4-3.</p>
+<p><img src="json-data-media/image3.png" alt=""></p>
+<p><em>Figure 4-3. Edit Item.</em></p>
+<p>Many fields, including the JSON data, can be fully edited.</p>
+<blockquote>
+<p><strong>Note:</strong> This example does not enforce strict data type validation for the JSON input. Additional client-side logic would be needed to ensure the integrity and correctness of the JSON structure.</p>
+</blockquote>
+<p>Finally, if we select <strong>Delete</strong> from the index page, we can remove an item from the database. In Figure 4-4, an item has been deleted. We can confirm this by checking SingleStore using the <strong>SQL Editor</strong> in the Portal:</p>
+<pre><code class="language-sql">SELECT COUNT(*) FROM items;
+</code></pre>
+<p><img src="json-data-media/image4.png" alt=""></p>
+<p><em>Figure 4-4. Delete Item.</em></p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>In this chapter, we’ve seen that SingleStore can manage JSON data of varying complexity with ease. It supports a wide range of functions that can be used with JSON data and we have used a number of these functions in this chapter. Furthermore, we’ve seen that we can use SQL queries that combine operations on both Relational and JSON data. Finally, we’ve built a simple web interface to our database system using Laravel and PHP that enabled us to explore the data and make some modifications.</p>
+<hr>
+<ol class="footnote-definition">
+<li id="footnote-1">
+<p>https://www.digitalocean.com/community/tutorials/working-with-json-in-mysql <a href="#fr-1-1">↩</a></p>
+</li>
+<li id="footnote-2">
+<p>https://docs.singlestore.com/cloud/reference/sql-reference/json-functions/ <a href="#fr-2-1">↩</a></p>
+</li>
+<li id="footnote-3">
+<p>https://docs.singlestore.com/cloud/reference/sql-reference/json-functions/ <a href="#fr-3-1">↩</a></p>
+</li>
+<li id="footnote-4">
+<p>https://getcomposer.org/download/ <a href="#fr-4-1">↩</a></p>
+</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../part-multi-model/geospatial-data.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../part-multi-model/full-text-index-and-search.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../part-multi-model/geospatial-data.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../part-multi-model/full-text-index-and-search.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-c22b7243.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,1691 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Chapter 15: Crime Analytics with SingleStore Kai - The SingleStore Cookbook</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Recipes for Multi-Model, Machine Learning and AI Data Engineering">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-0392ca55.css">
+        <link rel="stylesheet" href="../css/chrome-fc474251.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-7ad5f1bc.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-e2854824.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The SingleStore Cookbook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/singlestore-cookbook/singlestore-cookbook.github.io" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/singlestore-cookbook/singlestore-cookbook.github.io/edit/main/src/part-ml/crime-analytics-with-singlestore-kai.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="chapter-15-crime-analytics-with-singlestore-kai"><a class="header" href="#chapter-15-crime-analytics-with-singlestore-kai">Chapter 15: Crime Analytics with SingleStore Kai</a></h1>
+<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<p>Many great visualization techniques, such as kernel density mapping, can help us explore and analyze crime concentrations. However, sometimes, it can be more insightful to study how crimes cluster along a linear network, such as a bus route or Underground line. This kind of analysis can help law enforcement agencies target resources at specific hotspots along a route.</p>
+<p>One way to do this is by identifying hot routes<sup class="footnote-reference" id="fr-1-1"><a href="#footnote-1">1</a></sup>: sections of a transport line where crime is unusually concentrated. An excellent tutorial<sup class="footnote-reference" id="fr-2-1"><a href="#footnote-2">2</a></sup> by Reka Solymosi demonstrates this technique in R for the Bakerloo Line on the London Underground.</p>
+<p>In this chapter, we will follow the same workflow using Python and apply it to data stored in SingleStore via its MongoDB-compatible Kai API. We will not only visualize crime patterns along the Bakerloo Line using spatial queries and thematic mapping, but also build machine learning models to predict crime frequency (regression), likely crime types (classification) and discover emerging hotspots (clustering).</p>
+<p>We’ll follow the following four-step process:</p>
+<ul>
+<li>
+<p>Prepare the network layer.</p>
+</li>
+<li>
+<p>Link crime events to line segments.</p>
+</li>
+<li>
+<p>Calculate a rate.</p>
+</li>
+<li>
+<p>Visualize the results.</p>
+</li>
+</ul>
+<p>For Bakerloo line data, we’ll use some pre-prepared files:</p>
+<ul>
+<li>
+<p><strong>bakerloo_stops.csv</strong>: Contains Bakerloo Line station names and their latitude and longitude coordinates.</p>
+</li>
+<li>
+<p><strong>bakerloo_line.geojson</strong>: Contains a LineString with latitude and longitude coordinates for the entire Bakerloo Line.</p>
+</li>
+</ul>
+<p>For the British Transport Police (BTP) crime data, we’ll use a pre-prepared file for data from 2024-01 to 2025-01, originally generated from Data Downloads<sup class="footnote-reference" id="fr-3-1"><a href="#footnote-3">3</a></sup>. The data contains public sector information licensed under the UK Open Government License v3.0.</p>
+<h2 id="data-loader-for-hot-routes"><a class="header" href="#data-loader-for-hot-routes">Data Loader for Hot Routes</a></h2>
+<p>Let’s now create a new notebook. We’ll call it <strong>data_loader_for_hot_routes</strong>.</p>
+<p>In a new code cell, let’s add the following code to read the Bakerloo stops CSV file:</p>
+<pre><code class="language-python">bakerloo_stops_csv_url = ...
+
+bakerloo_stops_df = pd.read_csv(bakerloo_stops_csv_url)
+</code></pre>
+<p>Next, we’ll read the GeoJSON file:</p>
+<pre><code class="language-python">bakerloo_line_geojson_url = ...
+
+bakerloo_line = gpd.read_file(bakerloo_line_geojson_url).to_crs(epsg = 4326)
+</code></pre>
+<p>Finally, we’ll read the BTP crimes CSV file:</p>
+<pre><code class="language-python">btp_street_csv_url = ...
+
+crimes_df = pd.read_csv(btp_street_csv_url)
+</code></pre>
+<p>Now, we’ll create a connection to SingleStore Kai:</p>
+<pre><code class="language-python">try:
+    client = MongoClient(connection_url_kai)
+    db = client["hot_routes_db"]
+    client.drop_database(db)
+    print("Connected to Kai successfully")
+except Exception as e:
+    print(f"Could not connect to Kai: '{e}'")
+</code></pre>
+<p>We’ll ensure that we start with a clean environment by dropping the database if it already exists.</p>
+<p>We’ll now convert the Bakerloo stops data into a JSON format and insert it into a new collection:</p>
+<pre><code class="language-python">bakerloo_stops = [
+    {
+        "station_name": r["stn_name"],
+        "line": r["line"],
+        "location": {
+            "type": "Point",
+            "coordinates": [r["stn_lon"], r["stn_lat"]]
+        }
+    }
+    for r in bakerloo_stops_df.to_dict(orient = "records")
+]
+
+db["bakerloo_stops"].insert_many(bakerloo_stops)
+print(f"Inserted {len(bakerloo_stops)} stations")
+</code></pre>
+<p>This will insert data for 25 stations. We are using a geospatial <code>Point</code> type and here is an example of a JSON document:</p>
+<pre><code class="language-text">{'_id': ObjectId('68cb03cec2ca5ba1d2f3587a'),
+ 'station_name': "Regent's Park",
+ 'line': 'bakerloo',
+ 'location': {'type': 'Point', 'coordinates': [-0.146444, 51.523344]}}
+</code></pre>
+<p>We’ll repeat the process for the line segments between stations:</p>
+<pre><code class="language-python">def segments(curve):
+    return list(map(LineString, zip(curve.coords[:-1], curve.coords[1:])))
+
+bakerloo_sections = [
+    {
+        "geometry": {
+            "type": "LineString",
+            "coordinates": list(seg.coords)
+        }
+    }
+    for curve in bakerloo_line.geometry
+    for seg in segments(curve)
+]
+
+db["bakerloo_sections"].insert_many(bakerloo_sections)
+print(f"Inserted {len(bakerloo_sections)} line segments")
+</code></pre>
+<p>This will insert data for 24 segments. We are using a geospatial <code>LineString</code> type and here is an example of a JSON document:</p>
+<pre><code class="language-text">{'_id': ObjectId('68cb04d5c2ca5ba1d2f35892'),
+ 'geometry': {'type': 'LineString',
+  'coordinates': [[-0.243006, 51.532556], [-0.22505, 51.530545]]}}
+</code></pre>
+<p>We’ll repeat the process for the BTP crimes data:</p>
+<pre><code class="language-python">crimes = [
+    {
+        "crime_id": row.get("Crime ID"),
+        "month": row.get("Month"),
+        "reported_by": row.get("Reported by"),
+        "falls_within": row.get("Falls within"),
+        "geometry": {
+            "type": "Point",
+            "coordinates": [row["Longitude"], row["Latitude"]]
+        },
+        "location": row.get("Location"),
+        "lsoa_code": row.get("LSOA code"),
+        "lsoa_name": row.get("LSOA name"),
+        "crime_type": row.get("Crime type"),
+        "last_outcome_category": row.get("Last outcome category"),
+        "context": row.get("Context")
+    }
+    for _, row in crimes_df.iterrows()
+]
+
+db["crimes"].insert_many(crimes)
+print(f"Inserted {len(crimes)} crimes")
+</code></pre>
+<p>This will insert data for thousands of reported crimes. These are for the entire United Kingdom. We are using a geospatial <code>Point</code> type and here is an example of a JSON document:</p>
+<pre><code class="language-text">{'_id': ObjectId('68cb066cc2ca5ba1d2f358c7'),
+ 'crime_id': nan,
+ 'month': '2025-01',
+ 'reported_by': 'British Transport Police',
+ 'falls_within': 'British Transport Police',
+ 'geometry': {'type': 'Point', 'coordinates': [0.875301, 51.143228]},
+ 'location': 'On or near Ashford International (Station)',
+ 'lsoa_code': 'E01034986',
+ 'lsoa_name': 'Ashford 005G',
+ 'crime_type': 'Violence and sexual offences',
+ 'last_outcome_category': nan,
+ 'context': nan}
+</code></pre>
+<p>Finally, we’ll store a <code>Polygon</code> which is a buffer around the Bakerloo line. This is a strip with a radius of 0.005 degrees around the line, stored as a list of polygons.</p>
+<pre><code class="language-python">bakerloo_line_buffer = bakerloo_line.buffer(0.005)
+
+bakerloo_line_buff = [
+    {
+        "geometry": mapping(poly)
+    }
+    for poly in bakerloo_line_buffer
+]
+
+db["bakerloo_line_buff"].insert_many(bakerloo_line_buff)
+print(f"Inserted {len(bakerloo_line_buff)} line buffer polygons")
+</code></pre>
+<p>Here is a partial example document:</p>
+<pre><code class="language-text">{'_id': ObjectId('68cb09aac2ca5ba1d2f3658e'),
+ 'geometry': {'type': 'Polygon',
+  'coordinates': [[[-0.31443398617096996, 51.58610916857441],
+    [-0.31400443053839167, 51.5858291632545],
+    [-0.31360581092362083, 51.58550663663021],
+    [-0.31324231954569604, 51.585144980662704],
+    ...
+    [-0.33281982682498623, 51.596764571748075],
+    [-0.33238398617097, 51.59653916857441],
+    [-0.31443398617096996, 51.58610916857441]]]}}
+</code></pre>
+<p>Note how the first and last coordinates are the same, which is required for polygons.</p>
+<h2 id="visualization"><a class="header" href="#visualization">Visualization</a></h2>
+<p>In our SingleStore database, we’ve stored various geospatial data. We’ll use that data to create visualizations. We’ll start by creating a new Python notebook. We’ll call it <strong>hot_routes</strong>.</p>
+<p>First, we’ll set up the connection to SingleStore Kai:</p>
+<pre><code class="language-python">try:
+    client = MongoClient(connection_url_kai)
+    db = client["hot_routes_db"]
+    print("Connected to Kai successfully")
+except Exception as e:
+    print(f"Could not connect to Kai: '{e}'")
+</code></pre>
+<p>Let’s now prepare the network layer. First, we’ll read in the data from the <code>bakerloo_stops</code>:</p>
+<pre><code class="language-python">cursor = db["bakerloo_stops"].find()
+
+bakerloo_stops = gpd.GeoDataFrame(
+    (
+        {**doc, "geometry": Point(doc["location"]["coordinates"])}
+        for doc in cursor
+    ),
+    crs = 4326
+).drop(columns = ["_id", "location"])
+
+bakerloo_stops.head()
+</code></pre>
+<p>and create a visualization of the stations:</p>
+<pre><code class="language-python">fig, ax = plt.subplots(figsize = (10, 10))
+
+bakerloo_stops.to_crs(3857).plot(
+    ax = ax,
+    color = "black",
+    markersize = 15,
+    zorder = 2
+)
+
+cx.add_basemap(
+    ax,
+    source = cx.providers.CartoDB.VoyagerNoLabels,
+    attribution = "",
+    zorder = 1
+)
+
+ax.set_axis_off()
+</code></pre>
+<p>Example output is shown in Figure 15-1.</p>
+<p><img src="crime-analytics-with-singlestore-kai-media/image1.png" alt=""></p>
+<p><em>Figure 15-1. bakerloo_stops.</em></p>
+<p>Now we’ll load data from the <code>bakerloo_sections</code> collection:</p>
+<pre><code class="language-python">cursor = db["bakerloo_sections"].find()
+
+bakerloo_sections = gpd.GeoDataFrame(
+    (
+        {**doc, "geometry": shape(doc["geometry"])}
+        for doc in cursor
+    ),
+    crs = 4326
+).drop(columns = ["_id"])
+
+bakerloo_sections.head()
+</code></pre>
+<p>and create a map of the line segments:</p>
+<pre><code class="language-python">fig, ax = plt.subplots(figsize = (10, 10))
+
+bakerloo_sections.to_crs(3857).plot(
+    ax = ax,
+    color = "#B36305",
+    linewidth = 3,
+    zorder = 2
+)
+
+cx.add_basemap(
+    ax,
+    source = cx.providers.CartoDB.VoyagerNoLabels,
+    attribution = "",
+    zorder = 1
+)
+
+ax.set_axis_off()
+</code></pre>
+<p>Example output is shown in Figure 15-2.</p>
+<p><img src="crime-analytics-with-singlestore-kai-media/image2.png" alt=""></p>
+<p><em>Figure 15-2. bakerloo_sections.</em></p>
+<p>We can also combine both sets of data to produce a map of the Bakerloo Line:</p>
+<pre><code class="language-python">fig, ax = plt.subplots(figsize = (10, 10))
+
+bakerloo_sections.to_crs(3857).plot(
+    ax = ax,
+    color = "#B36305",
+    linewidth = 3,
+    zorder = 2
+)
+
+bakerloo_stops.to_crs(3857).plot(
+    ax = ax,
+    color = "black",
+    markersize = 15,
+    zorder = 3
+)
+
+cx.add_basemap(
+    ax,
+    source = cx.providers.CartoDB.VoyagerNoLabels,
+    attribution = "",
+    zorder = 1
+)
+
+ax.set_axis_off()
+</code></pre>
+<p>Example output is shown in Figure 15-3.</p>
+<p><img src="crime-analytics-with-singlestore-kai-media/image3.png" alt=""></p>
+<p><em>Figure 15-3. Bakerloo Line Map.</em></p>
+<p>Next, let’s link crime events to line segments. We’ll start by reading in the crimes data for 2025-01.</p>
+<pre><code class="language-python">cursor = db["crimes"].find({"month": "2025-01"})
+
+crimes = gpd.GeoDataFrame(
+    (
+        {**doc, "geometry": shape(doc["geometry"])}
+        for doc in cursor
+    ),
+    crs = 4326
+).drop(columns = ["_id"])
+
+crimes.head()
+</code></pre>
+<p>Then, we’ll plot the data across the UK using Uber’s H3 library.</p>
+<pre><code class="language-python">h3_resolution = 5
+
+hex_counts = {}
+for point in crimes.geometry:
+    cell = h3.latlng_to_cell(point.y, point.x, h3_resolution)
+    hex_counts[cell] = hex_counts.get(cell, 0) + 1
+
+hex_geoms = []
+hex_values = []
+
+for cell, count in hex_counts.items():
+    boundary = h3.cell_to_boundary(cell)
+    boundary = [(lng, lat) for lat, lng in boundary]
+    hex_geoms.append(Polygon(boundary))
+    hex_values.append(count)
+
+hex_gdf = gpd.GeoDataFrame(
+    {"count": hex_values, "geometry": hex_geoms},
+    crs = 4326
+)
+
+ax = (hex_gdf.to_crs(3857).sort_values("count", ascending = True).plot(
+        column = "count",
+        cmap = "YlOrRd",
+        edgecolor = "black",
+        linewidth = 0.3,
+        figsize = (10, 10),
+        legend = True,
+        legend_kwds = {
+            "label" : "Number of crimes",
+            "orientation" : "vertical"
+        }
+    )
+)
+
+cx.add_basemap(
+    ax,
+    source = cx.providers.CartoDB.VoyagerNoLabels,
+    attribution = ""
+)
+
+bounds = hex_gdf.to_crs(3857).total_bounds
+
+ax.set_xlim([bounds[0], bounds[2]])
+ax.set_ylim([bounds[1], bounds[3]])
+
+ax.set_axis_off()
+</code></pre>
+<p>Example output is shown in Figure 15-4.</p>
+<p><img src="crime-analytics-with-singlestore-kai-media/image4.png" alt=""></p>
+<p><em>Figure 15-4. h3_level = 5.</em></p>
+<p>We can see that London and the South East have higher crime numbers than other parts of the United Kingdom.</p>
+<p>Next, we’ll load in the buffer that we previously created.</p>
+<pre><code class="language-python">cursor = db["bakerloo_line_buff"].find()
+
+bakerloo_line_buff = gpd.GeoDataFrame(
+    (
+        {**doc, "geometry": shape(doc["geometry"])}
+        for doc in cursor
+    ),
+    crs = 4326
+).drop(columns = ["_id"])
+
+bakerloo_line_buff.head()
+</code></pre>
+<p>and plot this on a map:</p>
+<pre><code class="language-python">fig, ax = plt.subplots(figsize = (10, 10))
+
+bakerloo_line_buff.to_crs(3857).plot(
+    ax = ax,
+    color = "lightgrey",
+    edgecolor = "black",
+    alpha = 0.5,
+    zorder = 2
+)
+
+cx.add_basemap(
+    ax,
+    source = cx.providers.CartoDB.VoyagerNoLabels,
+    attribution = "",
+    zorder = 1
+)
+
+ax.set_axis_off()
+</code></pre>
+<p>Example output is shown in Figure 15-5.</p>
+<p><img src="crime-analytics-with-singlestore-kai-media/image5.png" alt=""></p>
+<p><em>Figure 15-5. bakerloo_line_buff.</em></p>
+<p>Now let’s narrow the number of crimes to those that lie within <code>bakerloo_line_buff</code>:</p>
+<pre><code class="language-python">crimes = gpd.sjoin(
+    crimes,
+    bakerloo_line_buff,
+    how = "inner",
+    predicate = "within"
+).drop(columns = ["index_right"])
+</code></pre>
+<p>We’ll now combine the datasets to produce a visualization:</p>
+<pre><code class="language-python">fig, ax = plt.subplots(figsize = (10, 10))
+
+bakerloo_line_buff.to_crs(3857).plot(
+    ax = ax,
+    color = "lightgrey",
+    edgecolor = "black",
+    alpha = 0.5,
+    zorder = 2
+)
+
+bakerloo_sections.to_crs(3857).plot(
+    ax = ax,
+    color = "#B36305",
+    linewidth = 3,
+    zorder = 3
+)
+
+bakerloo_stops.to_crs(3857).plot(
+    ax = ax,
+    color = "black",
+    markersize = 15,
+    zorder = 4
+)
+
+crimes.to_crs(3857).plot(
+    ax = ax,
+    color = "red",
+    markersize = 15,
+    zorder = 5
+)
+
+cx.add_basemap(
+    ax,
+    source = cx.providers.CartoDB.VoyagerNoLabels,
+    attribution = "",
+    zorder = 1
+)
+
+ax.set_axis_off()
+</code></pre>
+<p>Example output is shown in Figure 15-6.</p>
+<p><img src="crime-analytics-with-singlestore-kai-media/image6.png" alt=""></p>
+<p><em>Figure 15-6. Combined Datasets.</em></p>
+<p>We can see crimes plotted within the buffer area.</p>
+<p>Next, we’ll find which section of the Bakerloo Line a particular crime is nearest. First, we’ll find the number of crimes:</p>
+<pre><code class="language-python">bline_segments = gpd.sjoin_nearest(
+    crimes,
+    bakerloo_sections
+).rename(columns = {"index_right": "segment"})
+</code></pre>
+<p>and then we’ll sum them up for each section to provide the frequency:</p>
+<pre><code class="language-python">sections_freq = bline_segments["segment"].value_counts().rename("freq")
+</code></pre>
+<p>Next, we’ll get the geometry for each section by using a join and we’ll fill any sections that have no crimes with a 0 (zero):</p>
+<pre><code class="language-python">bakerloo_sections = bakerloo_sections.join(sections_freq, how = "left").fillna({"freq":0})
+</code></pre>
+<p>Now we’ll create a plot:</p>
+<pre><code class="language-python">fig, ax = plt.subplots(figsize = (10, 10))
+
+bakerloo_line_buff.to_crs(3857).plot(
+    ax = ax,
+    color = "lightgrey",
+    edgecolor = "black",
+    alpha = 0.5,
+    zorder = 2
+)
+
+bakerloo_sections.to_crs(3857).plot(
+    ax = ax,
+    column = "freq",
+    linewidth = 3,
+    cmap = "OrRd",
+    zorder = 3
+)
+
+bakerloo_stops.to_crs(3857).plot(
+    ax = ax,
+    color = "black",
+    markersize = 15,
+    zorder = 4
+)
+
+cx.add_basemap(
+    ax,
+    source = cx.providers.CartoDB.VoyagerNoLabels,
+    attribution = "",
+    zorder = 1
+)
+
+ax.set_axis_off()
+</code></pre>
+<p>Example output is shown in Figure 15-7.</p>
+<p><img src="crime-analytics-with-singlestore-kai-media/image7.png" alt=""></p>
+<p><em>Figure 15-7. Number of Crimes.</em></p>
+<p>So, the hot routes are starting to appear. Now, let’s calculate a rate. We need to consider the length of each section of the Bakerloo Line and then calculate the number of crimes per meter. First, we’ll switch the coordinate system to one that will enable us to determine the length of each section in meters and then create a new column to store the length:</p>
+<pre><code class="language-python">bakerloo_sections["length"] = bakerloo_sections.to_crs(3310).geometry.length
+</code></pre>
+<p>and then calculate the crimes per meter:</p>
+<pre><code class="language-python">bakerloo_sections["crime_per_m"] = bakerloo_sections["freq"] / bakerloo_sections["length"]
+</code></pre>
+<p>Finally, we can visualize the results to see the hot routes:</p>
+<pre><code class="language-python">fig, ax = plt.subplots(figsize = (10, 10))
+
+bakerloo_line_buff.to_crs(3857).plot(
+    ax = ax,
+    color = "lightgrey",
+    edgecolor = "black",
+    alpha = 0.5,
+    zorder = 2
+)
+
+min_width, max_width = 3, 15
+crime_min = bakerloo_sections.crime_per_m.min()
+crime_max = bakerloo_sections.crime_per_m.max()
+
+if crime_max != crime_min:
+    linewidths = min_width + (bakerloo_sections.crime_per_m - crime_min) / (crime_max - crime_min) * (max_width - min_width)
+else:
+    linewidths = pd.Series(min_width, index=bakerloo_sections.index)
+
+bakerloo_sections.to_crs(3857).plot(
+    ax = ax,
+    column = "crime_per_m",
+    linewidth = linewidths,
+    cmap = "OrRd",
+    zorder = 3
+)
+
+bakerloo_stops.to_crs(3857).plot(
+    ax = ax,
+    color = "black",
+    markersize = 15,
+    zorder = 4
+)
+
+cx.add_basemap(
+    ax,
+    source = cx.providers.CartoDB.VoyagerNoLabels,
+    attribution = "",
+    zorder = 1
+)
+
+ax.set_axis_off()
+</code></pre>
+<p>Example output is shown in Figure 15-8.</p>
+<p><img src="crime-analytics-with-singlestore-kai-media/image8.png" alt=""></p>
+<p><em>Figure 15-8. Hot Routes.</em></p>
+<p>Bakerloo Line sections that are wider and darker in color contain more crimes per meter.</p>
+<p>We can go a step further and use Folium to create a visualization:</p>
+<pre><code class="language-python">London = [51.509865, -0.118092]
+
+m = folium.Map(
+    location = London,
+    zoom_start = 14,
+    control_scale = True
+)
+
+folium.GeoJson(
+    bakerloo_line_buff.__geo_interface__,
+    name = "Buffer",
+).add_to(m)
+
+HeatMap(
+    data = list(zip(crimes.geometry.y, crimes.geometry.x)),
+    name = "Crime Heat Map",
+    radius = 10,
+    blur = 15,
+    max_zoom = 14
+).add_to(m)
+
+colormap = linear.OrRd_09.scale(
+    bakerloo_sections.crime_per_m.min(),
+    bakerloo_sections.crime_per_m.max()
+)
+colormap.caption = "Rate of crimes per metre"
+colormap.add_to(m)
+
+stations_cluster = MarkerCluster(name = "Stations").add_to(m)
+for _, row in bakerloo_stops.iterrows():
+    folium.Marker(
+        location = [row.geometry.y, row.geometry.x],
+        icon = folium.Icon(color = "red", icon = "train", prefix = "fa", icon_color = "white"),
+        popup = row.station_name
+    ).add_to(stations_cluster)
+
+crimes_cluster = MarkerCluster(name = "Crimes").add_to(m)
+for _, row in crimes.iterrows():
+    folium.Marker(
+        location = [row.geometry.y, row.geometry.x],
+        icon = folium.Icon(icon = "info-sign"),
+        popup = row.crime_type
+    ).add_to(crimes_cluster)
+
+min_width, max_width = 3, 15
+crime_min, crime_max = bakerloo_sections.crime_per_m.min(), bakerloo_sections.crime_per_m.max()
+
+def style_sections(feature):
+    rate = feature["properties"]["crime_per_m"]
+    if crime_max != crime_min:
+        lw = min_width + (rate - crime_min) / (crime_max - crime_min) * (max_width - min_width)
+    else:
+        lw = min_width
+    return {
+        "color": colormap(rate),
+        "weight": lw,
+        "opacity": 0.9
+    }
+
+tooltip_fields = ["freq", "length", "crime_per_m"]
+tooltip_aliases = ["Crimes", "Length (m)", "Rate per metre"]
+
+folium.GeoJson(
+    bakerloo_sections.__geo_interface__,
+    name = "Sections",
+    style_function = style_sections,
+    tooltip = folium.GeoJsonTooltip(
+        fields = tooltip_fields,
+        aliases = tooltip_aliases,
+        localize = True
+    )
+).add_to(m)
+
+folium.LayerControl().add_to(m)
+plugins.Fullscreen(
+    position = "topright",
+    title = "Fullscreen",
+    title_cancel = "Exit",
+    force_separate_button = True
+).add_to(m)
+
+hot_routes_map_html = "hot_routes_map.html"
+m.save(hot_routes_map_html)
+</code></pre>
+<p>The map is saved locally and we’ll download it.</p>
+<pre><code class="language-python">mime_type, _ = mimetypes.guess_type(hot_routes_map_html)
+
+with open(hot_routes_map_html, "rb") as f:
+    data = f.read()
+b64 = base64.b64encode(data).decode()
+href = f'&lt;a download="{hot_routes_map_html}" href="data:{mime_type};base64,{b64}"&gt;Download {hot_routes_map_html}&lt;/a&gt;'
+HTML(href)
+</code></pre>
+<p>This produces a map, as shown in Figure 15-9.</p>
+<p><img src="crime-analytics-with-singlestore-kai-media/image9.png" alt=""></p>
+<p><em>Figure 15-9. Hot Routes using Folium.</em></p>
+<p>With our visualizations for Hot Routes now complete, let’s focus our attention on creating some machine learning models.</p>
+<p>First, we’ll load the full crimes dataset:</p>
+<pre><code class="language-python">SEED = 42
+
+cursor = db["crimes"].find()
+crimes = gpd.GeoDataFrame(
+    (
+        {**doc, "geometry": shape(doc["geometry"])}
+        for doc in cursor
+    ),
+    crs = 4326
+).drop(columns = ["_id"])
+
+crimes = crimes.dropna(subset = ["crime_type", "geometry"])
+
+if "longitude" not in crimes.columns or "latitude" not in crimes.columns:
+    crimes["longitude"] = crimes.geometry.x
+    crimes["latitude"] = crimes.geometry.y
+</code></pre>
+<p>Next, we’ll build a regression model to predict how many crimes will occur at each Bakerloo Line station for a given month and crime type. We’ll assign each recorded crime to its nearest station, then aggregate monthly crime counts per station and crime type. Next, we’ll split the data by time, using January to November 2024 as training data, December 2024 as validation and January 2025 as the prediction target. Station names and crime types will be one-hot encoded as categorical features and we’ll train a Random Forest Regressor to learn patterns in crime frequency. We’ll evaluate the model’s accuracy on the December data using R² and RMSE and then use the model to forecast January 2025 crime counts for each station–crime type pair.</p>
+<pre><code class="language-python">crimes_nearest = gpd.sjoin_nearest(
+    crimes,
+    bakerloo_stops[["station_name", "geometry"]],
+    distance_col = "dist_to_station"
+)
+
+agg = (
+    crimes_nearest
+    .groupby(["month", "station_name", "crime_type"])
+    .size()
+    .rename("crime_count")
+    .reset_index()
+)
+
+train_months = [f"2024-{m:02d}" for m in range(1, 12)]
+train = agg[agg["month"].isin(train_months)]
+val = agg[agg["month"] == "2024-12"]
+pred = agg[agg["month"] == "2025-01"]
+
+encoder = OneHotEncoder(sparse_output = False, handle_unknown = "ignore")
+
+X_train = encoder.fit_transform(train[["station_name", "crime_type"]])
+y_train = train["crime_count"].values
+
+X_val = encoder.transform(val[["station_name", "crime_type"]])
+y_val = val["crime_count"].values
+
+X_pred = encoder.transform(pred[["station_name", "crime_type"]])
+
+rf = RandomForestRegressor(n_estimators = 200, random_state = SEED)
+rf.fit(X_train, y_train)
+
+y_val_pred = rf.predict(X_val)
+rmse = np.sqrt(mean_squared_error(y_val, y_val_pred))
+r2 = r2_score(y_val, y_val_pred)
+print(f"Validation Dec 2024: R² = {r2:.4f}, RMSE = {rmse:.2f}")
+
+pred["predicted_crime_count"] = rf.predict(X_pred)
+
+pred.head()
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Validation Dec 2024: R² = 0.9858, RMSE = 4.60
+</code></pre>
+<p>The model is performing very well on the validation set, producing predictions that are very close to the actual December values, which suggests it has learned the historical crime patterns effectively.</p>
+<p>Next, let’s compare the model’s predictions to the real observed values for Baker Street in January 2025, visualizing them side by side to see how accurate the predictions are.</p>
+<pre><code class="language-python">baker_street = pred[pred["station_name"] == "Baker Street"].sort_values("predicted_crime_count")
+
+x = np.arange(len(baker_street))
+width = 0.35
+
+fig, ax = plt.subplots(figsize=(12, 6))
+
+ax.bar(
+    x - width/2,
+    baker_street["crime_count"],
+    width,
+    label = "Actual",
+    color = "red",
+    alpha = 0.5
+)
+
+ax.bar(
+    x + width/2,
+    baker_street["predicted_crime_count"],
+    width,
+    label = "Predicted",
+    color = "blue",
+    alpha = 0.5
+)
+
+ax.set_xticks(x)
+ax.set_xticklabels(baker_street["crime_type"], rotation = 45, ha = "right")
+ax.set_ylabel("Crime Count")
+ax.set_xlabel("Crime Type")
+ax.set_title("Actual vs Predicted Crime Counts at Baker Street - Jan 2025")
+ax.legend()
+
+plt.tight_layout()
+plt.show()
+</code></pre>
+<p>Example output is shown in Figure 15-10.</p>
+<p><img src="crime-analytics-with-singlestore-kai-media/image10.png" alt=""></p>
+<p><em>Figure 15-10. Crime Counts at Baker Street.</em></p>
+<p>We can also extend this to the entire Bakerloo Line.</p>
+<pre><code class="language-python">agg = pred.groupby("crime_type")[["crime_count", "predicted_crime_count"]].sum().reset_index()
+agg = agg.sort_values("crime_count")
+
+x = np.arange(len(agg))
+bar_width = 0.35
+
+fig, ax = plt.subplots(figsize=(12, 6))
+
+ax.bar(
+    x,
+    agg["crime_count"],
+    width = bar_width,
+    label = "Actual",
+    color = "red",
+    alpha = 0.5
+)
+
+ax.bar(
+    x + bar_width,
+    agg["predicted_crime_count"],
+    width = bar_width,
+    label = "Predicted",
+    color = "blue",
+    alpha = 0.5
+)
+
+ax.set_xticks(x + bar_width/2)
+ax.set_xticklabels(agg["crime_type"], rotation = 45, ha = "right")
+ax.set_ylabel("Crime Count")
+ax.set_xlabel("Crime Type")
+ax.set_title("Predicted vs Actual Crime Counts - Jan 2025")
+ax.legend()
+
+plt.tight_layout()
+plt.show()
+</code></pre>
+<p>Example output is shown in Figure 15-11.</p>
+<p><img src="crime-analytics-with-singlestore-kai-media/image11.png" alt=""></p>
+<p><em>Figure 15-11. Crime Counts for Bakerloo Line.</em></p>
+<p>This is an aggregate accuracy check by crime type.</p>
+<p>Next, let’s build a classification model to predict the type of crime likely to occur at a Bakerloo Line station, given only the station name and the month as input features. Let’s see if the spatial (station) and temporal (month) patterns are strong enough to let the model predict the most likely crime type at a given station/month combination.</p>
+<pre><code class="language-python">crimes_nearest = gpd.sjoin_nearest(
+    crimes,
+    bakerloo_stops[["station_name", "geometry"]],
+    distance_col = "dist_to_station"
+)
+
+X = crimes_nearest[["station_name", "month"]]
+
+encoder = OneHotEncoder(sparse_output = False, handle_unknown = "ignore")
+X_encoded = encoder.fit_transform(X)
+
+le = LabelEncoder()
+y = le.fit_transform(crimes_nearest["crime_type"])
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X_encoded, y, test_size = 0.3, random_state = SEED
+)
+
+clf = RandomForestClassifier(n_estimators = 200, random_state = SEED)
+clf.fit(X_train, y_train)
+
+y_pred = clf.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy:.4f}")
+
+print(classification_report(y_test, y_pred, target_names = le.classes_))
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Accuracy: 0.2000
+                              precision    recall  f1-score   support
+
+               Bicycle theft       0.00      0.00      0.00       876
+                    Burglary       0.00      0.00      0.00        70
+   Criminal damage and arson       0.14      0.00      0.01      1369
+                       Drugs       0.00      0.00      0.00       461
+                 Other crime       0.00      0.00      0.00       183
+                 Other theft       0.11      0.02      0.04      1907
+       Possession of weapons       0.00      0.00      0.00       228
+                Public order       0.19      0.17      0.18      2687
+                     Robbery       0.00      0.00      0.00       492
+                 Shoplifting       0.00      0.00      0.00       315
+       Theft from the person       0.18      0.16      0.17      1599
+               Vehicle crime       0.00      0.00      0.00       385
+Violence and sexual offences       0.21      0.68      0.32      2822
+
+                    accuracy                           0.20     13394
+                   macro avg       0.06      0.08      0.06     13394
+                weighted avg       0.13      0.20      0.13     13394
+</code></pre>
+<p>The model’s accuracy is very low and most classes have near-zero precision and recall, except for “Violence and sexual offences,” which dominates the predictions but is also predicted incorrectly most of the time. This suggests the model is heavily biased toward the largest class because of class imbalance, while smaller classes are almost completely ignored. The poor performance is likely because the input features (<code>station_name</code> and <code>month</code>) are too weak to distinguish crime types and the large imbalance in class frequencies causes the model to mostly guess the majority category.</p>
+<p>Finally, let’s use KMeans clustering. We’ll identify spatial clusters of crimes within the Bakerloo Line’s surrounding buffer area. We’ll merge all the buffer polygons into one shape and select only the crimes and stations that fall inside it. Then we’ll run a KMeans clustering algorithm on the latitude/longitude coordinates of these crimes, grouping them into 10 clusters based purely on geographic proximity. We’ll give each cluster a centroid point and calculate the size of each cluster (number of crimes). Finally, we’ll plot the Bakerloo buffer, line and stations on a map and overlay the clusters as colored points sized by the number of crimes they contain. This helps visually reveal geographic hotspots of crime near the Bakerloo Line.</p>
+<pre><code class="language-python">buffer_union = bakerloo_line_buff.unary_union
+
+crimes_in_buffer = crimes[crimes["geometry"].apply(lambda g: g.within(buffer_union))].copy()
+
+stations_in_buffer = bakerloo_stops[
+    bakerloo_stops["geometry"].apply(lambda g: g.within(buffer_union))
+].copy()
+
+coords = crimes_in_buffer[["latitude", "longitude"]].to_numpy()
+n_clusters = 10
+kmeans = KMeans(n_clusters = n_clusters, random_state = SEED)
+crimes_in_buffer["cluster"] = kmeans.fit_predict(coords)
+
+cluster_counts = crimes_in_buffer.groupby("cluster").size().reset_index(name = "count")
+centroids = kmeans.cluster_centers_
+
+centroids_gdf = gpd.GeoDataFrame(
+    {'cluster': range(n_clusters)},
+    geometry = gpd.points_from_xy(centroids[:, 1], centroids[:, 0]),
+    crs = 4326
+)
+centroids_gdf["count"] = cluster_counts["count"].values
+
+fig, ax = plt.subplots(figsize = (12, 12))
+
+gpd.GeoSeries([buffer_union], crs = 4326).to_crs(3857).plot(
+    ax = ax,
+    color = "lightgrey",
+    alpha = 0.5,
+    edgecolor = "black",
+    zorder = 2
+)
+
+bakerloo_sections.to_crs(3857).plot(
+    ax=ax,
+    color = "#B36305",
+    linewidth = 3,
+    zorder = 3
+)
+
+stations_in_buffer.to_crs(3857).plot(
+    ax = ax,
+    color = "black",
+    markersize = 15,
+    zorder = 4
+)
+
+cmap = plt.get_cmap("tab10")
+scatter_handles = []
+
+centroids_sorted = centroids_gdf.sort_values("count", ascending = False).to_crs(3857)
+for i, row in centroids_sorted.iterrows():
+    color = cmap(row["cluster"] % 10)
+    ax.scatter(row.geometry.x, row.geometry.y, s = row["count"]*5, color = color, alpha = 0.5, zorder = 5)
+    scatter_handles.append(mpatches.Patch(color = color, label = f"Cluster {row['cluster']} ({row['count']})"))
+
+ax.legend(
+    handles=scatter_handles + [
+        mpatches.Patch(color = "lightgrey", label = "Bakerloo Buffer"),
+        mpatches.Patch(color = "#B36305", label = "Bakerloo Line"),
+        mpatches.Patch(color = "black", label = "Station")
+    ],
+    loc = "upper right",
+    fontsize = 10
+)
+
+cx.add_basemap(ax, source=cx.providers.CartoDB.VoyagerNoLabels, attribution = "", zorder = 1)
+
+ax.set_axis_off()
+ax.set_title("Crime Clusters within Bakerloo Buffer (Size ~ Number of Crimes)", fontsize = 14)
+plt.show()
+</code></pre>
+<p>Example output is shown in Figure 15-12.</p>
+<p><img src="crime-analytics-with-singlestore-kai-media/image12.png" alt=""></p>
+<p><em>Figure 15-12. Crime Clusters.</em></p>
+<p>The crime clustering analysis provides law enforcement agencies with a visual map of spatial hotspots along the Bakerloo Line. By aggregating all recorded crimes and identifying clusters using KMeans, agencies can quickly see where criminal activity tends to concentrate, independent of specific stations. The size of each cluster reflects the relative frequency of incidents, allowing planners to prioritize patrols, allocate resources and target interventions more effectively. The overlay of stations, line routes and buffer areas adds context, helping officers understand which parts of the transit network are most at risk. Over time, repeated analyses can reveal emerging trends or shifts in crime patterns, supporting strategic planning and proactive policing.</p>
+<h2 id="example-queries"><a class="header" href="#example-queries">Example Queries</a></h2>
+<p>Before running any queries, we’ll first ensure that we load the Bakerloo Line buffer.</p>
+<pre><code class="language-python">buffers = list(db["bakerloo_line_buff"].find({}))
+
+def crime_in_buffers_filter():
+    return {
+        "$or": [
+            {"geometry": {"$geoWithin": {"$geometry": buf["geometry"]}}}
+            for buf in buffers
+        ]
+    }
+</code></pre>
+<p>Now, we’ll run a query that aggregates all the crimes currently stored in the crimes collection that fall within the Bakerloo Line buffer and list the top 5 crimes.</p>
+<pre><code class="language-python">pipeline = [
+    {"$match": crime_in_buffers_filter()},
+    {"$group": {"_id": "$crime_type", "count": {"$sum": 1}}},
+    {"$sort": {"count": -1}},
+    {"$limit": 5}
+]
+
+results = list(db.crimes.aggregate(pipeline))
+
+if results:
+    print("Crime counts by type in the Bakerloo buffer:")
+    for r in results:
+        print(f"{r['_id']}: {r['count']}")
+else:
+    print("No crimes found in the Bakerloo buffer.")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Crime counts by type in the Bakerloo buffer:
+Theft from the person: 373
+Public order: 304
+Violence and sexual offences: 292
+Other theft: 267
+Criminal damage and arson: 106
+</code></pre>
+<p>Next, let’s run a query to aggregate crimes per month.</p>
+<pre><code class="language-python">pipeline = [
+    {"$match": crime_in_buffers_filter()},
+    {"$group": {"_id": "$month", "count": {"$sum": 1}}},
+    {"$sort": {"_id": 1}}  # chronological order
+]
+
+results = list(db.crimes.aggregate(pipeline))
+
+if results:
+    print("Crime counts per month in the Bakerloo buffer:")
+    for r in results:
+        print(f"{r['_id']}: {r['count']}")
+else:
+    print("No crimes found in the Bakerloo buffer.")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Crime counts per month in the Bakerloo buffer:
+2024-03: 151
+2024-04: 143
+2024-05: 155
+2024-06: 131
+2024-07: 148
+2024-08: 155
+2024-09: 135
+2024-10: 134
+2024-11: 149
+2024-12: 152
+2025-01: 150
+</code></pre>
+<p>The counts are fairly consistent, indicating relatively stable crime activity in this area over the observed months.</p>
+<p>Next, let’s run a query to calculate the number of distinct LSOAs (Lower Layer Super Output Areas) in which crimes occurred within the Bakerloo buffer. We’ll filter out missing or invalid LSOA names, groups by <code>lsoa_name</code> to find unique areas and count them.</p>
+<pre><code class="language-python">pipeline = [
+    {"$match": {**crime_in_buffers_filter(), "lsoa_name": {"$nin": [None, "nan"]}}},
+    {"$group": {"_id": "$lsoa_name"}},
+    {"$count": "distinct_lsoas"}
+]
+
+results = list(db.crimes.aggregate(pipeline))
+
+if results:
+    print(f"Number of distinct LSOAs in the Bakerloo buffer: {results[0]['distinct_lsoas']}")
+else:
+    print("No LSOAs found in the Bakerloo buffer.")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Number of distinct LSOAs in the Bakerloo buffer: 33
+</code></pre>
+<p>The result gives a sense of the geographic spread of crimes. Crimes are not all concentrated in a single neighborhood but spread across multiple areas.</p>
+<p>Now, let’s find the top 10 LSOAs by the number of crimes.</p>
+<pre><code class="language-python">pipeline = [
+    {"$match": {**crime_in_buffers_filter(), "lsoa_name": {"$nin": [None, "nan"]}}},
+    {"$group": {"_id": "$lsoa_name", "count": {"$sum": 1}}},
+    {"$sort": {"count": -1}},
+    {"$limit": 10}
+]
+
+results = list(db.crimes.aggregate(pipeline))
+
+if results:
+    print("Top 10 LSOAs in the Bakerloo buffer:")
+    for r in results:
+        print(f"{r['_id']}: {r['count']}")
+else:
+    print("No crimes found in any LSOA in the Bakerloo buffer.")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Top 10 LSOAs in the Bakerloo buffer:
+Lambeth 036E: 180
+Westminster 018A: 174
+Westminster 018C: 132
+Westminster 008D: 116
+Westminster 013G: 110
+Westminster 008A: 94
+Westminster 020C: 80
+Westminster 016B: 73
+Southwark 034C: 71
+Hammersmith and Fulham 001D: 56
+</code></pre>
+<p>The results highlight crime hotspots within the Bakerloo buffer, which could be important for policing strategies, resource allocation or targeted interventions.</p>
+<p>Now, let’s look for the top LSOAs for a specific crime type.</p>
+<pre><code class="language-python">crime_type_to_check = "Bicycle theft"
+
+pipeline_top = [
+    {"$match": {**crime_in_buffers_filter(), "crime_type": crime_type_to_check, "lsoa_name": {"$nin": [None, "nan"]}}},
+    {"$group": {"_id": "$lsoa_name", "count": {"$sum": 1}}},
+    {"$sort": {"count": -1}},
+    {"$limit": 5}
+]
+
+results = list(db.crimes.aggregate(pipeline_top))
+
+if results:
+    print(f"Top LSOAs for {crime_type_to_check} in the Bakerloo buffer:")
+    for r in results:
+        print(f"{r['_id']}: {r['count']}")
+else:
+    print("No LSOAs found for this crime type in the Bakerloo buffer.")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Top LSOAs for Bicycle theft in the Bakerloo buffer:
+Westminster 018A: 8
+Harrow 013G: 6
+Lambeth 036E: 3
+Southwark 034C: 3
+Hammersmith and Fulham 001D: 2
+</code></pre>
+<p>The results highlight localized hotspots for a specific crime type, which is valuable for targeted policing or prevention measures. For example, bike security campaigns in Westminster.</p>
+<p>Now, we’ll run a query that gives us the bottom LSOAs for a specific crime type.</p>
+<pre><code class="language-python">crime_type_to_check = "Bicycle theft"
+
+pipeline_bottom = [
+    {"$match": {**crime_in_buffers_filter(), "crime_type": crime_type_to_check, "lsoa_name": {"$nin": [None, "nan"]}}},
+    {"$group": {"_id": "$lsoa_name", "count": {"$sum": 1}}},
+    {"$sort": {"count": 1}},
+    {"$limit": 5}
+]
+
+results = list(db.crimes.aggregate(pipeline_bottom))
+
+if results:
+    print(f"Bottom LSOAs for {crime_type_to_check} in the Bakerloo buffer:")
+    for r in results:
+        print(f"{r['_id']}: {r['count']}")
+else:
+    print("No LSOAs found for this crime type in the Bakerloo buffer.")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Bottom LSOAs for Bicycle theft in the Bakerloo buffer:
+Westminster 016B: 1
+Brent 032E: 1
+Brent 008D: 1
+Westminster 020C: 1
+Brent 027G: 1
+</code></pre>
+<p>The results can be useful to identify areas with low incidence, which may either reflect safer neighborhoods or underreporting.</p>
+<p>Next, let’s find the top crimes per LSOA.</p>
+<pre><code class="language-python">pipeline = [
+    {"$match": {**crime_in_buffers_filter(), "lsoa_name": {"$nin": [None, "nan"]}, "crime_type": {"$ne": None}}},
+    {"$group": {"_id": {"lsoa": "$lsoa_name", "crime": "$crime_type"}, "count": {"$sum": 1}}},
+    {"$sort": {"count": -1}},
+    {"$limit": 10}
+]
+
+results = list(db.crimes.aggregate(pipeline))
+
+if results:
+    print("Top crimes per LSOA in the Bakerloo buffer:")
+    for r in results:
+        print(f"{r['_id']['lsoa']} - {r['_id']['crime']}: {r['count']}")
+else:
+    print("No crimes found for any LSOA in the Bakerloo buffer.")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Top crimes per LSOA in the Bakerloo buffer:
+Westminster 018C - Theft from the person: 41
+Westminster 018A - Violence and sexual offences: 36
+Lambeth 036E - Theft from the person: 36
+Westminster 018A - Public order: 33
+Lambeth 036E - Other theft: 32
+Westminster 018A - Other theft: 31
+Lambeth 036E - Violence and sexual offences: 31
+Lambeth 036E - Public order: 30
+Westminster 018A - Theft from the person: 26
+Westminster 018C - Other theft: 25
+</code></pre>
+<p>The results show a detailed view of crime concentration by type at a local level, useful for law enforcement to prioritize patrols, resource allocation or preventive measures.</p>
+<p>We are using crime data from the British Transport Police (BTP), but can confirm this with the following query.</p>
+<pre><code class="language-python">pipeline = [
+    {"$match": {**crime_in_buffers_filter(), "reported_by": {"$nin": [None, ""]}}},
+    {"$group": {"_id": "$reported_by", "count": {"$sum": 1}}},
+    {"$sort": {"count": -1}}
+]
+
+results = list(db.crimes.aggregate(pipeline))
+
+if results:
+    print("Crime counts by reporting authority in the Bakerloo buffer:")
+    for r in results:
+        print(f"{r['_id']}: {r['count']}")
+else:
+    print("No crimes found for any reporting authority in the Bakerloo buffer.")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Crime counts by reporting authority in the Bakerloo buffer:
+British Transport Police: 1603
+</code></pre>
+<p>Next, let’s write a query to identify the 10 crimes closest to the center near Elephant &amp; Castle, all located within the Bakerloo line buffer.</p>
+<pre><code class="language-python">def haversine(lon1, lat1, lon2, lat2):
+    R = 6371.0
+    dlon = radians(lon2 - lon1)
+    dlat = radians(lat2 - lat1)
+    a = sin(dlat/2)**2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon/2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1-a))
+    return R * c
+
+center_lon, center_lat = -0.1005, 51.4965
+
+crimes_cursor = db.crimes.find(crime_in_buffers_filter())
+
+crimes_with_dist = []
+for c in crimes_cursor:
+    geom = c.get("geometry")
+    if geom and "coordinates" in geom:
+        lon, lat = geom["coordinates"]
+        dist = haversine(center_lon, center_lat, lon, lat)
+        c["distance_km"] = dist
+        crimes_with_dist.append(c)
+
+top_crimes = sorted(crimes_with_dist, key = lambda x: x["distance_km"])[:10]
+
+if top_crimes:
+    crime_counts = Counter([c.get("crime_type", "Unknown") for c in top_crimes])
+
+
+    print(f"Top 10 closest crimes to ({center_lat}, {center_lon}) inside the Bakerloo buffer:")
+    for r in top_crimes:
+        print(f"{r.get('crime_type', 'Unknown')} at {r.get('location', 'Unknown')} (Distance: {r['distance_km']:.3f} km)")
+
+    print("\nCounts by crime type for these 10 closest crimes:")
+    for crime, count in crime_counts.items():
+        print(f"{crime}: {count}")
+else:
+    print(f"No crimes found inside the Bakerloo buffer near ({center_lat}, {center_lon}).")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Top 10 closest crimes to (51.4965, -0.1005) inside the Bakerloo buffer:
+Other theft at On or near Elephant And Castle (Lu Station) (Distance: 0.222 km)
+Public order at On or near Elephant And Castle (Lu Station) (Distance: 0.222 km)
+Other theft at On or near Elephant And Castle (Lu Station) (Distance: 0.222 km)
+Theft from the person at On or near Elephant And Castle (Lu Station) (Distance: 0.222 km)
+Criminal damage and arson at On or near Elephant And Castle (Lu Station) (Distance: 0.222 km)
+Public order at On or near Elephant And Castle (Lu Station) (Distance: 0.222 km)
+Theft from the person at On or near Elephant And Castle (Lu Station) (Distance: 0.222 km)
+Violence and sexual offences at On or near Elephant And Castle (Lu Station) (Distance: 0.222 km)
+Other theft at On or near Elephant And Castle (Lu Station) (Distance: 0.222 km)
+Public order at On or near Elephant And Castle (Lu Station) (Distance: 0.222 km)
+
+Counts by crime type for these 10 closest crimes:
+Other theft: 3
+Public order: 3
+Theft from the person: 2
+Criminal damage and arson: 1
+Violence and sexual offences: 1
+</code></pre>
+<p>Even within a very small area, multiple types of crime occur, emphasizing the importance of micro-level spatial analysis in policing urban transit hubs.</p>
+<p>Now let’s try a bounding box query.</p>
+<pre><code class="language-python">bbox = [[-0.1040, 51.4935], [-0.1000, 51.4975]]
+
+results = db.crimes.find({
+    **crime_in_buffers_filter(),
+    "geometry": {"$geoWithin": {"$box": bbox}}
+}).limit(10)
+
+results_list = list(results)
+
+if results_list:
+    print(f"Crimes within bounding box {bbox} inside the Bakerloo buffer:")
+    for r in results_list:
+        print(f"{r.get('crime_type', 'Unknown')} at {r.get('location', 'Unknown')}")
+else:
+    print("No crimes found within this bounding box inside the Bakerloo buffer.")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Crimes within bounding box [[-0.104, 51.4935], [-0.1, 51.4975]] inside the Bakerloo buffer:
+Other theft at On or near Elephant And Castle (Lu Station)
+Public order at On or near Elephant And Castle (Lu Station)
+Other theft at On or near Elephant And Castle (Lu Station)
+Theft from the person at On or near Elephant And Castle (Lu Station)
+Criminal damage and arson at On or near Elephant And Castle (Lu Station)
+Public order at On or near Elephant And Castle (Lu Station)
+Theft from the person at On or near Elephant And Castle (Lu Station)
+Violence and sexual offences at On or near Elephant And Castle (Lu Station)
+Other theft at On or near Elephant And Castle (Lu Station)
+Public order at On or near Elephant And Castle (Lu Station)
+</code></pre>
+<p>Each crime is reported with its type and location. Limiting to 10 keeps the output manageable while still showing the diversity of incidents.</p>
+<p>Now, let’s write a query to return up to 10 crimes that are strictly within the Bakerloo line buffer and also fall inside a defined polygon. The polygon roughly covers a small central area in London.</p>
+<pre><code class="language-python">polygon = {
+    "type": "Polygon",
+    "coordinates": [[
+        [-0.122 - 0.014, 51.507 - 0.009], # SW
+        [-0.122 + 0.014, 51.507 - 0.009], # SE
+        [-0.122 + 0.014, 51.507 + 0.009], # NE
+        [-0.122 - 0.014, 51.507 + 0.009], # NW
+        [-0.122 - 0.014, 51.507 - 0.009]  # back to SW
+    ]]
+}
+
+combined_filter = {
+    "$and": [
+        {
+            "$or": [
+                {"geometry": {"$geoWithin": {"$geometry": buf["geometry"]}}} 
+                for buf in buffers
+            ]
+        },
+        {"geometry": {"$geoWithin": {"$geometry": polygon}}}
+    ]
+}
+
+results = list(db.crimes.find(combined_filter).limit(10))
+
+if results:
+    print("Crimes strictly inside Bakerloo buffers that also intersect the polygon:")
+    for r in results:
+        print(f"{r.get('crime_type', 'Unknown')} at {r.get('location', 'Unknown')}")
+else:
+    print("No crimes found strictly inside Bakerloo buffers that intersect the polygon.")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Crimes strictly inside Bakerloo buffers that also intersect the polygon:
+Criminal damage and arson at On or near Waterloo (London) (Station)
+Violence and sexual offences at On or near Embankment (Lu Station)
+Public order at On or near Waterloo (London) (Station)
+Criminal damage and arson at On or near Waterloo (London) (Station)
+Theft from the person at On or near Waterloo (London) (Station)
+Violence and sexual offences at On or near Waterloo (London) (Station)
+Theft from the person at On or near Charing Cross (Lu Station)
+Shoplifting at On or near Embankment (Lu Station)
+Violence and sexual offences at On or near Waterloo (London) (Station)
+Other theft at On or near Waterloo (London) (Station)
+</code></pre>
+<p>The results show a mix of serious and minor offenses, indicating that this area is a concentrated crime zone.</p>
+<p>We can visualize the polygon on a map using the following code.</p>
+<pre><code class="language-python">cursor = db["bakerloo_stops"].find()
+bakerloo_stops = gpd.GeoDataFrame(
+    ({**doc, "geometry": Point(doc["location"]["coordinates"])} for doc in cursor),
+    crs = 4326
+).drop(columns = ["_id", "location"])
+
+cursor = db["bakerloo_sections"].find()
+bakerloo_sections = gpd.GeoDataFrame(
+    ({**doc, "geometry": shape(doc["geometry"])} for doc in cursor),
+    crs = 4326
+).drop(columns = ["_id"])
+
+cursor = db["bakerloo_line_buff"].find()
+bakerloo_line_buff = gpd.GeoDataFrame(
+    ({**doc, "geometry": shape(doc["geometry"])} for doc in cursor),
+    crs = 4326
+).drop(columns = ["_id"])
+
+polygon_coords = [
+    [-0.136, 51.498],
+    [-0.108, 51.498],
+    [-0.108, 51.516],
+    [-0.136, 51.516],
+    [-0.136, 51.498]
+]
+polygon = Polygon(polygon_coords)
+polygon_area = gpd.GeoDataFrame({"name": ["Area"]}, geometry = [polygon], crs = 4326)
+
+fig, ax = plt.subplots(figsize = (10, 10))
+
+bakerloo_line_buff.to_crs(3857).plot(
+    ax = ax,
+    color = "lightgrey",
+    edgecolor = "black",
+    alpha = 0.5,
+    zorder = 2
+)
+
+bakerloo_sections.to_crs(3857).plot(
+    ax = ax,
+    color = "#B36305",
+    linewidth = 3,
+    zorder = 3
+)
+
+bakerloo_stops.to_crs(3857).plot(
+    ax = ax,
+    color = "black",
+    markersize = 15,
+    zorder = 4
+)
+
+polygon_area.to_crs(3857).plot(
+    ax = ax,
+    color = "red",
+    edgecolor = "red",
+    alpha = 0.3,
+    linewidth = 2,
+    zorder = 5
+)
+
+cx.add_basemap(ax, source = cx.providers.CartoDB.VoyagerNoLabels, attribution = "", zorder = 1)
+
+ax.set_axis_off()
+ax.set_title("Bakerloo Line, Stations, Buffer and Area of Interest", fontsize = 14)
+plt.show()
+</code></pre>
+<p>Example output is shown in Figure 15-13.</p>
+<p><img src="crime-analytics-with-singlestore-kai-media/image13.png" alt=""></p>
+<p><em>Figure 15-13. Polygon of Interest.</em></p>
+<p>Finally, we’ll find crimes within two disjoint polygons.</p>
+<pre><code class="language-python">elephant_castle = [-0.1005, 51.4965]
+
+harrow_wealdstone = [-0.337, 51.592]
+
+def create_square_buffer(center, size_deg=0.0045 / 2):
+    lon, lat = center
+    return {
+        "type": "Polygon",
+        "coordinates": [[
+            [lon - size_deg, lat - size_deg],
+            [lon + size_deg, lat - size_deg],
+            [lon + size_deg, lat + size_deg],
+            [lon - size_deg, lat + size_deg],
+            [lon - size_deg, lat - size_deg]
+        ]]
+    }
+
+polygon1 = create_square_buffer(elephant_castle)
+polygon2 = create_square_buffer(harrow_wealdstone)
+
+pipeline = [
+    {
+        "$match": {
+            "$or": [
+                {"geometry": {"$geoWithin": {"$geometry": polygon1}}},
+                {"geometry": {"$geoWithin": {"$geometry": polygon2}}}
+            ]
+        }
+    },
+    {
+        "$group": {
+            "_id": {
+                "location": "$location",
+                "crime_type": "$crime_type"
+            },
+            "count": {"$sum": 1}
+        }
+    },
+    {
+        "$group": {
+            "_id": "$_id.location",
+            "crimes": {
+                "$push": {
+                    "crime_type": "$_id.crime_type",
+                    "count": "$count"
+                }
+            },
+            "total": {"$sum": "$count"}
+        }
+    },
+    {
+        "$project": {
+            "crimes": 1,
+            # Convert total to integer
+            "total": {"$toInt": "$total"}
+        }
+    },
+    {"$limit": 10}
+]
+
+results = list(db.crimes.aggregate(pipeline))
+
+if results:
+    print("Counts by location and crime type:")
+    for r in results:
+        loc = r["_id"] or "Unknown"
+        print(f"\n{loc} (Total: {r['total']}):")
+        for c in r["crimes"]:
+            print(f"  {c['crime_type']}: {c['count']}")
+else:
+    print("No crimes found in the specified polygons.")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Counts by location and crime type:
+
+On or near Elephant And Castle (Lu Station) (Total: 80):
+  Other theft: 16
+  Criminal damage and arson: 9
+  Other crime: 1
+  Theft from the person: 23
+  Robbery: 1
+  Violence and sexual offences: 11
+  Bicycle theft: 3
+  Possession of weapons: 1
+  Public order: 15
+
+On or near Harrow &amp; Wealdstone (Lu Station) (Total: 61):
+  Vehicle crime: 1
+  Public order: 15
+  Violence and sexual offences: 11
+  Criminal damage and arson: 4
+  Theft from the person: 11
+  Bicycle theft: 6
+  Other theft: 9
+  Robbery: 4
+</code></pre>
+<p>Across the two locations, Elephant &amp; Castle shows a higher overall crime volume, dominated by theft-related offences and some criminal damage and arson. In contrast, Harrow &amp; Wealdstone recorded fewer total crimes but with a more mixed profile. This suggests that Elephant &amp; Castle experiences more opportunistic crimes linked to busy, high-footfall environments, while Harrow &amp; Wealdstone sees a broader range of offences including more confrontational crimes, despite overall lower crime numbers.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>In this chapter, we explored crime data along the Bakerloo Line to understand patterns, hotspots and trends through a combination of geospatial analysis, visualization and machine learning techniques. We began by constructing a hot routes visualization, mapping the Bakerloo Line and generating spatial buffers around each station to spatially constrain our analysis. This allowed us to focus specifically on crimes occurring in close proximity to the line, providing a clear geographic context for our insights.</p>
+<p>Building on this foundation, we applied a series of geospatial queries to interrogate the dataset. We experimented with bounding boxes, polygons and disjoint area filters to precisely extract subsets of data and used Haversine-based distance calculations to identify the closest crimes to specific locations. We progressively enhanced these queries with the aggregation framework, allowing us to group, count and compare crime types across different spatial regions and scales, from single stations to entire corridors.</p>
+<p>To uncover deeper patterns, we incorporated machine learning techniques, applying clustering algorithms to detect crime hotspots and exploring classification and predictive models to better understand relationships between location, crime type and frequency. These approaches revealed meaningful spatial clusters, highlighting key risk areas along the route.</p>
+<p>Throughout this process, we combined visual and analytical methods to build a rich picture of how crime is distributed along the Bakerloo Line. The result is a multi-layered understanding of the crime landscape, from granular incidents near stations to overarching trends across the line, demonstrating how geospatial analytics and machine learning can be integrated to support data-driven decision-making and public safety insights.</p>
+<hr>
+<ol class="footnote-definition">
+<li id="footnote-1">
+<p>https://www.ucl.ac.uk/jill-dando-institute/sites/jill_dando_institute/files/hot_routes_1-5_all.pdf <a href="#fr-1-1">↩</a></p>
+</li>
+<li id="footnote-2">
+<p>https://rekadata.net/blog/hot-routes-tutorial/ <a href="#fr-2-1">↩</a></p>
+</li>
+<li id="footnote-3">
+<p>https://data.police.uk/data/ <a href="#fr-3-1">↩</a></p>
+</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../part-ml/agriculture-analytics-using-r.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../part-ml/running-sentiment-analysis-inside-the-database-with-webassembly.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../part-ml/agriculture-analytics-using-r.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../part-ml/running-sentiment-analysis-inside-the-database-with-webassembly.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-c22b7243.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

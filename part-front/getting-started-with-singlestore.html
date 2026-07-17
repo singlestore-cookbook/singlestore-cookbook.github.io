@@ -1,0 +1,446 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Chapter 1: Getting Started with SingleStore - The SingleStore Cookbook</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Recipes for Multi-Model, Machine Learning and AI Data Engineering">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-0392ca55.css">
+        <link rel="stylesheet" href="../css/chrome-fc474251.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-7ad5f1bc.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-e2854824.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The SingleStore Cookbook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/singlestore-cookbook/singlestore-cookbook.github.io" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/singlestore-cookbook/singlestore-cookbook.github.io/edit/main/src/part-front/getting-started-with-singlestore.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="chapter-1-getting-started-with-singlestore"><a class="header" href="#chapter-1-getting-started-with-singlestore">Chapter 1: Getting Started with SingleStore</a></h1>
+<blockquote>
+<p><strong>Note:</strong> The code, instructions and screenshots in this book reflect the state of SingleStore and related tools and libraries as of July 2026. Cloud platforms and APIs change frequently, so if you encounter a discrepancy between what’s described here and what you see in practice, check the relevant vendor’s current documentation.</p>
+</blockquote>
+<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<p>Over the last decade, the data infrastructure landscape has expanded into a patchwork of specialized systems, such as operational databases, analytical warehouses, time-series engines, document stores, vector databases, search engines and streaming platforms. Organizations increasingly find themselves stitching these systems together to support real-time applications, machine learning pipelines and AI agents. This architectural fragmentation introduces latency, complexity and operational cost.</p>
+<p>SingleStore takes a fundamentally different approach. It provides a unified, distributed, cloud-native engine capable of handling transactional, analytical, time-series, vector and unstructured workloads within a single system. The value proposition is simple: instead of building and maintaining a variety of purpose-built data engines, SingleStore is designed to serve as the primary platform for modern, data-intensive applications.</p>
+<h2 id="evolution-of-the-singlestore-engine"><a class="header" href="#evolution-of-the-singlestore-engine">Evolution of the SingleStore Engine</a></h2>
+<h3 id="rowstore-for-low-latency-oltp"><a class="header" href="#rowstore-for-low-latency-oltp">Rowstore for Low-Latency OLTP</a></h3>
+<p>SingleStore’s earliest design goal was to support high-speed transactional workloads through an in-memory rowstore engine. This made it attractive for operational applications requiring sub-millisecond access patterns.</p>
+<h3 id="columnstore-for-real-time-analytics"><a class="header" href="#columnstore-for-real-time-analytics">Columnstore for Real-Time Analytics</a></h3>
+<p>As customers began developing hybrid workloads, SingleStore introduced a distributed columnstore engine designed for fast scans, aggregations and analytical queries. The key was not just performance, but the ability to run OLTP and OLAP on the same dataset without ETL.</p>
+<h3 id="udfs-pipelines-and-extensibility"><a class="header" href="#udfs-pipelines-and-extensibility">UDFs, Pipelines and Extensibility</a></h3>
+<p>To meet the needs of data engineering teams, SingleStore added User-Defined Functions (UDFs) and native pipelines that ingest data from Kafka or cloud storage directly into a database. This turned SingleStore into an ingestion engine as well as a query engine.</p>
+<h3 id="native-json-and-multi-model-storage"><a class="header" href="#native-json-and-multi-model-storage">Native JSON and Multi-Model Storage</a></h3>
+<p>Next, SingleStore introduced JSON data support. This allowed it to function as both a relational engine and a scalable document store, eliminating the need for MongoDB-like systems when semi-structured data was required.</p>
+<h3 id="vectors-similarity-search-and-ai-workloads"><a class="header" href="#vectors-similarity-search-and-ai-workloads">Vectors, Similarity Search and AI Workloads</a></h3>
+<p>With the rise of Large Language Models (LLMs) and embedding-based retrieval, SingleStore integrated native vector types, vector indexes and optimized similarity search. Unlike standalone vector databases, these features run alongside SQL, JSON, time-series and full-text search. The result is a truly multi-model architecture built for AI agents, Retrieval-Augmented Generation (RAG) systems and real-time decision systems.</p>
+<h2 id="how-singlestore-differs-from-other-database-systems"><a class="header" href="#how-singlestore-differs-from-other-database-systems">How SingleStore Differs from Other Database Systems</a></h2>
+<h3 id="versus-other-relational-databases"><a class="header" href="#versus-other-relational-databases">Versus Other Relational Databases</a></h3>
+<p>Many Relational Systems today provide extensible general-purpose database capabilities but struggle with distributed workloads, columnstore analytics, high-volume ingestion and real-time vector search. SingleStore offers these capabilities natively and at scale.</p>
+<h3 id="versus-other-columnstores"><a class="header" href="#versus-other-columnstores">Versus Other Columnstores</a></h3>
+<p>Many Columnstores offer exceptional analytical performance but limited support for transactions, JSON operations, machine learning pipelines or AI/LLM workflows. SingleStore extends beyond analytics into full multi-model and operational workloads.</p>
+<h3 id="versus-data-warehouses"><a class="header" href="#versus-data-warehouses">Versus Data Warehouses</a></h3>
+<p>Data Warehouses excel at analytical processing but are not designed for operational workloads, low-latency queries, streaming ingestion, real-time pipelines or high-frequency vector search. SingleStore handles both operational and analytical workloads concurrently.</p>
+<h3 id="versus-document-databases"><a class="header" href="#versus-document-databases">Versus Document Databases</a></h3>
+<p>Document Stores provide flexibility for document data but lack strong SQL, large-scale analytics and a unified architecture for mixed workloads. SingleStore provides both document and relational capabilities in a single engine.</p>
+<h3 id="versus-standalone-vector-databases"><a class="header" href="#versus-standalone-vector-databases">Versus Standalone Vector Databases</a></h3>
+<p>These systems excel at similarity search but require external orchestration for SQL, metadata joins, time filtering or real-time pipelines. SingleStore co-locates vector search with structured data, enabling RAG, agents and multimodal retrieval without external systems.</p>
+<h2 id="multi-model-architecture-without-external-stitching"><a class="header" href="#multi-model-architecture-without-external-stitching">Multi-Model Architecture Without External Stitching</a></h2>
+<p>Where most architectures require three to eight systems to support the full lifecycle of an AI or data-driven application such as an RDBMS, analytics warehouse, caching layer, streaming engine, vector database, document store and full-text search, SingleStore integrates all of these capabilities into a distributed SQL engine.</p>
+<p>This eliminates:</p>
+<ul>
+<li>
+<p>ETL pipelines between engines.</p>
+</li>
+<li>
+<p>Inconsistent data representations.</p>
+</li>
+<li>
+<p>Operational overhead from managing multiple services.</p>
+</li>
+<li>
+<p>Latency introduced by cross-system communication.</p>
+</li>
+</ul>
+<p>SingleStore is architected from the ground up to support multiple data models with shared durability, storage and execution layers.</p>
+<h2 id="combining-real-time-vector-search-sql-and-pipelines"><a class="header" href="#combining-real-time-vector-search-sql-and-pipelines">Combining Real-Time Vector Search, SQL and Pipelines</a></h2>
+<p>SingleStore’s unified feature set allows teams to build applications such as:</p>
+<ul>
+<li>
+<p>Real-time recommendation engines.</p>
+</li>
+<li>
+<p>Hybrid search (keywords + vectors + metadata filters).</p>
+</li>
+<li>
+<p>Multi-agent systems requiring shared context.</p>
+</li>
+<li>
+<p>High-throughput time-series + AI inference pipelines.</p>
+</li>
+<li>
+<p>Operational ML and analytics in the same engine.</p>
+</li>
+</ul>
+<p>Pipeline ingestion brings data into the database continuously, vectors can be computed or refreshed in place and SQL queries can join operational data with embeddings, sentiment scores or time-series data.</p>
+<p>For practitioners building modern AI-driven systems combining streaming ETL, multimodal retrieval, agentic workflows or real-time analytics, SingleStore simplifies the architecture and accelerates development.</p>
+<h2 id="prerequisites-and-environment-setup"><a class="header" href="#prerequisites-and-environment-setup">Prerequisites and Environment Setup</a></h2>
+<p>To ensure readers can run all examples in the book without friction, this section outlines the required tools, environments and configurations used. While many recipes can be run independently, having a consistent baseline environment significantly improves reproducibility.</p>
+<h3 id="singlestore-installation-options"><a class="header" href="#singlestore-installation-options">SingleStore Installation Options</a></h3>
+<p>SingleStore can be deployed in several different ways. For example:</p>
+<ul>
+<li>
+<p>SingleStore Cloud</p>
+</li>
+<li>
+<p>Docker</p>
+</li>
+<li>
+<p>Native Linux installation</p>
+</li>
+</ul>
+<p>In this book, the recommended approach for readers is to use SingleStore Cloud. This provides a fully managed cluster with no local installation requirements. This is the simplest path for users who want to execute SQL, vector queries, pipelines and integrations quickly.</p>
+<p>A notebook environment is also built into the SingleStore Cloud Portal and we’ll use this environment to run the vast majority of code examples in this book. The GitHub repo for this book, <a href="https://singlestore-cookbook.github.io">singlestore-cookbook.github.io</a>, contains all the notebooks and support files.</p>
+<h3 id="create-a-free-singlestore-cloud-account"><a class="header" href="#create-a-free-singlestore-cloud-account">Create a Free SingleStore Cloud Account</a></h3>
+<p>We’ll start by navigating to the SingleStore Cloud Portal:</p>
+<pre><code class="language-text">https://portal.singlestore.com/
+</code></pre>
+<p>This will show a web page requesting sign in, similar to Figure 1-1.</p>
+<p><img src="getting-started-with-singlestore-media/image1.png" alt=""></p>
+<p><em>Figure 1-1 Sign In.</em></p>
+<p>At the bottom of Figure 1-1, we can see the text “Don’t have an account? Sign up.”</p>
+<p>Clicking on “Sign up” takes us to another web page, similar to Figure 1-2, where we can create a new account using an email address, GitHub, Google or Microsoft.</p>
+<p><img src="getting-started-with-singlestore-media/image2.png" alt=""></p>
+<p><em>Figure 1-2 Create an account.</em></p>
+<p>If using an email address, we’ll be asked to create a password. A verification code will then be sent to the email address which we’ll need to enter on another web page.</p>
+<p>Once logged into the SingleStore Portal, we’ll be asked for the type of workload we require. Choosing <strong>Personal</strong> will be fine.</p>
+<p>On the next page, we’ll be asked to select the top two data challenges we want to solve with SingleStore. From the options shown, we’ll choose <strong>New Application</strong> and <strong>Better System for AI/LLMs/Agents</strong>.</p>
+<p>On the next page, we’ll be asked to describe our goals for using SingleStore. From the options shown, we’ll select <strong>Other</strong> and enter <strong>The SingleStore Cookbook</strong> into the text box.</p>
+<p>Finally, we’ll be shown two options to either <strong>Create Shared Workspace</strong> or <strong>Create Standard Workspace</strong>. The <strong>Standard Workspace</strong> option provides a free trial worth US$600 of credits and would be perfect for using with this book. No credit card is required.</p>
+<p>Clicking <strong>Create Standard Workspace</strong> takes us to a <strong>Create New Workspace</strong> page. Here are the options we’ll use:</p>
+<ul>
+<li>
+<p><strong>Name:</strong> Keep the system-generated workspace name.</p>
+</li>
+<li>
+<p><strong>Project:</strong> Select <strong>Standard Project</strong> from the pull-down menu.</p>
+</li>
+<li>
+<p><strong>Group:</strong> Leave unchanged.</p>
+</li>
+<li>
+<p><strong>Group Name:</strong> Keep the system-generated group name.</p>
+</li>
+<li>
+<p><strong>Cloud Provider:</strong> Select GCP.</p>
+</li>
+<li>
+<p><strong>Region:</strong> US East 4 (N. Virginia).</p>
+</li>
+<li>
+<p><strong>Size:</strong> S-00.</p>
+</li>
+<li>
+<p><strong>Settings:</strong> Enable <strong>Mongo Compatible Endpoint API</strong>. Leave all other settings unchanged.</p>
+</li>
+<li>
+<p><strong>Advanced Settings:</strong> Leave all settings unchanged.</p>
+</li>
+<li>
+<p>Click <strong>Create Workspace</strong> in the bottom right.</p>
+</li>
+</ul>
+<p>Workspace deployment may take several minutes.</p>
+<p>In the SingleStore Portal, on the extreme left-hand side will be a sidebar (navigation pane) with a series of icons. It’s helpful to see not just the icons, but the text equivalent. This can be enabled by clicking on the icon at the very bottom left. Hovering over it produces the text “Expand sidebar”, as shown in Figure 1-3.</p>
+<p><img src="getting-started-with-singlestore-media/image3.png" alt=""></p>
+<p><em>Figure 1-3 Expand sidebar.</em></p>
+<p>Clicking on the icon will expand the sidebar.</p>
+<h3 id="connection-details"><a class="header" href="#connection-details">Connection Details</a></h3>
+<p>Once the sidebar has expanded, we’ll select <strong>Workspaces</strong> and this will show us the workspace we previously provisioned. From the workspace, we’ll select <strong>Connect &gt; CLI Client</strong>.</p>
+<p>This will show the credentials and connection string, as shown in the example in Figure 1-4.</p>
+<p><img src="getting-started-with-singlestore-media/image4.png" alt=""></p>
+<p><em>Figure 1-4 Connect to Workspace.</em></p>
+<p>Looking at the MySQL Command in Figure 1-4, we see the following:</p>
+<pre><code class="language-text">mysql -u admin -h svc-0a9bfb5b-da6f-4150-894a-327fffd450f5-dml.gcp-virginia-1.svc.singlestore.com -P 3306 --default-auth=mysql_native_password --password='w$Rb;ZJ^wr#g4hE1|x3GR'
+</code></pre>
+<p>This shows us the <strong>user</strong>, <strong>host</strong>, <strong>port</strong> and <strong>password</strong>. Your values will be different from this example. Make a note of these details from your environment and keep them in a safe place.</p>
+<h3 id="secrets"><a class="header" href="#secrets">Secrets</a></h3>
+<p>Next from the sidebar, we’ll select <strong>Editor &gt; My Files &gt; Secrets</strong> and add some secrets that we need in the book, as shown in Figure 1-5.</p>
+<p><img src="getting-started-with-singlestore-media/image5.png" alt=""></p>
+<p><em>Figure 1-5. Secrets.</em></p>
+<p>Several examples in this book will use <strong>OpenAI</strong>. We’ll use very cost-effective OpenAI models and since our examples are small-scale, the overall cost will be quite small. We’ll use the free <strong>LiveKit</strong> tier for our Audio example in the multimodal chapter and we’ll see how to obtain the values shown in Figure 1-5 in that chapter. The <strong>password</strong> variable contains our password that we previously saved from Figure 1-4.</p>
+<blockquote>
+<p><strong>Note:</strong> If you terminate a workspace and create a new one, ensure that you update the saved password in the secrets vault.</p>
+</blockquote>
+<h3 id="firewall"><a class="header" href="#firewall">Firewall</a></h3>
+<p>Next from the sidebar, we’ll select <strong>Editor &gt; My Files &gt; Firewall</strong> and add the following domains to the existing list and save the new list.</p>
+<pre><code class="language-text">*.*.aws.confluent.cloud
+*.eu-west-2.aws.confluent.cloud
+*.host.livekit.cloud
+*.livekit.cloud
+*.turn.livekit.cloud
+a.basemaps.cartocdn.com
+api.openml.org
+cas-server.xethub.hf.co
+cloud.r-project.org
+en.wikipedia.org
+repo1.maven.org
+repos.spark-packages.org
+transfer.xethub.hf.co
+us.aws.cdn.hf.co
+www.ipcc.ch
+</code></pre>
+<p>Normally, the notebook environment will prompt if it needs access to an external site. The Kafka example in a later chapter is created using the free tier on the Confluent Cloud and the AWS address shown in the above list may be different, so adjust as required.</p>
+<h3 id="provision-compute"><a class="header" href="#provision-compute">Provision Compute</a></h3>
+<p>Just above the notebook menu bar (<strong>Edit</strong>, <strong>View</strong>, <strong>Run</strong>, <strong>Kernel</strong>) select <strong>Small &gt; Start Session</strong> if no compute resources have been provisioned. Once this is done, a pulldown will appear where the workspace and database (if available) can be selected.</p>
+<h3 id="notebooks-and-sql-scripts"><a class="header" href="#notebooks-and-sql-scripts">Notebooks and SQL Scripts</a></h3>
+<p>The notebooks and SQL scripts used in this book can be uploaded using <strong>Editor &gt; My Files &gt; New &gt; Import From File</strong>. Use the file browser to locate the file to upload. Once uploaded, ensure that you connect to the workspace from the pull-down just above the notebook or SQL file.</p>
+<h3 id="troubleshooting-common-errors"><a class="header" href="#troubleshooting-common-errors">Troubleshooting Common Errors</a></h3>
+<ul>
+<li>
+<p><strong>JWT token expired</strong>. Run <code>db_connection = create_engine(connection_url)</code> in your notebook to refresh.</p>
+</li>
+<li>
+<p><strong>Incorrect password</strong>. Ensure that you saved your password to the <strong>Secrets Vault</strong>, particularly if you terminated a workspace and created a new one.</p>
+</li>
+<li>
+<p><strong>Firewall issues</strong>. Usually the firewall will prompt to add a new domain but, sometimes, you may have missed the prompt. Whilst the list shown above for the firewall is comprehensive, domains can change.</p>
+</li>
+<li>
+<p><strong>Python packages</strong>. The environment for running notebooks in SingleStore Cloud may update and this may cause some packages in notebooks to stop working. Most packages in notebooks have been pinned but updates in the cloud environment could introduce incompatibilities. Please report any issues through GitHub.</p>
+</li>
+</ul>
+<p>With our environment set up, we’re ready to start exploring SingleStore.</p>
+<h2 id="whats-ahead"><a class="header" href="#whats-ahead">What’s Ahead</a></h2>
+<p>This book is organized into four parts, each building on the foundation we introduced in this chapter.</p>
+<p><strong>Part 1: Multi-Model</strong> covers the different data types SingleStore supports natively, including time series data, geospatial data, JSON data, full-text index and search and vector data.</p>
+<p><strong>Part 2: Streaming and Big Data Pipelines</strong> looks at how SingleStore integrates with Apache Spark and Apache Kafka and how change data capture can be used to keep data continuously in sync.</p>
+<p><strong>Part 3: Machine Learning</strong> works through a series of hands-on projects, including predictive analytics for loan approvals, fraud detection, image classification, a movie recommender system, agriculture analytics using R, crime analytics with SingleStore Kai, sentiment analysis running inside the database with WebAssembly and building a feature store with Feast.</p>
+<p><strong>Part 4: AI and Agentic Frameworks</strong> brings everything together, covering LangChain, LlamaIndex workflows, multimodal RAG across text, images and audio, running local LLMs with Ollama, using MCP for real-time data access and agentic patterns with SingleStore.</p>
+<p>We’ll close with some concluding thoughts on where multi-model, unified data platforms are headed.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>In this chapter, we introduced SingleStore as a unified, distributed engine capable of handling transactional, analytical, time-series, vector and unstructured workloads within a single system, tracing its evolution from an in-memory rowstore through columnstore analytics, pipelines, JSON support and native vector search. We compared SingleStore against relational databases, columnstores, data warehouses, document databases and standalone vector databases to highlight where a unified multi-model architecture removes the need for stitching together multiple specialized systems.</p>
+<p>We then set up the environment we’ll use throughout the book: creating a free SingleStore Cloud account, provisioning a Standard Workspace, saving our connection credentials, configuring secrets for OpenAI and LiveKit and updating the firewall to allow the external domains our examples will need. We covered how to upload notebooks and SQL scripts and reviewed some common errors readers might hit along the way, along with how to resolve them.</p>
+<p>We’re now set to start building and the next chapter moves into our first hands-on SingleStore examples, beginning with time series data.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../part-front/about-the-author.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../part-multi-model/time-series-data.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../part-front/about-the-author.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../part-multi-model/time-series-data.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-c22b7243.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

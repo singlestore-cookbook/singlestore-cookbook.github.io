@@ -1,0 +1,1275 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Chapter 23: Agentic Patterns with SingleStore - The SingleStore Cookbook</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Recipes for Multi-Model, Machine Learning and AI Data Engineering">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-0392ca55.css">
+        <link rel="stylesheet" href="../css/chrome-fc474251.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-7ad5f1bc.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-e2854824.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The SingleStore Cookbook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/singlestore-cookbook/singlestore-cookbook.github.io" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/singlestore-cookbook/singlestore-cookbook.github.io/edit/main/src/part-ai/agentic-patterns-with-singlestore.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="chapter-23-agentic-patterns-with-singlestore"><a class="header" href="#chapter-23-agentic-patterns-with-singlestore">Chapter 23: Agentic Patterns with SingleStore</a></h1>
+<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<p>The rapid evolution of large language models has moved application design beyond traditional request/response patterns toward systems composed of autonomous, goal-driven agents. These agentic systems observe, analyze, coordinate and act on data with increasing levels of autonomy. While frameworks such as LangChain, LlamaIndex and MCP simplify the orchestration layer, the data layer remains the backbone of any agentic architecture. Agents need reliable access to operational data, historical context, fast analytical queries and a unified record of decisions and outcomes.</p>
+<p>This chapter explores practical agentic patterns built on top of SingleStore, with a focus on how a high-performance, multi-model database simplifies memory, coordination and decision logging for multi-agent systems. To illustrate these patterns, we’ll walk through a simple, but fully working example: a multi-agent trading system implemented using a <strong>Chain of Responsibility</strong> pipeline. Each agent performs a specialized role - data analysis, risk validation, execution planning - and hands enriched context to the next. The agents interact entirely through SingleStore, which acts as:</p>
+<ul>
+<li>
+<p>The real-time feature store for market and sentiment signals.</p>
+</li>
+<li>
+<p>The agent memory layer for storing past decisions, positions and risk history.</p>
+</li>
+<li>
+<p>The coordination mechanism for sharing state across agents.</p>
+</li>
+<li>
+<p>The execution log that records all recommendations, confidence scores and trade actions.</p>
+</li>
+</ul>
+<p>The example demonstrates several reusable patterns:</p>
+<ul>
+<li>
+<p><strong>Sequential Agent Pipeline:</strong> Agents receive a shared context, add analysis and forward the enriched context to the next agent. This creates deterministic, auditable workflows.</p>
+</li>
+<li>
+<p><strong>Database-Native Memory and State:</strong> Agents read/write from tables such as <code>tick</code>, <code>stock_sentiment</code>, <code>portfolio</code> and <code>agent_decisions</code> to ground their reasoning in real data.</p>
+</li>
+<li>
+<p><strong>LLM-Driven Decision Making:</strong> Each agent uses LLMs to generate structured decisions with confidence scores and reasoning, enabling downstream agents to validate or override the recommendation.</p>
+</li>
+<li>
+<p><strong>Risk-Aware Coordination:</strong> The Risk Manager agent reviews prior activity, decision history and recent trades - an example of agents using SingleStore as a temporal context engine.</p>
+</li>
+<li>
+<p><strong>Action Execution as a Database Operation:</strong> Trades are executed by writing into the portfolio table, closing the loop between perception, reasoning and action.</p>
+</li>
+</ul>
+<p>By the end of the chapter, we’ll understand how to design agentic systems that are grounded in high-quality data, operate with traceability and can scale from proof-of-concept to production. More importantly, the architectural techniques shown here apply broadly: financial trading, fraud detection, customer support assistants, IoT orchestration and any domain where multi-agent collaboration requires a shared, low-latency data plane.</p>
+<h2 id="create-the-database"><a class="header" href="#create-the-database">Create the Database</a></h2>
+<p>In the SingleStore Portal, we’ll use the <strong>SQL Editor</strong> to create a new database. Call this <code>multi_agent_trading_db</code>, as follows:</p>
+<pre><code class="language-sql">CREATE DATABASE IF NOT EXISTS multi_agent_trading_db;
+</code></pre>
+<h2 id="fill-out-the-notebook"><a class="header" href="#fill-out-the-notebook">Fill out the Notebook</a></h2>
+<p>Let’s now create a new Python notebook. We’ll call it <strong>multi_agent_trading</strong>. We’ll connect the notebook to the <code>multi_agent_trading_db</code> database.</p>
+<p>First, we’ll setup some global variables:</p>
+<pre><code class="language-python">LLM_MODEL = ...
+TEMPERATURE = 0.0
+MAX_TOKENS = 300
+SEED = 42
+</code></pre>
+<p>Next, we’ll initialize the OpenAI client:</p>
+<pre><code class="language-python">os.environ["OPENAI_API_KEY"] = get_secret("OPENAI_API_KEY")
+openai_client = OpenAI()
+</code></pre>
+<p>Now we’ll define the data models:</p>
+<pre><code class="language-python"># Data Models
+
+@dataclass
+class AgentDecision:
+    """Structured decision output from each agent."""
+    agent_id: str
+    recommendation: str
+    confidence: float
+    reasoning: str
+    metadata: Dict = field(default_factory = dict)
+
+@dataclass
+class TradingContext:
+    """Shared context passed through the agent chain."""
+    symbol: str
+    price_data: str = ""
+    sentiment_data: str = ""
+    position_data: str = ""
+    recent_decisions: str = ""
+    portfolio_data: str = ""
+    agent_decisions: List[AgentDecision] = field(default_factory = list)
+</code></pre>
+<p>These data models define the structured communication layer for the agentic system. <code>AgentDecision</code> captures each agent’s recommendation, confidence and reasoning, while <code>TradingContext</code> provides a shared, progressively enriched state that flows through the entire agent chain.</p>
+<p>Now, we’ll define the Data Access Layer:</p>
+<pre><code class="language-python">def query_db(sql: str, params: dict = None) -&gt; List[Dict]:
+    """Execute query and return results."""
+    with db_connection.connect() as conn:
+        if params is None:
+            params = {}
+        result = conn.execute(text(sql), params)
+        return [dict(row._mapping) for row in result]
+
+def execute_db(sql: str, params: dict = None):
+    """Execute insert/update statement."""
+    with db_connection.connect() as conn:
+        if params is None:
+            params = {}
+        conn.execute(text(sql), params)
+        conn.commit()
+
+def get_recent_ticks(symbol: str, hours: int = 24) -&gt; str:
+    """Fetch recent price data."""
+    ticks = query_db(
+        """SELECT close, high, low, volume
+           FROM tick
+           WHERE symbol = :symbol AND ts &gt;= DATE_SUB(NOW(), INTERVAL :hours HOUR)
+           ORDER BY ts DESC LIMIT 100""",
+        {"symbol": symbol, "hours": hours}
+    )
+    if not ticks:
+        return f"No data for {symbol}"
+
+    avg_vol = sum(t["volume"] for t in ticks) // len(ticks)
+    high = max(t["high"] for t in ticks)
+    low = min(t["low"] for t in ticks)
+    current = ticks[0]["close"]
+    oldest = ticks[-1]["close"]
+    pct_change = (current - oldest) / oldest * 100
+
+    return f"Price: ${current:.2f} | {hours}h Change: {pct_change:+.1f}% | {hours}h High: ${high:.2f} | Low: ${low:.2f} | Avg Vol: {avg_vol:,}"
+
+def get_recent_sentiment(symbol: str, days: int = 7) -&gt; str:
+    """Fetch sentiment analysis."""
+    sentiments = query_db(
+        """SELECT headline, compound
+           FROM stock_sentiment
+           WHERE symbol = :symbol AND ts &gt;= DATE_SUB(NOW(), INTERVAL :days DAY)
+           ORDER BY ts DESC LIMIT 20""",
+        {"symbol": symbol, "days": days}
+    )
+    if not sentiments:
+        return f"No sentiment data for {symbol}"
+
+    avg_compound = sum(s["compound"] for s in sentiments) / len(sentiments)
+    pos_count = sum(1 for s in sentiments if s["compound"] &gt; 0.05)
+    neg_count = sum(1 for s in sentiments if s["compound"] &lt; -0.05)
+
+    return f"Sentiment Score: {avg_compound:.2f} | Positive: {pos_count} | Negative: {neg_count}"
+
+def get_portfolio_position(symbol: str) -&gt; str:
+    """Get current holdings."""
+    pos = query_db(
+        "SELECT shares_held, purchase_price FROM portfolio WHERE symbol = :symbol",
+        {"symbol": symbol}
+    )
+    if not pos:
+        return f"No position in {symbol}"
+
+    return f"Holding: {pos[0]['shares_held']} shares @ ${pos[0]['purchase_price']:.2f}"
+
+def get_recent_decisions(symbol: str, hours: int = 24) -&gt; str:
+    """Fetch recent agent decisions."""
+    decisions = query_db(
+        """SELECT agent_id, action, confidence
+           FROM agent_decisions
+           WHERE symbol = :symbol AND decision_timestamp &gt;= DATE_SUB(NOW(), INTERVAL :hours HOUR)
+           ORDER BY decision_timestamp DESC LIMIT 5""",
+        {"symbol": symbol, "hours": hours}
+    )
+    if not decisions:
+        return f"No recent decisions for {symbol}"
+
+    return " | ".join(f"{d['agent_id']}: {d['action']} ({d['confidence']*100:.0f}%)" for d in decisions)
+
+def get_all_positions() -&gt; str:
+    """Get full portfolio."""
+    positions = query_db(
+        "SELECT symbol, shares_held, purchase_price FROM portfolio ORDER BY symbol"
+    )
+    if not positions:
+        return "Portfolio is empty"
+
+    return " | ".join(f"{p['symbol']}: {p['shares_held']} @ ${p['purchase_price']:.2f}" for p in positions)
+
+def log_decision(decision: AgentDecision, symbol: str):
+    """Log agent decision to database."""
+    execute_db(
+        """INSERT INTO agent_decisions
+           (agent_id, decision_timestamp, symbol, action, confidence, reasoning, data_sources)
+           VALUES (:agent_id, NOW(), :symbol, :action, :confidence, :reasoning, :data_sources)""",
+        {
+            "agent_id": decision.agent_id,
+            "symbol": symbol,
+            "action": decision.recommendation,
+            "confidence": decision.confidence,
+            "reasoning": decision.reasoning,
+            "data_sources": "market_data"
+        }
+    )
+
+def execute_trade(symbol: str, action: str, shares: int):
+    """Execute a trade."""
+    if action == "BUY":
+        price = query_db(
+            "SELECT close FROM tick WHERE symbol = :symbol ORDER BY ts DESC LIMIT 1",
+            {"symbol": symbol}
+        )
+        purchase_price = price[0]["close"] if price else 100.0
+
+        existing = query_db(
+            "SELECT shares_held FROM portfolio WHERE symbol = :symbol",
+            {"symbol": symbol}
+        )
+
+        if existing:
+            execute_db(
+                "UPDATE portfolio SET shares_held = shares_held + :shares WHERE symbol = :symbol",
+                {"shares": shares, "symbol": symbol}
+            )
+        else:
+            execute_db(
+                """INSERT INTO portfolio (symbol, shares_held, purchase_date, purchase_price)
+                   VALUES (:symbol, :shares, CURDATE(), :price)""",
+                {"symbol": symbol, "shares": shares, "price": purchase_price}
+            )
+        print(f"*** TRADE EXECUTED: BUY {shares} shares of {symbol} @ ${purchase_price:.2f}")
+    elif action == "SELL":
+        position = query_db(
+            "SELECT shares_held FROM portfolio WHERE symbol = :symbol",
+            {"symbol": symbol}
+        )
+
+        if not position:
+            print(f"!!! TRADE FAILED: No position in {symbol} to sell")
+            return
+
+        current_shares = position[0]['shares_held']
+        if current_shares &lt; shares:
+            print(f"!!! TRADE FAILED: Cannot sell {shares} shares, only have {current_shares}")
+            return
+
+        execute_db(
+            "UPDATE portfolio SET shares_held = shares_held - :shares WHERE symbol = :symbol",
+            {"shares": shares, "symbol": symbol}
+        )
+        print(f"*** TRADE EXECUTED: SELL {shares} shares of {symbol}")
+</code></pre>
+<p>This Data Access Layer encapsulates all interactions with SingleStore, providing a clean API for querying market data, retrieving sentiment and portfolio information, logging agent decisions and executing trades. By centralizing database operations, it ensures that each agent operates over consistent, well-structured and up-to-date data.</p>
+<p>Next, we’ll implement a <strong>Chain of Responsibility</strong> pattern in which each trading agent performs three responsibilities - loading data, generating a decision and logging its output - before passing control to the next agent in the sequence. The pattern creates a clean, deterministic execution pipeline, ensuring that every agent contributes independent analysis while sharing a common context and persistence layer.</p>
+<pre><code class="language-python"># Chain of Responsibility Pattern
+
+class TradingAgent(ABC):
+    """Abstract base class for agents in the chain."""
+
+    def __init__(self, agent_id: str, next_agent: Optional["TradingAgent"] = None):
+        self.agent_id = agent_id
+        self.next_agent = next_agent
+
+    def set_next(self, agent: "TradingAgent") -&gt; "TradingAgent":
+        """Set the next agent in the chain."""
+        self.next_agent = agent
+        return agent
+
+    def process(self, context: TradingContext) -&gt; TradingContext:
+        """Process the request and pass to next agent."""
+        context = self.load_data(context)
+
+        decision = self.make_decision(context)
+        context.agent_decisions.append(decision)
+
+        log_decision(decision, context.symbol)
+
+        self.display_decision(decision)
+
+        if self.next_agent:
+            return self.next_agent.process(context)
+        return context
+
+    @abstractmethod
+    def load_data(self, context: TradingContext) -&gt; TradingContext:
+        """Load necessary data for this agent."""
+        pass
+
+    @abstractmethod
+    def make_decision(self, context: TradingContext) -&gt; AgentDecision:
+        """Make a decision based on context."""
+        pass
+
+    def display_decision(self, decision: AgentDecision):
+        """Display the agent's decision."""
+        print(f"\n{'-' * 60}")
+        print(f"[AGENT] {self.agent_id.upper()}")
+        print(f"{'-' * 60}")
+        print(f"Recommendation: {decision.recommendation}")
+        print(f"Confidence: {decision.confidence * 100:.0f}%")
+        print(f"Reasoning: {decision.reasoning}")
+        if decision.metadata:
+            print(f"Metadata: {decision.metadata}")
+
+    def call_llm(self, messages: List[Dict], temp: float = None) -&gt; str:
+        """Call OpenAI API."""
+        if temp is None:
+            temp = TEMPERATURE
+        response = openai_client.chat.completions.create(
+            model = LLM_MODEL,
+            messages = messages,
+            temperature = temp,
+            max_tokens = MAX_TOKENS
+        )
+        return response.choices[0].message.content
+</code></pre>
+<p>The <strong>Chain of Responsibility</strong> pattern provides a perfect architectural fit for agentic systems operating over shared, database-backed state. In this design, each agent becomes a self-contained analytical unit responsible for loading the data it needs, applying domain-specific or LLM-driven reasoning and persisting its outputs before delegating control to the next agent in the sequence, as shown in Figure 23-1. This creates a deterministic, auditable flow in which the shared <code>TradingContext</code> is progressively enriched as it moves through the chain. For data engineering and AI workflows built on a database system, the pattern ensures that every agent works from a consistent, real-time source of truth while maintaining strict separation of concerns which makes the system easy to extend, validate and monitor.</p>
+<p><img src="agentic-patterns-with-singlestore-media/image1.png" alt=""></p>
+<p><em>Figure 23-1. Chain of Responsibility.</em></p>
+<p>We’ll now provide concrete implementations of the agents:</p>
+<pre><code class="language-python">class DataAnalystAgent(TradingAgent):
+    """Stage 1: Analyzes market data and sentiment."""
+
+    def load_data(self, context: TradingContext) -&gt; TradingContext:
+        context.price_data = get_recent_ticks(context.symbol)
+        context.sentiment_data = get_recent_sentiment(context.symbol)
+        context.position_data = get_portfolio_position(context.symbol)
+        return context
+
+    def make_decision(self, context: TradingContext) -&gt; AgentDecision:
+        prompt = f"""You are a Data Analyst. Analyze this market data for {context.symbol}.
+
+Price Data: {context.price_data}
+Sentiment: {context.sentiment_data}
+Current Position: {context.position_data}
+
+Provide a trading recommendation (BUY, SELL, or HOLD) based on technical and sentiment analysis.
+
+Respond ONLY with valid JSON in this exact format:
+{{"recommendation": "BUY", "confidence": 0.75, "reasoning": "Strong positive sentiment with price momentum"}}"""
+
+        response = self.call_llm([{"role": "user", "content": prompt}])
+
+        try:
+            cleaned = response.strip()
+            if cleaned.startswith("```"):
+                cleaned = cleaned.split("```")[1]
+                if cleaned.startswith("json"):
+                    cleaned = cleaned[4:]
+            cleaned = cleaned.strip()
+
+            data = json.loads(cleaned)
+            return AgentDecision(
+                agent_id = self.agent_id,
+                recommendation = data["recommendation"],
+                confidence = float(data["confidence"]),
+                reasoning = data["reasoning"],
+                metadata = {"approved": True, "fallback": False}
+            )
+        except (json.JSONDecodeError, KeyError) as e:
+            print(f"!!! Parse error: {e}. Using fallback.")
+            return AgentDecision(
+                agent_id = self.agent_id,
+                recommendation = "HOLD",
+                confidence = 0.5,
+                reasoning = "Unable to parse LLM response",
+                metadata = {"fallback": True, "error": str(e)}
+            )
+
+class RiskManagerAgent(TradingAgent):
+    """Stage 2: Reviews and validates recommendations."""
+
+    def load_data(self, context: TradingContext) -&gt; TradingContext:
+        context.recent_decisions = get_recent_decisions(context.symbol)
+        return context
+
+    def make_decision(self, context: TradingContext) -&gt; AgentDecision:
+        analyst_decision = context.agent_decisions[-1]
+
+        prompt = f"""You are a Risk Manager. Review this trading recommendation for {context.symbol}.
+
+Analyst Recommendation: {analyst_decision.recommendation}
+Analyst Confidence: {analyst_decision.confidence * 100:.0f}%
+Analyst Reasoning: {analyst_decision.reasoning}
+
+Recent Trading Activity: {context.recent_decisions}
+
+Assess risk factors:
+- Is confidence level adequate (&gt;60%)?
+- Are we trading too frequently?
+- Is the recommendation reasonable given recent activity?
+
+Approve, modify, or reject the recommendation.
+
+Respond ONLY with valid JSON in this exact format:
+{{"recommendation": "BUY", "confidence": 0.80, "reasoning": "Approved with high confidence", "approved": true}}"""
+
+        response = self.call_llm([{"role": "user", "content": prompt}])
+
+        try:
+            cleaned = response.strip()
+            if cleaned.startswith("```"):
+                cleaned = cleaned.split("```")[1]
+                if cleaned.startswith("json"):
+                    cleaned = cleaned[4:]
+            cleaned = cleaned.strip()
+
+            data = json.loads(cleaned)
+            return AgentDecision(
+                agent_id = self.agent_id,
+                recommendation = data["recommendation"],
+                confidence = float(data["confidence"]),
+                reasoning = data["reasoning"],
+                metadata = {
+                    "approved": data.get("approved", True),
+                    "fallback": False
+                }
+            )
+        except (json.JSONDecodeError, KeyError) as e:
+            print(f"!!! Parse error: {e}. Defaulting to HOLD.")
+            return AgentDecision(
+                agent_id = self.agent_id,
+                recommendation = "HOLD",
+                confidence = 0.5,
+                reasoning = "Risk assessment failed - defaulting to HOLD",
+                metadata = {"approved": False, "fallback": True, "error": str(e)}
+            )
+
+class PortfolioOptimizerAgent(TradingAgent):
+    """Stage 3: Optimizes for portfolio balance and diversification."""
+
+    def load_data(self, context: TradingContext) -&gt; TradingContext:
+        context.portfolio_data = get_all_positions()
+        return context
+
+    def make_decision(self, context: TradingContext) -&gt; AgentDecision:
+        risk_decision = context.agent_decisions[-1]
+
+        prompt = f"""You are a Portfolio Optimizer. Finalize this trade decision for {context.symbol}.
+
+Risk-Approved Recommendation: {risk_decision.recommendation}
+Risk Manager Confidence: {risk_decision.confidence * 100:.0f}%
+Risk Manager Notes: {risk_decision.reasoning}
+
+Full Portfolio: {context.portfolio_data}
+
+Consider:
+- Does this improve diversification?
+- What is the optimal trade size (10-100 shares)?
+- Should we proceed with this trade?
+
+Provide final recommendation and trade size.
+
+Respond ONLY with valid JSON in this exact format:
+{{"recommendation": "BUY", "confidence": 0.85, "reasoning": "Improves diversification", "trade_size": 25}}"""
+
+        response = self.call_llm([{"role": "user", "content": prompt}])
+
+        try:
+            cleaned = response.strip()
+            if cleaned.startswith("```"):
+                cleaned = cleaned.split("```")[1]
+                if cleaned.startswith("json"):
+                    cleaned = cleaned[4:]
+            cleaned = cleaned.strip()
+
+            data = json.loads(cleaned)
+            return AgentDecision(
+                agent_id = self.agent_id,
+                recommendation = data["recommendation"],
+                confidence = float(data["confidence"]),
+                reasoning = data["reasoning"],
+                metadata = {
+                    "trade_size": data.get("trade_size", 10),
+                    "approved": True,
+                    "fallback": False
+                }
+            )
+        except (json.JSONDecodeError, KeyError) as e:
+            print(f"!!! Parse error: {e}. Defaulting to HOLD.")
+            return AgentDecision(
+                agent_id = self.agent_id,
+                recommendation = "HOLD",
+                confidence = 0.5,
+                reasoning = "Optimization failed - defaulting to HOLD",
+                metadata = {
+                    "trade_size": 0,
+                    "approved": False,
+                    "fallback": True,
+                    "error": str(e)
+                }
+            )
+</code></pre>
+<p>These concrete agent classes implement a three-stage decision pipeline, with each agent applying its own analytics before passing control downstream.</p>
+<p>The <code>DataAnalystAgent</code> performs the initial technical and sentiment review, using recent price history, sentiment metrics and portfolio exposure to generate a structured LLM-driven recommendation.</p>
+<p>The <code>RiskManagerAgent</code> then evaluates that proposal against recent trading activity and confidence thresholds, acting as a governance checkpoint that can approve, adjust or reject the recommendation based on risk constraints.</p>
+<p>Finally, the <code>PortfolioOptimizerAgent</code> incorporates full-portfolio context to determine whether the trade improves diversification and to calculate an appropriate position size.</p>
+<p>Together, these agents demonstrate a layered decision architecture where each stage enriches the shared context, applies its own reasoning logic and contributes to a final, auditable trading action.</p>
+<p>Next, we’ll provide the orchestration and execution:</p>
+<pre><code class="language-python">def run_trading_pipeline(symbol: str, execute: bool = False) -&gt; TradingContext:
+    """Run the complete multi-agent trading pipeline."""
+
+    print(f"\n{'=' * 60}")
+    print(f"[SYSTEM] MULTI-AGENT TRADING SYSTEM: {symbol}")
+    print(f"{'=' * 60}")
+
+    analyst = DataAnalystAgent("data_analyst")
+    risk_mgr = RiskManagerAgent("risk_manager")
+    optimizer = PortfolioOptimizerAgent("portfolio_optimizer")
+
+    analyst.set_next(risk_mgr).set_next(optimizer)
+
+    context = TradingContext(symbol = symbol)
+
+    context = analyst.process(context)
+
+    final_decision = context.agent_decisions[-1]
+
+    print(f"\n{'=' * 60}")
+    print(f"[FINAL] DECISION")
+    print(f"{'=' * 60}")
+    print(f"Action: {final_decision.recommendation}")
+    print(f"Trade Size: {final_decision.metadata.get('trade_size', 0)} shares")
+    print(f"Confidence: {final_decision.confidence * 100:.0f}%")
+    print(f"Approved: {final_decision.metadata.get('approved', False)}")
+    print(f"Fallback: {final_decision.metadata.get('fallback', False)}")
+
+    if execute and final_decision.recommendation in ["BUY", "SELL"]:
+        trade_size = final_decision.metadata.get("trade_size", 10)
+        execute_trade(symbol, final_decision.recommendation, trade_size)
+    elif not execute:
+        print("\n[INFO] Run with execute = True to execute trades")
+
+    return context
+</code></pre>
+<p>The orchestration layer organizes the individual agents into a complete end-to-end decision pipeline and coordinates execution.</p>
+<p>The <code>run_trading_pipeline</code> function constructs the <strong>Chain of Responsibility</strong>, linking the Data Analyst, Risk Manager and Portfolio Optimizer and then initializes a <code>TradingContext</code> that flows through all stages. As each agent processes the context, decisions are accumulated, logged and surfaced for inspection.</p>
+<p>After the final agent completes its optimization step, the system presents the consolidated recommendation and, if execution is enabled, automatically triggers a trade through the database-backed execution module. This orchestration function demonstrates how a modular agent stack can be composed into a deterministic, auditable workflow that delivers fully automated or semi-automated trading actions backed by real-time data stored in a database system.</p>
+<p>We’re now ready to run the code so, first, we’ll create a database connection:</p>
+<pre><code class="language-python">from sqlalchemy import *
+
+db_connection = create_engine(connection_url)
+</code></pre>
+<p>Next, we’ll create our database tables:</p>
+<pre><code class="language-python">def setup_database_schema():
+    '''Create all required tables for the trading system.'''
+
+    print("Dropping existing tables...")
+    execute_db("DROP TABLE IF EXISTS agent_decisions")
+    execute_db("DROP TABLE IF EXISTS portfolio")
+    execute_db("DROP TABLE IF EXISTS stock_sentiment")
+    execute_db("DROP TABLE IF EXISTS tick")
+    print("Existing tables dropped")
+
+    execute_db('''
+        CREATE TABLE IF NOT EXISTS tick (
+            symbol VARCHAR(10),
+            ts     DATETIME SERIES TIMESTAMP,
+            open   NUMERIC(18, 2),
+            high   NUMERIC(18, 2),
+            low    NUMERIC(18, 2),
+            close  NUMERIC(18, 2),
+            volume INT,
+            PRIMARY KEY (symbol, ts)
+        )
+    ''')
+
+    execute_db('''
+        CREATE TABLE IF NOT EXISTS stock_sentiment (
+            headline  VARCHAR(250),
+            compound  FLOAT,
+            positive  FLOAT,
+            negative  FLOAT,
+            neutral   FLOAT,
+            url       TEXT,
+            publisher VARCHAR(30),
+            ts        DATETIME,
+            symbol    VARCHAR(10),
+            PRIMARY KEY (symbol, ts, headline(100))
+        )
+    ''')
+
+    execute_db('''
+        CREATE TABLE IF NOT EXISTS portfolio (
+            symbol         VARCHAR(10) PRIMARY KEY,
+            shares_held    INT DEFAULT 0,
+            purchase_date  DATE,
+            purchase_price NUMERIC(18, 2)
+        )
+    ''')
+
+    execute_db('''
+        CREATE TABLE IF NOT EXISTS agent_decisions (
+            agent_id           VARCHAR(50),
+            decision_timestamp DATETIME,
+            symbol             VARCHAR(10),
+            action             VARCHAR(10),
+            confidence         DECIMAL(5, 4),
+            reasoning          TEXT,
+            data_sources       VARCHAR(100),
+            PRIMARY KEY (symbol, decision_timestamp, agent_id)
+        )
+    ''')
+    
+    print("Database schema created successfully!")
+
+setup_database_schema()
+</code></pre>
+<p>The <code>setup_database_schema</code> function drops any existing objects to provide a clean baseline and then creates four purpose-built tables: <code>tick</code> for time-series market data, <code>stock_sentiment</code> for aggregated sentiment signals, <code>portfolio</code> for current holdings and <code>agent_decisions</code> for a complete audit trail of all agent outputs.</p>
+<p>Example output:</p>
+<pre><code class="language-text">Dropping existing tables...
+Existing tables dropped
+Database schema created successfully!
+</code></pre>
+<p>Next, we’ll load some sample data for testing:</p>
+<pre><code class="language-python">def load_sample_data():
+    '''Load sample data with a distinct story per symbol, so agents see real signal instead of noise.
+
+    BBRQ-FX: clean breakout - steady uptrend, building volume, strongly positive sentiment
+    BJBY-FX: selloff with a late contrarian rumor - downtrend, panic volume, one bullish outlier headline
+    YWMG-FX: choppy/range-bound - deliberately balanced price and sentiment, plus a late volatility spike
+    '''
+
+    random.seed(SEED)
+
+    now = datetime.now()
+    symbols = ["BBRQ-FX", "BJBY-FX", "YWMG-FX"]
+    base_prices = {"BBRQ-FX": 180.0, "BJBY-FX": 140.0, "YWMG-FX": 380.0}
+
+    print("Loading sample tick data...")
+    for symbol in symbols:
+        base = base_prices[symbol]
+        for i in range(100):
+            ts = now - timedelta(hours = 48 - i * 0.5)
+            progress = i / 99
+
+            if symbol == "BBRQ-FX":
+                drift = progress * 30
+                price = base + drift + random.uniform(-1.5, 1.5)
+                volume = int(1_500_000 + progress * 4_000_000 + random.randint(-200000, 200000))
+                if i &gt;= 95:
+                    volume = int(volume * 1.8)
+
+            elif symbol == "BJBY-FX":
+                drift = -progress * 35
+                price = base + drift + random.uniform(-1.5, 1.5)
+                volume = int(1_500_000 + progress * 3_000_000 + random.randint(-200000, 200000))
+                if 80 &lt;= i &lt; 85:
+                    volume = int(volume * 2.2)
+                if i &gt;= 96:
+                    price += 6
+
+            else:
+                cycle = 8 * random.uniform(0.8, 1.2) * ((i % 20) / 20 - 0.5)
+                price = base + cycle + random.uniform(-3, 3)
+                volume = int(2_000_000 + random.randint(-300000, 300000))
+                if i &gt;= 97:
+                    price += random.choice([-9, 9])
+                    volume = int(volume * 2)
+
+            execute_db(
+                '''INSERT INTO tick (symbol, ts, open, high, low, close, volume)
+                   VALUES (:symbol, :ts, :open, :high, :low, :close, :volume)''',
+                {
+                    "symbol": symbol,
+                    "ts": ts,
+                    "open": price,
+                    "high": price + 2,
+                    "low": price - 2,
+                    "close": price + random.uniform(-1, 1),
+                    "volume": volume
+                }
+            )
+
+    print("Loading sample sentiment data...")
+
+    headline_bank = {
+        "positive": [
+            "Company reports record quarterly earnings",
+            "Analyst upgrades stock on strong growth outlook",
+            "New product launch exceeds expectations",
+            "Institutional investors increase holdings"
+        ],
+        "negative": [
+            "Regulatory investigation raises concerns",
+            "Guidance cut spooks investors",
+            "Analyst downgrades on weak demand",
+            "Executive departure unsettles markets"
+        ],
+        "neutral": [
+            "Market volatility continues amid mixed signals",
+            "Trading volume in line with recent average",
+            "Sector performance diverges across peers"
+        ],
+        "rumor": [
+            "Unconfirmed report suggests takeover interest"
+        ]
+    }
+
+    ywmg_buckets = ["positive"] * 7 + ["negative"] * 7 + ["neutral"] * 6
+    random.shuffle(ywmg_buckets)
+
+    for symbol in symbols:
+        for i in range(20):
+            ts = now - timedelta(days = random.randint(0, 7), seconds = i * 10)
+
+            if symbol == "BBRQ-FX":
+                is_positive = random.random() &lt; 0.9
+                headline = random.choice(headline_bank["positive"] if is_positive else headline_bank["neutral"])
+                compound = random.uniform(0.6, 0.9) if is_positive else random.uniform(-0.05, 0.05)
+
+            elif symbol == "BJBY-FX":
+                if i == 0:
+                    headline = headline_bank["rumor"][0]
+                    compound = random.uniform(0.5, 0.7)
+                else:
+                    is_negative = random.random() &lt; 0.9
+                    headline = random.choice(headline_bank["negative"] if is_negative else headline_bank["neutral"])
+                    compound = random.uniform(-0.9, -0.6) if is_negative else random.uniform(-0.05, 0.05)
+
+            else:
+                bucket = ywmg_buckets[i]
+                headline = random.choice(headline_bank[bucket])
+                compound = {
+                    "positive": random.uniform(0.3, 0.5),
+                    "negative": random.uniform(-0.5, -0.3),
+                    "neutral": random.uniform(-0.05, 0.05)
+                }[bucket]
+
+            execute_db(
+                '''INSERT INTO stock_sentiment (symbol, ts, headline, compound, publisher)
+                   VALUES (:symbol, :ts, :headline, :compound, :publisher)''',
+                {
+                    "symbol": symbol,
+                    "ts": ts,
+                    "headline": headline,
+                    "compound": compound,
+                    "publisher": "sample_data"
+                }
+            )
+
+    print("Sample data loaded successfully!")
+
+load_sample_data()
+</code></pre>
+<p>To make the multi-agent trading system easy to explore and demonstrate, the sample data generator creates three fictitious tickers, each telling a distinct market story rather than random noise:</p>
+<ul>
+<li>
+<p><code>BBRQ-FX</code> is built as a clean breakout: price climbs steadily over the trading window, trading volume builds alongside it and news sentiment is overwhelmingly positive.</p>
+</li>
+<li>
+<p><code>BJBY-FX</code> tells the opposite story: a steady decline accompanied by a burst of heavy volume, with news sentiment turning sharply negative - except for one late, unconfirmed rumor of takeover interest, which gives the system a genuine piece of conflicting evidence to weigh.</p>
+</li>
+<li>
+<p><code>YWMG-FX</code> is deliberately balanced: price moves sideways within a range and the mix of positive, negative and neutral headlines is kept even, so there’s no dominant signal in either direction.</p>
+</li>
+</ul>
+<p>Each agent in the chain draws on two pieces of market context: a price summary that includes the percentage change over the trading window alongside the current price, high, low and volume, and a sentiment summary that reports an average sentiment score together with a count of positive and negative headlines. Framing the price movement as a percentage change, rather than raw numbers alone, gives the language model a clear, unambiguous signal to reason over - a market that moved eight percent in a day reads very differently to a model than three numbers it has to compare itself.</p>
+<p>Example output:</p>
+<pre><code class="language-text">Loading sample tick data...
+Loading sample sentiment data...
+Sample data loaded successfully!
+</code></pre>
+<h2 id="example-queries"><a class="header" href="#example-queries">Example Queries</a></h2>
+<p>Let’s test the complete multi-agent trading pipeline in analysis-only mode.</p>
+<pre><code class="language-python">context = run_trading_pipeline("BBRQ-FX", execute = False)
+</code></pre>
+<p>The system processes real-time signals through all agents without placing an actual trade. This allows us to inspect the full decision chain, verify agent behavior and validate the final recommendation in a safe, non-executing environment.</p>
+<p>Example output:</p>
+<pre><code class="language-text">============================================================
+[SYSTEM] MULTI-AGENT TRADING SYSTEM: BBRQ-FX
+============================================================
+
+------------------------------------------------------------
+[AGENT] DATA_ANALYST
+------------------------------------------------------------
+Recommendation: BUY
+Confidence: 75%
+Reasoning: Strong positive sentiment with price momentum
+Metadata: {'approved': True, 'fallback': False}
+
+------------------------------------------------------------
+[AGENT] RISK_MANAGER
+------------------------------------------------------------
+Recommendation: BUY
+Confidence: 75%
+Reasoning: Approved based on strong positive sentiment and adequate confidence level
+Metadata: {'approved': True, 'fallback': False}
+
+------------------------------------------------------------
+[AGENT] PORTFOLIO_OPTIMIZER
+------------------------------------------------------------
+Recommendation: BUY
+Confidence: 85%
+Reasoning: Improves diversification
+Metadata: {'trade_size': 25, 'approved': True, 'fallback': False}
+
+============================================================
+[FINAL] DECISION
+============================================================
+Action: BUY
+Trade Size: 25 shares
+Confidence: 85%
+Approved: True
+Fallback: False
+
+[INFO] Run with execute = True to execute trades
+</code></pre>
+<p>When ready, we can submit a live trade:</p>
+<pre><code class="language-python">context = run_trading_pipeline("BBRQ-FX", execute = True)
+</code></pre>
+<p>The system not only evaluates the trading signal through all agent stages but also submits a live trade based on the final approved recommendation. After the Data Analyst, Risk Manager and Portfolio Optimizer complete their sequential assessments, the pipeline issues a buy, sell or hold order with the optimized trade size. This mode demonstrates the full end-to-end workflow, including automated execution.</p>
+<p>Example output:</p>
+<pre><code class="language-text">============================================================
+[SYSTEM] MULTI-AGENT TRADING SYSTEM: BBRQ-FX
+============================================================
+
+------------------------------------------------------------
+[AGENT] DATA_ANALYST
+------------------------------------------------------------
+Recommendation: BUY
+Confidence: 75%
+Reasoning: Strong positive sentiment with price momentum
+Metadata: {'approved': True, 'fallback': False}
+
+------------------------------------------------------------
+[AGENT] RISK_MANAGER
+------------------------------------------------------------
+Recommendation: BUY
+Confidence: 75%
+Reasoning: Approved based on strong positive sentiment and adequate confidence level
+Metadata: {'approved': True, 'fallback': False}
+
+------------------------------------------------------------
+[AGENT] PORTFOLIO_OPTIMIZER
+------------------------------------------------------------
+Recommendation: BUY
+Confidence: 85%
+Reasoning: Improves diversification
+Metadata: {'trade_size': 25, 'approved': True, 'fallback': False}
+
+============================================================
+[FINAL] DECISION
+============================================================
+Action: BUY
+Trade Size: 25 shares
+Confidence: 85%
+Approved: True
+Fallback: False
+*** TRADE EXECUTED: BUY 25 shares of BBRQ-FX @ $210.71
+</code></pre>
+<p>Let’s view the decision history:</p>
+<pre><code class="language-python">def view_decision_history(symbol: str, limit: int = 10):
+    decisions = query_db(
+        '''SELECT agent_id, decision_timestamp, action, confidence, reasoning
+           FROM agent_decisions
+           WHERE symbol = :symbol
+           ORDER BY decision_timestamp DESC
+           LIMIT :limit''',
+        {"symbol": symbol, "limit": limit}
+    )
+
+    print(f"\n[HISTORY] Decision History for {symbol}")
+    print("=" * 80)
+    for d in decisions:
+        print(f"{d['decision_timestamp']} | {d['agent_id']:20} | {d['action']:6} | {d['confidence']*100:5.0f}%")
+        print(f"  -&gt; {d['reasoning']}\n")
+
+view_decision_history("BBRQ-FX")
+</code></pre>
+<p>The <code>view_decision_history</code> utility provides an auditable record of all agent decisions for a given symbol. It queries the <code>agent_decisions</code> table and displays a reverse-chronological list of actions, confidence scores and associated reasoning. This function illustrates how a database system acts as the persistent memory layer for the agentic system, enabling post-hoc review, debugging, compliance checks and performance analysis across the full decision chain.</p>
+<p>Example output:</p>
+<pre><code class="language-text">[HISTORY] Decision History for BBRQ-FX
+================================================================================
+2026-07-05 13:31:16 | portfolio_optimizer  | BUY    |    85%
+  -&gt; Improves diversification
+
+2026-07-05 13:31:15 | risk_manager         | BUY    |    75%
+  -&gt; Approved based on strong positive sentiment and adequate confidence level
+
+2026-07-05 13:31:14 | data_analyst         | BUY    |    75%
+  -&gt; Strong positive sentiment with price momentum
+
+2026-07-05 13:31:13 | portfolio_optimizer  | BUY    |    85%
+  -&gt; Improves diversification
+
+2026-07-05 13:31:12 | risk_manager         | BUY    |    75%
+  -&gt; Approved based on strong positive sentiment and adequate confidence level
+
+2026-07-05 13:31:11 | data_analyst         | BUY    |    75%
+  -&gt; Strong positive sentiment with price momentum
+</code></pre>
+<p>Finally, we’ll compare multiple stocks:</p>
+<pre><code class="language-python">symbols = ["BBRQ-FX", "BJBY-FX", "YWMG-FX"]
+results = {}
+
+for symbol in symbols:
+    print(f"\n\n{'#' * 60}")
+    print(f"Analyzing {symbol}")
+    print(f"{'#' * 60}")
+    results[symbol] = run_trading_pipeline(symbol, execute = False)
+
+print("\n\n[SUMMARY]")
+print("=" * 60)
+for symbol, ctx in results.items():
+    final = ctx.agent_decisions[-1]
+    print(f"{symbol:6} | {final.recommendation:4} | {final.confidence*100:5.0f}% | {final.metadata.get('trade_size', 0):3} shares")
+</code></pre>
+<p>This batch-processing loop runs the full multi-agent trading pipeline across multiple symbols and aggregates the results. Each stock is evaluated independently through the analyst, risk and portfolio-optimization stages, with all decisions stored in the database system. After processing, the script prints a consolidated summary showing the final recommendation, confidence level and suggested trade size for each asset. This demonstrates how the agentic architecture scales seamlessly across a portfolio and how a database system enables fast, repeatable multi-symbol analysis.</p>
+<p>Example output:</p>
+<pre><code class="language-text">############################################################
+Analyzing BBRQ-FX
+############################################################
+
+============================================================
+[SYSTEM] MULTI-AGENT TRADING SYSTEM: BBRQ-FX
+============================================================
+
+------------------------------------------------------------
+[AGENT] DATA_ANALYST
+------------------------------------------------------------
+Recommendation: HOLD
+Confidence: 80%
+Reasoning: Current price is near the 24h high with strong positive sentiment, but recent volatility suggests caution.
+Metadata: {'approved': True, 'fallback': False}
+
+------------------------------------------------------------
+[AGENT] RISK_MANAGER
+------------------------------------------------------------
+Recommendation: BUY
+Confidence: 80%
+Reasoning: Approved with high confidence due to strong positive sentiment and recent trading activity supporting a buy recommendation.
+Metadata: {'approved': True, 'fallback': False}
+
+------------------------------------------------------------
+[AGENT] PORTFOLIO_OPTIMIZER
+------------------------------------------------------------
+Recommendation: BUY
+Confidence: 85%
+Reasoning: Improves diversification
+Metadata: {'trade_size': 25, 'approved': True, 'fallback': False}
+
+============================================================
+[FINAL] DECISION
+============================================================
+Action: BUY
+Trade Size: 25 shares
+Confidence: 85%
+Approved: True
+Fallback: False
+
+[INFO] Run with execute = True to execute trades
+
+
+############################################################
+Analyzing BJBY-FX
+############################################################
+
+============================================================
+[SYSTEM] MULTI-AGENT TRADING SYSTEM: BJBY-FX
+============================================================
+
+------------------------------------------------------------
+[AGENT] DATA_ANALYST
+------------------------------------------------------------
+Recommendation: SELL
+Confidence: 85%
+Reasoning: Significant negative sentiment and a sharp price decline indicate a bearish trend.
+Metadata: {'approved': True, 'fallback': False}
+
+------------------------------------------------------------
+[AGENT] RISK_MANAGER
+------------------------------------------------------------
+Recommendation: SELL
+Confidence: 85%
+Reasoning: Approved due to significant negative sentiment and a bearish trend
+Metadata: {'approved': True, 'fallback': False}
+
+------------------------------------------------------------
+[AGENT] PORTFOLIO_OPTIMIZER
+------------------------------------------------------------
+Recommendation: SELL
+Confidence: 85%
+Reasoning: Significant negative sentiment and bearish trend
+Metadata: {'trade_size': 25, 'approved': True, 'fallback': False}
+
+============================================================
+[FINAL] DECISION
+============================================================
+Action: SELL
+Trade Size: 25 shares
+Confidence: 85%
+Approved: True
+Fallback: False
+
+[INFO] Run with execute = True to execute trades
+
+
+############################################################
+Analyzing YWMG-FX
+############################################################
+
+============================================================
+[SYSTEM] MULTI-AGENT TRADING SYSTEM: YWMG-FX
+============================================================
+
+------------------------------------------------------------
+[AGENT] DATA_ANALYST
+------------------------------------------------------------
+Recommendation: HOLD
+Confidence: 65%
+Reasoning: Negative sentiment and recent price decline suggest caution; wait for clearer signals.
+Metadata: {'approved': True, 'fallback': False}
+
+------------------------------------------------------------
+[AGENT] RISK_MANAGER
+------------------------------------------------------------
+Recommendation: HOLD
+Confidence: 65%
+Reasoning: Recommendation is reasonable given recent negative sentiment and price decline; caution is warranted.
+Metadata: {'approved': True, 'fallback': False}
+
+------------------------------------------------------------
+[AGENT] PORTFOLIO_OPTIMIZER
+------------------------------------------------------------
+Recommendation: HOLD
+Confidence: 65%
+Reasoning: Caution is warranted due to recent negative sentiment and price decline
+Metadata: {'trade_size': 0, 'approved': True, 'fallback': False}
+
+============================================================
+[FINAL] DECISION
+============================================================
+Action: HOLD
+Trade Size: 0 shares
+Confidence: 65%
+Approved: True
+Fallback: False
+
+[INFO] Run with execute = True to execute trades
+
+
+[SUMMARY]
+============================================================
+BBRQ-FX | BUY  |    85% |  25 shares
+BJBY-FX | SELL |    85% |  25 shares
+YWMG-FX | HOLD |    65% |   0 shares
+</code></pre>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>Because the three tickers carry genuinely different signal strength, the pipeline produces a genuinely different outcome for each one.</p>
+<p>A clear uptrend paired with strongly positive sentiment leads to a confident buy recommendation, a clear downtrend paired with strongly negative sentiment leads to a confident sell, and a balanced, directionless market leads the system to hold, with lower confidence, since there is no strong case in either direction.</p>
+<p>This variation is also what lets the <strong>Chain of Responsibility</strong> pattern demonstrate its value, because each agent evaluates the same evidence independently, so a later agent can reach a different conclusion than the one before it - a Risk Manager, for instance, may be more willing to act decisively on strong sentiment than a Data Analyst.</p>
+<p>That disagreement and the trail of reasoning behind it, is what makes a multi-agent pipeline more interesting to study than a single model call, since each stage adds its own perspective and the final decision reflects all of them.</p>
+<p>In the example application, we examined how agents use SingleStore to fetch market signals, sentiment indicators, portfolio positions and historical decisions, turning the database into a high-performance feature store. We also saw how agents write recommendations, confidence scores and rationales back into <code>agent_decisions</code>, creating a full audit log suitable for compliance, debugging or model improvement. This grounding in real data is essential for agentic systems, especially as large language models grow more powerful but still require structured context to operate safely in domains like finance.</p>
+<p>The chapter also highlighted patterns central to practical agent design, such as structured outputs, deterministic pipelines, downstream validation through a Risk Manager and safe trade execution through database updates. None of these patterns are specific to trading - they apply just as well to supply chain agents, security agents, customer support routing, scientific workflows and any scenario where an agentic system must reason over dynamic data.</p>
+<p>With this final chapter, the book completes its arc. Starting with multi-model data and moving through streaming, machine learning and AI, we close by showing how these capabilities converge to support next-generation autonomous systems.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../part-ai/using-mcp-for-real-time-data-access.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../part-back/conclusions.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../part-ai/using-mcp-for-real-time-data-access.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../part-back/conclusions.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-c22b7243.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

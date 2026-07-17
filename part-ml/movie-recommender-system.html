@@ -1,0 +1,1175 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Chapter 13: Movie Recommender System - The SingleStore Cookbook</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Recipes for Multi-Model, Machine Learning and AI Data Engineering">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-0392ca55.css">
+        <link rel="stylesheet" href="../css/chrome-fc474251.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-7ad5f1bc.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-e2854824.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The SingleStore Cookbook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/singlestore-cookbook/singlestore-cookbook.github.io" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/singlestore-cookbook/singlestore-cookbook.github.io/edit/main/src/part-ml/movie-recommender-system.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="chapter-13-movie-recommender-system"><a class="header" href="#chapter-13-movie-recommender-system">Chapter 13: Movie Recommender System</a></h1>
+<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<p>In this chapter, we’ll generate a synthetic movie recommendation dataset inspired by MovieLens. Instead of using the original MovieLens files, which come with licensing restrictions, we’ll create our own dataset that preserves the structure, scale and statistical flavor of MovieLens 1M.</p>
+<p>The dataset includes three main files:</p>
+<ul>
+<li>
+<p><strong>Users</strong>: Each user is assigned demographic attributes such as gender, age bucket, occupation and location. To mimic realism, we’ll introduce random per-user rating biases and personalized genre preferences.</p>
+</li>
+<li>
+<p><strong>Movies</strong>: Each movie is given a release year, one to three genres and a plausible-sounding title generated from genre-specific vocabularies. Genre popularity and historical release distributions are modeled to reproduce patterns such as long-tail distributions and recency effects.</p>
+</li>
+<li>
+<p><strong>Ratings</strong>: Users provide ratings to movies on a 1-5 scale. Rating generation combines global tendencies (average score), user and movie biases, genre correlations and noise. We’ll also simulate realistic phenomena such as long-tail popularity (a few movies being rated a lot), varied user activity levels and timestamps biased toward recent years.</p>
+</li>
+</ul>
+<p>Throughout, we’ll include sanity checks (e.g., probability normalization, minimum ratings per user) to ensure internal consistency. Finally, the results are in the familiar <code>users.dat</code>, <code>movies.dat</code> and <code>ratings.dat</code> format.</p>
+<p>This synthetic dataset serves as a drop-in replacement for MovieLens in our recommender system examples: large enough to feel realistic, rich with structure, yet free of licensing restrictions.</p>
+<h2 id="create-the-database-and-tables"><a class="header" href="#create-the-database-and-tables">Create the Database and Tables</a></h2>
+<p>In the SingleStore Portal, let’s use the <strong>SQL Editor</strong> to create a new database. Call this <code>movies_db</code>, as follows:</p>
+<pre><code class="language-sql">CREATE DATABASE IF NOT EXISTS movies_db;
+</code></pre>
+<p>We’ll also create three tables, as follows:</p>
+<pre><code class="language-sql">USE movies_db;
+
+DROP TABLE IF EXISTS users;
+CREATE TABLE users (
+    id INT PRIMARY KEY,
+    age INT,
+    gender VARCHAR(5),
+    occupation VARCHAR(255),
+    zip_code VARCHAR(255),
+    factors VECTOR(200)
+);
+
+DROP TABLE IF EXISTS movies;
+CREATE TABLE movies (
+    id INT PRIMARY KEY,
+    title VARCHAR(255),
+    genres VARCHAR(255),
+    factors VECTOR(200)
+);
+
+DROP TABLE IF EXISTS ratings;
+CREATE TABLE ratings (
+    user_id INT,
+    movie_id INT,
+    rating FLOAT,
+    timestamp INT
+);
+</code></pre>
+<p>We’ll use SingleStore’s <code>VECTOR</code> data type in the <strong>users</strong> and <strong>movies</strong> tables.</p>
+<h2 id="fill-out-the-notebook"><a class="header" href="#fill-out-the-notebook">Fill out the Notebook</a></h2>
+<p>Let’s now create a new Python notebook. We’ll call it <strong>movies</strong>.</p>
+<p>Let’s start by creating the movies DataFrame:</p>
+<pre><code class="language-python">movies_csv_url = ...
+
+movies_df = pd.read_csv(
+    movies_csv_url,
+    engine = "python",
+    sep = "::",
+    header = None,
+    encoding = "latin1",
+    names = ["id", "title", "genres"]
+)
+</code></pre>
+<p>We’ll create a WordCloud to see some of the popular movie names:</p>
+<pre><code class="language-python">movie_titles_list = movies_df["title"].tolist()
+movie_titles_corpus = " ".join(movie_titles_list)
+
+wordcloud = WordCloud(
+    stopwords = STOPWORDS,
+    background_color = "lightgrey",
+    colormap = "hot",
+    max_words = 50,
+    # collocations = False
+).generate(movie_titles_corpus)
+
+plt.figure(figsize = (10, 8))
+plt.imshow(wordcloud, interpolation = "bilinear")
+plt.axis("off")
+plt.show()
+</code></pre>
+<p>Example output is shown in Figure 13-1.</p>
+<p><img src="movie-recommender-system-media/image1.png" alt=""></p>
+<p><em>Figure 13-1. WordCloud.</em></p>
+<p>Next, let’s create the users DataFrame:</p>
+<pre><code class="language-python">users_csv_url = ...
+
+users_df = pd.read_csv(
+    users_csv_url,
+    engine = "python",
+    sep = "::",
+    header = None,
+    encoding = "latin1",
+    names = ["id", "gender", "age", "occupation", "zip_code"]
+)
+</code></pre>
+<p>Let’s do a quick analysis of gender:</p>
+<pre><code class="language-python">result = (
+    users_df.groupby("gender")
+    .size()
+    .reset_index(name = "count")
+)
+
+print(result.to_string(index = False))
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">gender  count
+     F   1738
+     M   4302
+</code></pre>
+<p>and a quick analysis of profession:</p>
+<pre><code class="language-python">result = (
+    users_df.groupby("occupation")
+    .size()
+    .reset_index(name = "count")
+    .sort_values(by = "count", ascending = False)
+    .head(21)
+)
+
+print(result.to_string(index = False))
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">          occupation  count
+college/grad student    732
+executive/managerial    700
+               other    689
+ technician/engineer    514
+   academic/educator    511
+          programmer    405
+              artist    278
+     sales/marketing    276
+              writer    264
+       self-employed    242
+  doctor/health care    227
+      clerical/admin    195
+        K-12 student    195
+           scientist    156
+             retired    144
+              lawyer    136
+    customer service    131
+           homemaker    116
+ tradesman/craftsman     60
+          unemployed     53
+              farmer     16
+</code></pre>
+<p>This is similar in distribution to MovieLens.</p>
+<p>Finally, let’s create the ratings DataFrame:</p>
+<pre><code class="language-python">ratings_csv_url = ...
+
+ratings_df = pd.read_csv(
+    ratings_csv_url,
+    engine = "python",
+    sep = "::",
+    header = None,
+    encoding = "latin1",
+    names = ["user_id", "movie_id", "rating", "timestamp"]
+)
+</code></pre>
+<p>Let’s do a quick plot of the movie ratings:</p>
+<pre><code class="language-python">ratings_df["rating"].plot.hist(
+    edgecolor = "white",
+    color = "#32B5C9",
+    rwidth = 0.9,
+    bins = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5]
+)
+
+plt.ylabel("Frequency")
+plt.xlabel("Rating")
+plt.show()
+</code></pre>
+<p>Example output is shown in Figure 13-2.</p>
+<p><img src="movie-recommender-system-media/image2.png" alt=""></p>
+<p><em>Figure 13-2. Movie Ratings.</em></p>
+<p>We can see that most ratings are 3 and 4.</p>
+<p>Next, we’ll convert the synthetic ratings data into the Surprise library format, split the data for training/testing and set up the parameters for training a collaborative filtering model using SVD. In recommendation systems, SVD is used for matrix factorization, which helps in predicting missing entries in a user-item rating matrix.</p>
+<pre><code class="language-python">reader = Reader(rating_scale = (1, 5))
+data = Dataset.load_from_df(
+    ratings_df[["user_id", "movie_id", "rating"]],
+    reader
+)
+
+train, test = train_test_split(
+    data,
+    test_size = 0.3,
+    random_state = 42
+)
+
+best_params = {
+    "n_factors": 100,
+    "reg_all": 0.05,
+    "n_epochs": 40
+}
+</code></pre>
+<p>A set of default values for <code>best_params</code> are provided, but can be tuned.</p>
+<p>Now, we’ll initialize SVD, create the model and then fit the model on the training data. During training:</p>
+<ul>
+<li>
+<p>It estimates biases (global, user, item).</p>
+</li>
+<li>
+<p>It learns latent vectors (hidden features) for each user and each movie.</p>
+</li>
+<li>
+<p>It minimizes the error between predicted and actual ratings, using gradient descent with regularization.</p>
+</li>
+</ul>
+<pre><code class="language-python">model = SVD(
+    n_factors = best_params["n_factors"],
+    reg_all = best_params["reg_all"],
+    n_epochs = best_params["n_epochs"],
+    random_state = 0
+)
+
+model.fit(train)
+</code></pre>
+<p>We can then make prediction on the testing data:</p>
+<pre><code class="language-python">predictions = model.test(test)
+
+predictions_df = pd.DataFrame(
+    predictions,
+    columns = ["user_id", "movie_id", "rating", "prediction", "details"]
+)
+
+predictions_df = predictions_df.drop(columns = ["details"])
+
+predictions_df.head()
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">   user_id  movie_id  rating  prediction
+0     2934      3594     3.0    3.184101
+1     5706      1535     4.0    4.165922
+2     5251      1283     4.0    3.390595
+3     5683      3186     5.0    4.247155
+4     1120      1012     5.0    4.188839
+</code></pre>
+<p>Let’s look at some metrics:</p>
+<pre><code class="language-python">rmse = accuracy.rmse(predictions)
+mae = accuracy.mae(predictions)
+mse = accuracy.mse(predictions)
+fcp = accuracy.fcp(predictions)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">RMSE: 0.4085
+MAE: 0.3207
+MSE: 0.1669
+FCP: 0.9411
+</code></pre>
+<p>The SVD model is performing really well. Predictions are close to the true ratings (low RMSE/MAE) and, more importantly, it’s ranking movies in the right order for users (very high FCP).</p>
+<p>Next, the following code takes the true and predicted ratings from the model’s output and converts them into binary labels for classification-style evaluation. First, it extracts the actual ratings (<code>y_true</code>) and the model’s predicted ratings (<code>y_pred</code>). Then, using a threshold of 3.5, it labels ratings as positive (1 = liked) if they are equal to or above the threshold and negative (0 = not liked) if they are below. This transformation allows us to evaluate the recommender not just on how close predictions are numerically, but also on how well it distinguishes between liked and disliked items.</p>
+<pre><code class="language-python">y_true = [true_r for (_, _, true_r, _, _) in predictions]
+y_pred = [est for (_, _, _, est, _) in predictions]
+
+threshold = 3.5
+y_true_binary = [1 if rating &gt;= threshold else 0 for rating in y_true]
+y_pred_binary = [1 if rating &gt;= threshold else 0 for rating in y_pred]
+</code></pre>
+<p>Let’s plot a precision-recall curve:</p>
+<pre><code class="language-python">precision, recall, _ = metrics.precision_recall_curve(y_true_binary, y_pred)
+plt.figure(figsize = (10, 6))
+plt.plot(
+    recall,
+    precision,
+    marker = "."
+)
+
+plt.title("Precision-Recall Curve")
+plt.xlabel("Recall")
+plt.ylabel("Precision")
+
+plt.grid(True)
+plt.show()
+</code></pre>
+<p>Example output shown in Figure 13-3.</p>
+<p><img src="movie-recommender-system-media/image3.png" alt=""></p>
+<p><em>Figure 13-3. Precision-Recall.</em></p>
+<p>The plot visualizes how varying the decision threshold affects both precision and recall, providing insights into the model’s capability to balance between correctly identifying positives and minimizing false positives. A good classifier strives to achieve high precision and recall simultaneously, as represented by a curve that hugs the upper-right corner of the plot.</p>
+<p>The following code generates a Receiver Operating Characteristic (ROC) curve to evaluate the recommender system as a binary classifier. It computes the false positive rate (FPR) and true positive rate (TPR) from the binary labels and predicted scores, then plots them to visualize the trade-off between sensitivity and specificity. The Area Under the Curve (AUC) is also calculated, providing a single metric that summarizes how well the model separates liked from disliked movies. An AUC close to 1 indicates strong discriminatory power, while the dashed diagonal line represents random guessing at 50%.</p>
+<pre><code class="language-python">fpr, tpr, _ = metrics.roc_curve(y_true_binary, y_pred)
+roc_auc = metrics.auc(fpr, tpr)
+plt.figure(figsize = (10, 6))
+plt.plot(
+    fpr,
+    tpr,
+    marker = ".",
+    label = f"ROC Curve (AUC = {roc_auc:.2f})"
+)
+plt.plot(
+    [0, 1],
+    [0, 1],
+    linestyle = "--",
+    label = "50% Line"
+)
+
+plt.title("ROC Curve")
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate")
+plt.legend()
+
+plt.grid(True)
+plt.show()
+</code></pre>
+<p>Example output shown in Figure 13-4.</p>
+<p><img src="movie-recommender-system-media/image4.png" alt=""></p>
+<p><em>Figure 13-4. ROC/AUC.</em></p>
+<p>Now let’s plot a confusion matrix.</p>
+<pre><code class="language-python">cm = metrics.confusion_matrix(y_true_binary, y_pred_binary)
+
+labels = ["Negative", "Positive"]
+
+disp = metrics.ConfusionMatrixDisplay(confusion_matrix = cm, display_labels = labels)
+disp.plot(cmap = "Reds", values_format = "d")
+plt.title("Confusion Matrix for Recommender System")
+plt.show()
+</code></pre>
+<p>Example output shown in Figure 13-5.</p>
+<p><img src="movie-recommender-system-media/image5.png" alt=""></p>
+<p><em>Figure 13-5. Confusion Matrix.</em></p>
+<p>From these numbers, the model is performing very well at identifying liked movies (high true positives, relatively low false negatives), which is what we generally want in a recommender, since it is better to slightly “over-recommend” than to miss too many good options. The false positives are not negligible, but compared to the scale of true positives, the model’s precision and recall are both likely quite strong.</p>
+<p>We can output more detailed metrics:</p>
+<pre><code class="language-python">print("Accuracy :", metrics.accuracy_score(y_true_binary, y_pred_binary))
+print("Precision:", metrics.precision_score(y_true_binary, y_pred_binary))
+print("Recall   :", metrics.recall_score(y_true_binary, y_pred_binary))
+print("F1-score :", metrics.f1_score(y_true_binary, y_pred_binary))
+
+print("\nClassification Report:\n")
+print(metrics.classification_report(y_true_binary, y_pred_binary))
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Accuracy : 0.9005008948120895
+Precision: 0.8903795702852588
+Recall   : 0.9412012496928424
+F1-score : 0.9150853242320819
+
+Classification Report:
+
+              precision    recall  f1-score   support
+
+           0       0.92      0.85      0.88    129141
+           1       0.89      0.94      0.92    170922
+
+    accuracy                           0.90    300063
+   macro avg       0.90      0.89      0.90    300063
+weighted avg       0.90      0.90      0.90    300063
+</code></pre>
+<p>From these results, the recommender slightly favors recall over precision, which is often the right trade-off in recommendation systems. It errs on the side of recommending more, rather than risking missing good items.</p>
+<p>Now let’s look at user coverage and item diversity:</p>
+<pre><code class="language-python">unique_users = ratings_df["user_id"].nunique()
+users_with_recommendations = len(set([uid for uid, _, _, _, _ in predictions]))
+user_coverage = users_with_recommendations / unique_users
+print(f"User Coverage: {user_coverage:.2%}")
+
+recommended_items = set([iid for _, iid, _, _, _ in predictions])
+total_items = movies_df["id"].nunique()
+item_diversity = len(recommended_items) / total_items
+print(f"Item Diversity: {item_diversity:.2%}")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">User Coverage: 100.00%
+Item Diversity: 7.57%
+</code></pre>
+<p>The recommender performs very well in terms of accuracy and recall and it ensures all users get recommendations. However, the relatively low item diversity suggests that it leans towards recommending a narrower part of the catalog, which might limit discovery.</p>
+<p>Now, let’s translate the model’s internal numbering of users and movies back to the real IDs from our dataset, which is essential for producing readable recommendations:</p>
+<pre><code class="language-python">raw_user_id_mapping = {inner_id: train.to_raw_uid(inner_id) for inner_id in range(train.n_users)}
+raw_item_id_mapping = {inner_id: train.to_raw_iid(inner_id) for inner_id in range(train.n_items)}
+</code></pre>
+<p>Now we’ll take the SVD model’s learned user embeddings (latent factors) and create a clean DataFrame that links each original user ID to their learned preferences:</p>
+<pre><code class="language-python">user_factors = model.pu
+
+user_factors_df = pd.DataFrame({
+    "id": [raw_user_id_mapping[idx] for idx in range(user_factors.shape[0])],
+    "factors": [np.array(factor, dtype = np.float32) for factor in user_factors]
+})
+
+user_factors_df = user_factors_df.sort_values(by = "id")
+
+user_factors_df.head()
+</code></pre>
+<p>and we’ll repeat this for movies:</p>
+<pre><code class="language-python">item_factors = model.qi
+
+item_factors_df = pd.DataFrame({
+    "id": [raw_item_id_mapping[idx] for idx in range(item_factors.shape[0])],
+    "factors": [np.array(factor, dtype = np.float32) for factor in item_factors]
+})
+
+item_factors_df = item_factors_df.sort_values(by="id")
+
+item_factors_df.head()
+</code></pre>
+<p>Using these DataFrames, we’ll merge the factors first for users:</p>
+<pre><code class="language-python">users_df = pd.merge(
+    users_df,
+    user_factors_df,
+    on = "id",
+    how = "left"
+)
+
+users_df = users_df.dropna(subset = ["factors"])
+
+users_df.head()
+</code></pre>
+<p>and movies:</p>
+<pre><code class="language-python">movies_df = pd.merge(
+    movies_df,
+    item_factors_df,
+    on = "id",
+    how = "left"
+)
+
+movies_df = movies_df.dropna(subset = ["factors"])
+
+movies_df.head()
+</code></pre>
+<p>The factors in both cases will be stored in the <code>VECTOR</code> columns in the respective tables.</p>
+<p>Let’s now connect to SingleStore:</p>
+<pre><code class="language-python">from sqlalchemy import *
+
+db_connection = create_engine(connection_url)
+</code></pre>
+<p>First, we’ll ensure that we start with empty tables:</p>
+<pre><code class="language-python">tables = ["users", "movies", "ratings"]
+
+with db_connection.begin() as conn:
+    for table in tables:
+        conn.execute(text(f"TRUNCATE TABLE {table};"))
+</code></pre>
+<p>We’ll also ensure that the <code>VECTOR</code> columns are of the appropriate length for the factors we want to store:</p>
+<pre><code class="language-python">n_factors = best_params["n_factors"]
+tables = ["users", "movies"]
+
+for table in tables:
+    with db_connection.begin() as conn:
+        conn.execute(text(f"ALTER TABLE {table} DROP COLUMN factors;"))
+        conn.execute(text(f"ALTER TABLE {table} ADD COLUMN factors VECTOR({n_factors});"))
+</code></pre>
+<p>Then we’ll write the DataFrames. First users:</p>
+<pre><code class="language-python">users_df.to_sql(
+    "users",
+    con = db_connection,
+    if_exists = "append",
+    index = False,
+    chunksize = 1000
+)
+</code></pre>
+<p>then movies:</p>
+<pre><code class="language-python">movies_df.to_sql(
+    "movies",
+    con = db_connection,
+    if_exists = "append",
+    index = False,
+    chunksize = 1000
+)
+</code></pre>
+<p>and finally, ratings:</p>
+<pre><code class="language-python">ratings_df.to_sql(
+    "ratings",
+    con = db_connection,
+    if_exists = "append",
+    index = False,
+    chunksize = 1000
+)
+</code></pre>
+<h2 id="example-queries"><a class="header" href="#example-queries">Example Queries</a></h2>
+<p>Let’s now run some queries on the database.</p>
+<p>First, let’s compute similarity between a user and a movie.</p>
+<pre><code class="language-sql">SELECT
+    u.id AS user_id,
+    m.title,
+    (u.factors &lt;*&gt; m.factors) AS similarity_score
+FROM users u, movies m
+WHERE u.id = 1 AND m.id = 989;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+---------+-----------------------------------+----------------------+
+| user_id | title                             | similarity_score     |
++---------+-----------------------------------+----------------------+
+|       1 | Colony on the Stephen Fort (1978) | -0.11794045567512512 |
++---------+-----------------------------------+----------------------+
+</code></pre>
+<p>The similarity score between user and the movie is slightly negative, indicating the movie’s latent features are not aligned with the user’s preferences.</p>
+<p>Next, let’s find top movies for a user based on similarity.</p>
+<pre><code class="language-sql">SELECT
+    m.title,
+    m.genres,
+    (u.factors &lt;*&gt; m.factors) AS similarity_score
+FROM users u, movies m
+WHERE u.id = 1
+ORDER BY similarity_score DESC
+LIMIT 10;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+-----------------------------------------+-------------------------+---------------------+
+| title                                   | genres                  | similarity_score    |
++-----------------------------------------+-------------------------+---------------------+
+| Misadventures: The Usually Story (1977) | Comedy                  |  0.5429962277412415 |
+| Hear Scream (2002)                      | Horror                  | 0.34303292632102966 |
+| The Last Curse (1970)                   | Horror|Film-Noir        |  0.3351995050907135 |
+| The Around Robot (2000)                 | Children's|Sci-Fi       | 0.29692572355270386 |
+| The Fiasco of the Operation (1999)      | Comedy                  |  0.2640172243118286 |
+| Natural Player (2008)                   | Film-Noir               | 0.24245382845401764 |
+| The Symphony of the Choose (1999)       | Musical|Mystery         | 0.23745118081569672 |
+| Similar Owner (1990)                    | Drama|Documentary|Crime | 0.23657731711864471 |
+| The Mansion of the Skill (1998)         | Mystery                 | 0.21089650690555573 |
+| Financial People (1974)                 | Sci-Fi                  | 0.20892225205898285 |
++-----------------------------------------+-------------------------+---------------------+
+</code></pre>
+<p>For user 1, the top 10 movies by latent factor similarity include a mix of genres (Comedy, Horror, Sci-Fi), showing which movies are most aligned with their inferred tastes.</p>
+<p>Now, let’s calculate the similarity matrix between users and movies.</p>
+<pre><code class="language-sql">SELECT
+    u.id AS user_id,
+    m.title,
+    (u.factors &lt;*&gt; m.factors) AS similarity_score
+FROM users u, movies m
+ORDER BY similarity_score DESC
+LIMIT 10;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+---------+-------------------------------------+--------------------+
+| user_id | title                               | similarity_score   |
++---------+-------------------------------------+--------------------+
+|     977 | Star: The Difference Story (2006)   | 1.3437403440475464 |
+|    5209 | The Legend of Trevor Hines (2023)   | 1.2662196159362793 |
+|    1265 | Assault: The Meeting Story (1975)   | 1.2640817165374756 |
+|    4589 | The Legend of Brian Morales (2008)  | 1.2541571855545044 |
+|    2763 | A Singularity in Alberthaven (2008) | 1.2411115169525146 |
+|    3776 | Measure Echo (1963)                 | 1.2297375202178955 |
+|    2188 | The Colony of the Pull (1975)       | 1.2200380563735962 |
+|    5519 | A Singularity in Alberthaven (2008) | 1.2074799537658691 |
+|    1730 | The Fiasco of the Operation (1999)  | 1.2000336647033691 |
+|    5531 | Guardian: The Child Story (2007)    | 1.1966848373413086 |
++---------+-------------------------------------+--------------------+
+</code></pre>
+<p>We can see that across all users, the highest similarity scores identify pairs where a user strongly matches a movie’s latent factors.</p>
+<p>Next, let’s recommend top movies for each user.</p>
+<pre><code class="language-sql">SELECT
+    u.id AS user_id,
+    m.title,
+    (u.factors &lt;*&gt; m.factors) AS similarity_score
+FROM users u, movies m
+ORDER BY u.id, similarity_score DESC
+LIMIT 10;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+---------+-----------------------------------------+---------------------+
+| user_id | title                                   | similarity_score    |
++---------+-----------------------------------------+---------------------+
+|       1 | Misadventures: The Usually Story (1977) |  0.5429962277412415 |
+|       1 | Hear Scream (2002)                      | 0.34303292632102966 |
+|       1 | The Last Curse (1970)                   |  0.3351995050907135 |
+|       1 | The Around Robot (2000)                 | 0.29692572355270386 |
+|       1 | The Fiasco of the Operation (1999)      |  0.2640172243118286 |
+|       1 | Natural Player (2008)                   | 0.24245382845401764 |
+|       1 | The Symphony of the Choose (1999)       | 0.23745118081569672 |
+|       1 | Similar Owner (1990)                    | 0.23657731711864471 |
+|       1 | The Mansion of the Skill (1998)         | 0.21089650690555573 |
+|       1 | Financial People (1974)                 | 0.20892225205898285 |
++---------+-----------------------------------------+---------------------+
+</code></pre>
+<p>This query ranks movies for each user individually by similarity.</p>
+<p>Now, let’s find the top-10 movies for a given user, excluding already-rated movies.</p>
+<pre><code class="language-sql">SELECT
+    m.id,
+    m.title,
+    m.genres,
+    (u.factors &lt;*&gt; m.factors) AS predicted_rating
+FROM users u
+JOIN movies m ON TRUE
+WHERE u.id = 1
+  AND m.id NOT IN (SELECT movie_id FROM ratings WHERE user_id = u.id)
+ORDER BY predicted_rating DESC
+LIMIT 10;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+------+-----------------------------------+------------------------------+---------------------+
+| id   | title                             | genres                       | predicted_rating    |
++------+-----------------------------------+------------------------------+---------------------+
+|  354 | The Last Curse (1970)             | Horror|Film-Noir             |  0.3351995050907135 |
+| 2921 | The Around Robot (2000)           | Children's|Sci-Fi            | 0.29692572355270386 |
+|  550 | Natural Player (2008)             | Film-Noir                    | 0.24245382845401764 |
+|  424 | The Symphony of the Choose (1999) | Musical|Mystery              | 0.23745118081569672 |
+| 3283 | Similar Owner (1990)              | Drama|Documentary|Crime      | 0.23657731711864471 |
+|  352 | The Mansion of the Skill (1998)   | Mystery                      | 0.21089650690555573 |
+| 1251 | Financial People (1974)           | Sci-Fi                       | 0.20892225205898285 |
+| 1760 | A Protocol in Palmerville (2014)  | Thriller|Musical|Documentary | 0.19852496683597565 |
+| 1453 | Ground Witness (2022)             | Mystery                      | 0.19429895281791687 |
+|  554 | Tale on the James Station (1938)  | Fantasy                      | 0.19405868649482727 |
++------+-----------------------------------+------------------------------+---------------------+
+</code></pre>
+<p>The results show predicted top movies for user 1 that they haven’t rated yet, allowing the recommender to suggest new content rather than items already seen.</p>
+<p>Next, let’s find the top movies predicted ratings.</p>
+<pre><code class="language-sql">SELECT
+    m.title,
+    m.genres,
+    (m.factors &lt;*&gt; u.factors) AS predicted_rating
+FROM movies m, users u
+WHERE u.gender = 'F' AND u.age = 18
+ORDER BY predicted_rating DESC
+LIMIT 10;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+------------------------------------+-----------------------+--------------------+
+| title                              | genres                | predicted_rating   |
++------------------------------------+-----------------------+--------------------+
+| Guardian: The Child Story (2007)   | Fantasy               | 1.1966848373413086 |
+| Witness on the Jack Row (1994)     | Mystery               | 1.0511256456375122 |
+| The Recon of the Station (2012)    | Action|Sci-Fi|Fantasy | 0.9973692893981934 |
+| The Candidate and the Force (1974) | Action                | 0.9807149171829224 |
+| Guardian: The Child Story (2007)   | Fantasy               | 0.9801395535469055 |
+| The Colony of the Pull (1975)      | Sci-Fi|Action         | 0.9595403671264648 |
+| The Strike of the Prevent (1992)   | Action|Adventure      | 0.9424246549606323 |
+| The Deep and the Caper (1970)      | Comedy|Adventure      | 0.9109749794006348 |
+| Witness on the Jack Row (1994)     | Mystery               | 0.9075832366943359 |
+| The Model and the Blunder (1997)   | Comedy                | 0.9016542434692383 |
++------------------------------------+-----------------------+--------------------+
+</code></pre>
+<p>For female users aged 18, the top predicted ratings highlight movies most likely to appeal to this demographic.</p>
+<p>Next, let’s find Movies Similar to Computer Whisper.</p>
+<pre><code class="language-sql">SELECT
+    m.title,
+    (m.factors &lt;*&gt; qv.factors) AS similarity_score
+FROM movies m,
+    (SELECT factors AS factors FROM movies WHERE id = 2) AS qv -- Computer Whisper
+ORDER BY similarity_score DESC
+LIMIT 10;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+---------------------------------+---------------------+
+| title                           | similarity_score    |
++---------------------------------+---------------------+
+| Computer Whisper (1999)         |  0.8242829442024231 |
+| Official Appear (2002)          | 0.24847206473350525 |
+| Recon: The Decide Story (1999)  | 0.24466082453727722 |
+| Theory Star (1974)              | 0.22606335580348969 |
+| The Public Honor (1989)         |  0.2253294289112091 |
+| Measure Echo (1963)             |  0.2225538045167923 |
+| The Asylum of the Which (1944)  | 0.22162827849388123 |
+| Into Somebody (1989)            | 0.20337367057800293 |
+| Summer: The System Story (2005) | 0.19393306970596313 |
+| Reveal Echo (1975)              | 0.19028185307979584 |
++---------------------------------+---------------------+
+</code></pre>
+<p>The results show the 10 movies most similar to Computer Whisper based on latent factors, useful for movie similarity recommendations.</p>
+<p>Next, let’s find users similar to Computer Whisper.</p>
+<pre><code class="language-sql">SELECT
+    u.gender,
+    u.age,
+    u.occupation,
+    u.zip_code,
+    (m.factors &lt;*&gt; u.factors) AS similarity_score
+FROM movies m, users u
+WHERE m.id = 2 -- Computer Whisper
+ORDER BY similarity_score DESC
+LIMIT 10;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+--------+------+----------------------+----------+---------------------+
+| gender | age  | occupation           | zip_code | similarity_score    |
++--------+------+----------------------+----------+---------------------+
+| F      |   56 | writer               | 56621    | 0.38576820492744446 |
+| M      |   50 | clerical/admin       | 81935    | 0.34670817852020264 |
+| M      |   18 | academic/educator    | 39898    |  0.3156816363334656 |
+| M      |   25 | sales/marketing      | 42958    |  0.3128150999546051 |
+| M      |   56 | college/grad student | 77355    |  0.3116776943206787 |
+| M      |   45 | programmer           | 24678    |  0.3059542775154114 |
+| M      |    1 | other                | 93494    | 0.30399641394615173 |
+| M      |   35 | lawyer               | 8573     | 0.30269429087638855 |
+| M      |   50 | scientist            | 60440    | 0.30082404613494873 |
+| F      |   25 | clerical/admin       | 16843    |  0.2997968792915344 |
++--------+------+----------------------+----------+---------------------+
+</code></pre>
+<p>Here, we identify users whose preferences align with the movie Computer Whisper. This is helpful for collaborative filtering or target user analysis.</p>
+<p>Now, let’s find the most similar users to a given user.</p>
+<pre><code class="language-sql">SELECT
+    u2.id AS other_user_id,
+    (u1.factors &lt;*&gt; u2.factors) AS similarity_score
+FROM users u1
+JOIN users u2 ON u1.id &lt;&gt; u2.id
+WHERE u1.id = 1
+ORDER BY similarity_score DESC
+LIMIT 10;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+---------------+--------------------+
+| other_user_id | similarity_score   |
++---------------+--------------------+
+|            12 | 0.6378978490829468 |
+|          1119 | 0.6228543519973755 |
+|          5903 | 0.6025550961494446 |
+|          3949 | 0.5898808240890503 |
+|          3230 | 0.5796329975128174 |
+|          3224 | 0.5751187801361084 |
+|          2458 | 0.5426428318023682 |
+|          5703 | 0.5250847935676575 |
+|          5635 | 0.5229214429855347 |
+|          4364 | 0.5180311799049377 |
++---------------+--------------------+
+</code></pre>
+<p>Lists the 10 users most similar to user 1, based on latent factors, which can aid in social or collaborative recommendations.</p>
+<p>Next, let’s see a user activity overview.</p>
+<pre><code class="language-sql">SELECT
+    u.gender,
+    u.age,
+    COUNT(r.rating) AS num_ratings,
+    AVG(r.rating) AS avg_rating
+FROM users u
+LEFT JOIN ratings r ON u.id = r.user_id
+GROUP BY u.gender, u.age
+ORDER BY u.gender, u.age;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+--------+------+-------------+--------------------+
+| gender | age  | num_ratings | avg_rating         |
++--------+------+-------------+--------------------+
+| F      |    1 |       38749 |  3.624532245993445 |
+| F      |   18 |       39556 | 3.6168722823339063 |
+| F      |   25 |       40740 | 3.6332596956308296 |
+| F      |   35 |       46039 |   3.61925758595973 |
+| F      |   45 |       37791 | 3.6272128284512184 |
+| F      |   50 |       44119 |  3.637820440173168 |
+| F      |   56 |       39978 |    3.6664915703637 |
+| M      |    1 |      101128 | 3.5906771616169606 |
+| M      |   18 |       98524 | 3.6053753400186754 |
+| M      |   25 |      104535 | 3.6049744104845267 |
+| M      |   35 |       98053 |  3.602847439649985 |
+| M      |   45 |      100718 | 3.5905399233503443 |
+| M      |   50 |      107005 |  3.626578197280501 |
+| M      |   56 |      103274 |  3.617870906520518 |
++--------+------+-------------+--------------------+
+</code></pre>
+<p>This aggregates rating behavior by gender and age, showing how many ratings each demographic gives on average and their typical rating score.</p>
+<p>Now, let’s find the most active users.</p>
+<pre><code class="language-sql">SELECT
+    u.id,
+    u.gender,
+    u.age,
+    COUNT(r.rating) AS num_ratings
+FROM users u
+LEFT JOIN ratings r ON u.id = r.user_id
+GROUP BY u.id, u.gender, u.age
+ORDER BY num_ratings DESC
+LIMIT 10;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+------+--------+------+-------------+
+| id   | gender | age  | num_ratings |
++------+--------+------+-------------+
+| 4021 | M      |   35 |         411 |
+|  277 | M      |   45 |         410 |
+| 5251 | M      |    1 |         409 |
+| 4693 | M      |   50 |         398 |
+|  367 | M      |    1 |         395 |
+| 1434 | F      |   56 |         392 |
+| 3421 | M      |   35 |         385 |
+| 5417 | M      |   50 |         377 |
+| 4466 | M      |   50 |         372 |
+| 4659 | F      |   45 |         365 |
++------+--------+------+-------------+
+</code></pre>
+<p>The query ranks users by the total number of ratings submitted, identifying highly engaged users in the dataset.</p>
+<p>Now, let’s look at the distribution of ratings.</p>
+<pre><code class="language-sql">SELECT
+    rating,
+    COUNT(*) AS count
+FROM ratings
+GROUP BY rating
+ORDER BY rating;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+--------+--------+
+| rating | count  |
++--------+--------+
+|      1 |    663 |
+|      2 |  46249 |
+|      3 | 383952 |
+|      4 | 477652 |
+|      5 |  91693 |
++--------+--------+
+</code></pre>
+<p>The results show the frequency of each rating value. Most ratings are 3 or 4, indicating a tendency toward neutral-to-positive evaluations.</p>
+<p>Now, let’s look at average ratings over time.</p>
+<pre><code class="language-sql">SELECT
+    YEAR(FROM_UNIXTIME(r.timestamp)) AS rating_year,
+    AVG(r.rating) AS avg_rating
+FROM ratings r
+GROUP BY rating_year
+ORDER BY rating_year;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+-------------+--------------------+
+| rating_year | avg_rating         |
++-------------+--------------------+
+|        2000 | 3.6923076923076925 |
+|        2001 | 3.6232258064516127 |
+|        2002 | 3.6179660366906017 |
+|        2003 | 3.6130733966663406 |
++-------------+--------------------+
+</code></pre>
+<p>Tracks the average rating per year, showing a slight downward trend from 2000 to 2003.</p>
+<p>Next, let’s look at the top average ratings by genre.</p>
+<pre><code class="language-sql">SELECT
+    genres,
+    ROUND(AVG(rating), 2) AS avg_rating,
+    COUNT(*) AS num_ratings
+FROM movies m
+JOIN ratings r ON m.id = r.movie_id
+GROUP BY genres
+ORDER BY avg_rating DESC
+LIMIT 10;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+----------------------------+------------+-------------+
+| genres                     | avg_rating | num_ratings |
++----------------------------+------------+-------------+
+| Fantasy|Romance|Drama      |       5.00 |           5 |
+| Documentary|War            |       4.77 |          13 |
+| Sci-Fi|Action|Comedy       |       4.67 |           3 |
+| Sci-Fi|Romance|Documentary |       4.50 |           4 |
+| Documentary|Crime|Horror   |       4.35 |          17 |
+| Horror|Children's          |       4.24 |          17 |
+| Thriller|Musical           |       4.21 |          33 |
+| Sci-Fi|Documentary         |       4.21 |          19 |
+| Sci-Fi|Film-Noir           |       4.19 |         149 |
+| War|Musical                |       4.18 |          40 |
++----------------------------+------------+-------------+
+</code></pre>
+<p>The query identifies genres with the highest average ratings. Niche combinations (e.g., Fantasy|Romance|Drama) often have very high ratings but few total ratings.</p>
+<p>Now, let’s find genre preferences by gender/age group.</p>
+<pre><code class="language-sql">SELECT
+    u.gender,
+    u.age,
+    m.genres,
+    ROUND(AVG(r.rating),2) AS avg_rating,
+    COUNT(*) AS num_ratings
+FROM users u
+JOIN ratings r ON u.id = r.user_id
+JOIN movies m ON m.id = r.movie_id
+GROUP BY u.gender, u.age, m.genres
+ORDER BY avg_rating DESC
+LIMIT 10;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+--------+------+----------------------------+------------+-------------+
+| gender | age  | genres                     | avg_rating | num_ratings |
++--------+------+----------------------------+------------+-------------+
+| M      |   25 | Thriller|Musical           |       5.00 |           2 |
+| M      |   50 | War|Musical                |       5.00 |           4 |
+| M      |   50 | Romance|Drama|Horror       |       5.00 |           3 |
+| M      |   25 | Documentary|War            |       5.00 |          10 |
+| M      |    1 | Documentary|Crime|Horror   |       5.00 |           6 |
+| M      |   35 | Sci-Fi|Romance|Documentary |       5.00 |           2 |
+| M      |   25 | Sci-Fi|Documentary         |       5.00 |           4 |
+| M      |    1 | Sci-Fi|Film-Noir           |       5.00 |           2 |
+| F      |   45 | Sci-Fi|Film-Noir           |       5.00 |           2 |
+| F      |   56 | Action|Mystery|Western     |       5.00 |           3 |
++--------+------+----------------------------+------------+-------------+
+</code></pre>
+<p>The query highlights the top-rated genres within specific gender and age groups, showing demographic-based taste patterns.</p>
+<p>Next, let’s find movies that are both highly rated and diverse (long-tail hits).</p>
+<pre><code class="language-sql">SELECT
+    m.title,
+    m.genres,
+    COUNT(r.rating) AS num_ratings,
+    AVG(r.rating) AS avg_rating
+FROM movies m
+JOIN ratings r ON m.id = r.movie_id
+GROUP BY m.id, m.title, m.genres
+HAVING COUNT(r.rating) BETWEEN 20 AND 100
+ORDER BY avg_rating DESC
+LIMIT 10;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+--------------------------------------+-------------------+-------------+--------------------+
+| title                                | genres            | num_ratings | avg_rating         |
++--------------------------------------+-------------------+-------------+--------------------+
+| The Care and the Conspiracy (1996)   | Thriller|Musical  |          33 |  4.212121212121212 |
+| The West and the Victory (1930)      | War|Musical       |          40 |              4.175 |
+| A Legacy in Cynthiafort (1970)       | Animation         |          43 |  4.093023255813954 |
+| The Nor and the Passage (1999)       | Drama|Documentary |          86 |  4.069767441860465 |
+| Recon: The Decide Story (1999)       | Action            |          29 |  4.068965517241379 |
+| Promise on the Andersen Point (1973) | Romance           |          59 |  4.067796610169491 |
+| Down Inside (1969)                   | Animation|Romance |          95 |  4.031578947368421 |
+| The Guardian of the Real (1936)      | Fantasy|Crime     |          70 | 3.9571428571428573 |
+| The Skill Fear (2018)                | Horror|Thriller   |          32 |            3.90625 |
+| Into Somebody (1989)                 | Film-Noir|Comedy  |          45 |  3.888888888888889 |
++--------------------------------------+-------------------+-------------+--------------------+
+</code></pre>
+<p>The query shows us movies with moderate rating counts (20–100) that achieve high average ratings, useful for surfacing underrated or “long-tail” content.</p>
+<p>Next, let’s do a cold-start problem check (movies with few ratings).</p>
+<pre><code class="language-sql">SELECT
+    m.title,
+    COUNT(r.rating) AS num_ratings
+FROM movies m
+LEFT JOIN ratings r ON m.id = r.movie_id
+GROUP BY m.id, m.title
+HAVING COUNT(r.rating) &lt; 5
+ORDER BY num_ratings ASC
+LIMIT 10;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+-------------------------------------------+-------------+
+| title                                     | num_ratings |
++-------------------------------------------+-------------+
+| The Secret of Tammy Stevens (2002)        |           1 |
+| Piece Trail (1976)                        |           2 |
+| The Fall of Jessica Allen (1978)          |           2 |
+| Heart: The Environmental Story (1970)     |           3 |
+| Federal Echo (1985)                       |           3 |
+| A Spotlight in Port Zacharyborough (1985) |           3 |
+| The Ground and the Fury (2004)            |           3 |
+| Awakening: The Become Story (1991)        |           3 |
+| Caper: The Class Story (1970)             |           3 |
+| Shoulder Tales (1986)                     |           3 |
++-------------------------------------------+-------------+
+</code></pre>
+<p>The query identifies movies with very few ratings (&lt; 5), highlighting items for which the system has little data to make recommendations.</p>
+<p>Finally, let’s find the ratings density (how filled the user–movie matrix is).</p>
+<pre><code class="language-sql">SELECT
+    COUNT(*) / (SELECT COUNT(*) FROM users) / (SELECT COUNT(*) FROM movies) AS density
+FROM ratings;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+------------+
+| density    |
++------------+
+| 0.53246790 |
++------------+
+</code></pre>
+<p>This shows that approximately 53% of the possible user–movie ratings exist, indicating a moderately sparse matrix suitable for collaborative filtering.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>In this chapter, we developed a movie recommendation system using collaborative filtering and matrix factorization. We began by preparing a dataset of user–movie ratings and splitting it into training and test sets. Using the Surprise library, we trained an SVD model to learn latent factors that represent both user preferences and movie characteristics.</p>
+<p>We evaluated the model’s predictive performance on unseen data by calculating standard classification-style metrics such as accuracy, precision, recall and F1-score, as well as generating a classification report to understand per-class behavior. The model achieved strong performance, showing its ability to generalize to new ratings.</p>
+<p>To assess recommendation quality beyond prediction accuracy, we also measured user coverage (the proportion of users who receive at least one recommendation) and item diversity (the proportion of unique recommended items across all users). Our system achieved full user coverage and reasonable item diversity, indicating that it can serve relevant recommendations to every user while offering variety.</p>
+<p>We then extracted the learned user and item factor vectors from the trained model and mapped them back to their original IDs. These factor embeddings capture hidden patterns in the data and can be stored in a database for fast retrieval and future use. We created <code>VECTOR</code> columns in our SingleStore database to store these embeddings and demonstrated how SQL queries can use them to generate recommendations directly. These queries showed how recommendation logic can be executed efficiently at query time without needing to rerun the model.</p>
+<p>By the end of this chapter, we built a fully working, end-to-end movie recommender pipeline, from data preparation and model training to evaluation, embedding extraction and database integration, laying the groundwork for scalable, real-world recommendation systems.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../part-ml/image-classification.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../part-ml/agriculture-analytics-using-r.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../part-ml/image-classification.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../part-ml/agriculture-analytics-using-r.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-c22b7243.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

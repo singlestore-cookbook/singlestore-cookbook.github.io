@@ -1,0 +1,598 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Chapter 19: Using LlamaIndex Workflows - The SingleStore Cookbook</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Recipes for Multi-Model, Machine Learning and AI Data Engineering">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-0392ca55.css">
+        <link rel="stylesheet" href="../css/chrome-fc474251.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-7ad5f1bc.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-e2854824.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The SingleStore Cookbook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/singlestore-cookbook/singlestore-cookbook.github.io" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/singlestore-cookbook/singlestore-cookbook.github.io/edit/main/src/part-ai/using-llamaindex-workflows.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="chapter-19-using-llamaindex-workflows"><a class="header" href="#chapter-19-using-llamaindex-workflows">Chapter 19: Using LlamaIndex Workflows</a></h1>
+<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<p>LlamaIndex is a data framework designed to connect large language models with external data sources, making it an ideal tool for building intelligent applications that combine the reasoning capabilities of LLMs with structured and unstructured data. When paired with SingleStore’s high-performance database, LlamaIndex enables powerful patterns like natural language querying, retrieval-augmented generation and conversational interfaces with memory.</p>
+<p>In this chapter, we’ll explore three fundamental LlamaIndex patterns using stock market data:</p>
+<ul>
+<li>
+<p><strong>Natural Language to SQL:</strong> Convert conversational queries into SQL statements, allowing users to ask questions about stock prices in plain English without writing any SQL code.</p>
+</li>
+<li>
+<p><strong>Retrieval-Augmented Generation:</strong> Combine vector embeddings stored in SingleStore with LLM reasoning to answer questions about company information that isn’t in structured tables, demonstrating how to augment a database with semantic search capabilities.</p>
+</li>
+<li>
+<p><strong>Conversational Memory:</strong> Build stateful chat interfaces that remember context across multiple interactions, enabling more natural multi-turn conversations about data.</p>
+</li>
+</ul>
+<p>Each pattern demonstrates how SingleStore’s dual capabilities as both a high-performance SQL database and a vector store make it an excellent foundation for LLM-powered applications. The stock ticker dataset provides a realistic scenario where users need to query time-series data, understand company information and have natural conversations about market trends.</p>
+<p>By the end of this chapter, we’ll understand how to:</p>
+<ul>
+<li>
+<p>Set up LlamaIndex with SingleStore for natural language database interactions.</p>
+</li>
+<li>
+<p>Implement vector search for semantic retrieval using company knowledge.</p>
+</li>
+<li>
+<p>Build conversational interfaces that maintain context across queries.</p>
+</li>
+<li>
+<p>Combine structured SQL data with unstructured knowledge bases.</p>
+</li>
+</ul>
+<h2 id="stockticker-data"><a class="header" href="#stockticker-data">Stockticker Data</a></h2>
+<p>We’ll use the same dataset that was previously generated in the chapter on LangChain. Using the same dataset will also provide us with the opportunity to compare LlamaIndex with LangChain.</p>
+<h2 id="llamaindex"><a class="header" href="#llamaindex">LlamaIndex</a></h2>
+<p>In this section. we’ll use LlamaIndex with SingleStore and test the key capabilities we discussed earlier.</p>
+<h3 id="fill-out-the-notebook"><a class="header" href="#fill-out-the-notebook">Fill out the Notebook</a></h3>
+<p>Let’s now create a new Python notebook. We’ll call it <strong>llamaindex</strong>.</p>
+<p>First, we’ll set our models and retrieve our OpenAI API Key from the secrets vault. We’ll need the OpenAI API Key for generating vector embeddings. We’ll access the OpenAI API Key using <code>get_secret</code>:</p>
+<pre><code class="language-python">LLM_MODEL = ...
+EMBEDDING_MODEL = ...
+
+os.environ["OPENAI_API_KEY"] = get_secret("OPENAI_API_KEY")
+</code></pre>
+<p>Next, we’ll set our OpenAI model:</p>
+<pre><code class="language-python">llm = OpenAI(
+    model = LLM_MODEL,
+    temperature = 0
+)
+</code></pre>
+<h4 id="natural-language"><a class="header" href="#natural-language">Natural Language</a></h4>
+<p>Let’s start with natural language. First, we’ll connect to SingleStore:</p>
+<pre><code class="language-python">from sqlalchemy import *
+
+db_connection = create_engine(connection_url)
+</code></pre>
+<p>Next, we’ll create a LlamaIndex wrapper around this connection:</p>
+<pre><code class="language-python">db = SQLDatabase(
+    db_connection,
+    include_tables = ["tick"]
+)
+
+sql_query_engine = NLSQLTableQueryEngine(
+    sql_database = db,
+    tables = ["tick"]
+)
+</code></pre>
+<p>The <code>SQLDatabase</code> object wraps our database connection and restricts LlamaIndex to only see and query the <code>tick</code> table, even if other tables exist in the database. This improves security, performance and helps the LLM generate more accurate queries by limiting its scope.</p>
+<p>Let’s now test the natural language capability. The following code sends a natural language question to the query engine, which converts it into SQL, executes the query against the <code>tick</code> table and prints the result.</p>
+<pre><code class="language-python">print(sql_query_engine.query(
+    "Using the 'tick' table, return the ticker symbol with the highest closing price and its close value."
+    )
+)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">The ticker symbol with the highest closing price is WVVF-FX, with a closing price of 6301.59.
+</code></pre>
+<p>We can also directly pass SQL statements, as follows:</p>
+<pre><code class="language-python">print(sql_query_engine.query(
+    """
+    SELECT symbol, close
+    FROM tick
+    ORDER BY close DESC
+    LIMIT 1;
+    """
+    )
+)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">The stock with the highest closing price is WVVF-FX, with a closing price of $6301.59.
+</code></pre>
+<p>There is also an important consideration with natural language to SQL - when there are ties in the data, different SQL formulations could return different, but equally valid, answers. The LLM doesn’t know there’s a tie unless we explicitly ask it to check or handle duplicates.</p>
+<h4 id="retrieval-augmented-generation-rag"><a class="header" href="#retrieval-augmented-generation-rag">Retrieval Augmented Generation (RAG)</a></h4>
+<p>Let’s now create a small knowledge base that stores some information about the key demo tickers that we created earlier, as follows:</p>
+<pre><code class="language-python">company_info = {
+    "BBRQ-FX": "BBRQ Corp is a global technology conglomerate known for its enterprise software platforms, cloud infrastructure services and a dominant position in business productivity tools.",
+    "BJBY-FX": "BJBY Dynamics is a consumer electronics and devices company renowned for its flagship smartphone line, wearable technology and a fast-growing digital services ecosystem.",
+    "YWMG-FX": "YWMG Group is an e-commerce and logistics powerhouse with expanding interests in cloud computing, digital advertising and subscription-based media streaming.",
+    "HRPD-FX": "HRPD Technologies is a semiconductor and hardware manufacturer supplying chips and processing units to the automotive, aerospace and artificial intelligence industries."
+}
+</code></pre>
+<p>We’ll extract the information and store the stock symbol as metadata and the text as the page content:</p>
+<pre><code class="language-python">documents = [
+    Document(text = text, metadata = {"symbol": symbol})
+    for symbol, text in company_info.items()
+]
+</code></pre>
+<p>We’ll use an OpenAI embedding model:</p>
+<pre><code class="language-python">embed_model = OpenAIEmbedding(
+    model = EMBEDDING_MODEL
+)
+</code></pre>
+<p>Next, we’ll ensure that we have a connection to SingleStore:</p>
+<pre><code class="language-python">from sqlalchemy import *
+
+db_connection = create_engine(connection_url)
+</code></pre>
+<p>and then drop the company knowledge table if it already exists, so we start with a clean state:</p>
+<pre><code class="language-python">with db_connection.begin() as conn:
+    conn.execute(text("DROP TABLE IF EXISTS company_knowledge;"))
+</code></pre>
+<p>Now we’re ready to use the SingleStore LlamaIndex integration to store the company data:</p>
+<pre><code class="language-python">vector_store = SingleStoreVectorStore(
+    table_name = "company_knowledge"
+)
+
+storage_context = StorageContext.from_defaults(vector_store = vector_store)
+
+index = VectorStoreIndex.from_documents(
+    documents,
+    storage_context = storage_context,
+    embed_model = embed_model,
+    llm = llm
+)
+
+query_engine = index.as_query_engine()
+</code></pre>
+<p>We’ll quickly check what was stored by retrieving the data from the database into a Pandas DataFrame:</p>
+<pre><code class="language-python">df = pd.read_sql(
+    """
+    SELECT
+        LEFT(content, 30) AS content,
+        LEFT(JSON_ARRAY_UNPACK(vector), 30) AS vector,
+        metadata::symbol AS metadata
+    FROM company_knowledge
+    """,
+    db_connection
+)
+</code></pre>
+<p>and then check the DataFrame:</p>
+<pre><code class="language-python">df.head()
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">                         content                          vector metadata
+0  YWMG Group is an e-commerce an  [-0.00719451904,0.0222320557,-  YWMG-FX
+1  BBRQ Corp is a global technolo  [0.0135726929,-0.00692367554,0  BBRQ-FX
+2  HRPD Technologies is a semicon  [-0.0163726807,-0.0491027832,0  HRPD-FX
+3  BJBY Dynamics is a consumer el  [0.0202178955,-0.0174713135,-0  BJBY-FX
+</code></pre>
+<p>We’ll also quickly check that the semantic search works for the four key demo stocks we stored. First, BBRQ.</p>
+<pre><code class="language-python">print(query_engine.query(
+    "What are the most popular consumer devices and services that BBRQ sells?"
+).response)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">BBRQ Corp is known for its enterprise software platforms, cloud infrastructure services, and business productivity tools.
+</code></pre>
+<p>Next, BJBY.</p>
+<pre><code class="language-python">print(query_engine.query(
+    "Describe BJBY's main contributions to both operating systems and cloud services."
+).response)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">BJBY's main contributions include innovations in operating systems that enhance user experience on its devices, as well as advancements in cloud services that support its digital ecosystem and services.
+</code></pre>
+<p>Next, YWMG.</p>
+<pre><code class="language-python">print(query_engine.query(
+    "Can you detail the core technologies and services provided by YWMG?"
+).response)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">YWMG Group offers a range of core technologies and services including e-commerce solutions, logistics services, cloud computing services, digital advertising services, and subscription-based media streaming services.
+</code></pre>
+<p>Finally, HRPD.</p>
+<pre><code class="language-python">print(query_engine.query(
+    "What are the primary sectors, including e-commerce and cloud, in which HRPD operates?"
+).response)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">HRPD operates primarily in the automotive, aerospace, and artificial intelligence industries.
+</code></pre>
+<p>All is working well with the semantic search. Next, we’ll explore how to use LlamaIndex to store the full transcript of conversations.</p>
+<h4 id="conversational-memory-in-memory"><a class="header" href="#conversational-memory-in-memory">Conversational Memory (in-memory)</a></h4>
+<p>Let’s now create a conversational interface that remembers previous questions and answers. When we ask a follow-up question, the chat engine understands and maintains context across the conversation, enabling natural multi-turn dialogues with our database.</p>
+<pre><code class="language-python">memory = ChatMemoryBuffer.from_defaults()
+
+chat_engine = CondenseQuestionChatEngine.from_defaults(
+    query_engine = sql_query_engine,
+    memory = memory,
+    llm = llm
+)
+</code></pre>
+<p>We’ll ask a few questions to fill the buffer. First, let’s ask for the tick values for a particular stock symbol:</p>
+<pre><code class="language-python">print(chat_engine.chat(
+    "Show me the last 5 ticks for BBRQ-FX. Present the result as a table."
+    )
+)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Here are the last 5 ticks for BBRQ-FX:
+
+| Symbol  | Date                | Open   | High    | Low     | Close   | Volume  |
+|---------|---------------------|--------|---------|---------|---------|---------|
+| BBRQ-FX | 2015-11-24 00:00:00 | 999.83 | 1017.41 | 985.60  | 1004.39 | 2066982 |
+| BBRQ-FX | 2015-11-23 00:00:00 | 1020.74| 1039.59 | 1010.85 | 1019.04 | 2005610 |
+| BBRQ-FX | 2015-11-20 00:00:00 | 991.68 | 992.87  | 977.93  | 990.32  | 1995583 |
+| BBRQ-FX | 2015-11-19 00:00:00 | 1001.18| 1008.44 | 992.92  | 1003.77 | 33279776|
+| BBRQ-FX | 2015-11-18 00:00:00 | 1037.09| 1052.68 | 1023.30 | 1042.63 | 5600879 |
+</code></pre>
+<p>Next, let’s compare tick values from two different stock symbols:</p>
+<pre><code class="language-python">print(chat_engine.chat(
+    "Now compare BBRQ-FX with BJBY-FX for the same period."
+    )
+)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Here is a comparison of the last 5 ticks for BBRQ-FX and BJBY-FX for the same dates:
+
+| Symbol   | Date                | Open   | High    | Low     | Close   | Volume   |
+|----------|----------------------|--------|---------|---------|---------|----------|
+| BBRQ-FX  | 2015-11-24 00:00:00  | 999.83 | 1017.41 | 985.60  | 1004.39 | 2066982  |
+| BJBY-FX  | 2015-11-24 00:00:00  | 423.62 | 427.74  | 419.80  | 423.54  | 4809503  |
+| BBRQ-FX  | 2015-11-23 00:00:00  | 1020.74| 1039.59 | 1010.85 | 1019.04 | 2005610  |
+| BJBY-FX  | 2015-11-23 00:00:00  | 414.12 | 419.63  | 408.61  | 411.49  | 1094794  |
+| BBRQ-FX  | 2015-11-20 00:00:00  | 991.68 | 992.87  | 977.93  | 990.32  | 1995583  |
+| BJBY-FX  | 2015-11-20 00:00:00  | 414.89 | 421.62  | 414.55  | 417.29  | 1528386  |
+| BBRQ-FX  | 2015-11-19 00:00:00  | 1001.18| 1008.44 | 992.92  | 1003.77 | 33279776 |
+| BJBY-FX  | 2015-11-19 00:00:00  | 405.89 | 413.27  | 403.93  | 406.81  | 7714812  |
+| BBRQ-FX  | 2015-11-18 00:00:00  | 1037.09| 1052.68 | 1023.30 | 1042.63 | 5600879  |
+| BJBY-FX  | 2015-11-18 00:00:00  | 392.06 | 394.92  | 385.35  | 392.48  | 4152808  |
+</code></pre>
+<p>Finally, let’s compare the last close price for two stock symbols:</p>
+<pre><code class="language-python">print(chat_engine.chat(
+    "Which had the higher last close, BBRQ-FX or BJBY-FX?"
+    )
+)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">On the last date in the provided data (2015-11-24), the symbol BBRQ-FX had a higher closing price of 1004.39 compared to BJBY-FX.
+</code></pre>
+<p>Let’s now output the complete conversation history:</p>
+<pre><code class="language-python">print("\nConversation memory buffer (recent):")
+for msg in memory.get_all():
+    role = msg.role.value.capitalize()
+    # Each message may have multiple blocks, we just join text ones
+    text = " ".join(
+        block.text for block in msg.blocks if hasattr(block, "text")
+    )
+    print(f"{role}: {text}\n")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Conversation memory buffer (recent):
+User: Show me the last 5 ticks for BBRQ-FX. Present the result as a table.
+
+Assistant: Here are the last 5 ticks for BBRQ-FX:
+
+| Symbol  | Date                | Open   | High    | Low     | Close   | Volume  |
+|---------|---------------------|--------|---------|---------|---------|---------|
+| BBRQ-FX | 2015-11-24 00:00:00 | 999.83 | 1017.41 | 985.60  | 1004.39 | 2066982 |
+| BBRQ-FX | 2015-11-23 00:00:00 | 1020.74| 1039.59 | 1010.85 | 1019.04 | 2005610 |
+| BBRQ-FX | 2015-11-20 00:00:00 | 991.68 | 992.87  | 977.93  | 990.32  | 1995583 |
+| BBRQ-FX | 2015-11-19 00:00:00 | 1001.18| 1008.44 | 992.92  | 1003.77 | 33279776|
+| BBRQ-FX | 2015-11-18 00:00:00 | 1037.09| 1052.68 | 1023.30 | 1042.63 | 5600879 |
+
+User: Now compare BBRQ-FX with BJBY-FX for the same period.
+
+Assistant: Here is a comparison of the last 5 ticks for BBRQ-FX and BJBY-FX for the same dates:
+
+| Symbol   | Date                | Open   | High    | Low     | Close   | Volume   |
+|----------|----------------------|--------|---------|---------|---------|----------|
+| BBRQ-FX  | 2015-11-24 00:00:00  | 999.83 | 1017.41 | 985.60  | 1004.39 | 2066982  |
+| BJBY-FX  | 2015-11-24 00:00:00  | 423.62 | 427.74  | 419.80  | 423.54  | 4809503  |
+| BBRQ-FX  | 2015-11-23 00:00:00  | 1020.74| 1039.59 | 1010.85 | 1019.04 | 2005610  |
+| BJBY-FX  | 2015-11-23 00:00:00  | 414.12 | 419.63  | 408.61  | 411.49  | 1094794  |
+| BBRQ-FX  | 2015-11-20 00:00:00  | 991.68 | 992.87  | 977.93  | 990.32  | 1995583  |
+| BJBY-FX  | 2015-11-20 00:00:00  | 414.89 | 421.62  | 414.55  | 417.29  | 1528386  |
+| BBRQ-FX  | 2015-11-19 00:00:00  | 1001.18| 1008.44 | 992.92  | 1003.77 | 33279776 |
+| BJBY-FX  | 2015-11-19 00:00:00  | 405.89 | 413.27  | 403.93  | 406.81  | 7714812  |
+| BBRQ-FX  | 2015-11-18 00:00:00  | 1037.09| 1052.68 | 1023.30 | 1042.63 | 5600879  |
+| BJBY-FX  | 2015-11-18 00:00:00  | 392.06 | 394.92  | 385.35  | 392.48  | 4152808  |
+
+User: Which had the higher last close, BBRQ-FX or BJBY-FX?
+
+Assistant: On the last date in the provided data (2015-11-24), the symbol BBRQ-FX had a higher closing price of 1004.39 compared to BJBY-FX.
+</code></pre>
+<p>Finally, let’s query structured data as JSON documents. We’ll retrieve the most recent stock prices from the database, convert each row into a JSON document and index with LlamaIndex. We’ll then ask a natural language question and the LLM will filter and sort the JSON documents to return the answer ordered alphabetically.</p>
+<pre><code class="language-python">df = pd.read_sql(
+    """
+    SELECT symbol
+    FROM tick
+    WHERE ts &gt;= (SELECT MAX(ts) FROM tick) - INTERVAL 10 SECOND AND close &gt; 500
+    ORDER BY symbol ASC
+    """,
+    db_connection
+)
+
+documents = [Document(text = row.to_json()) for _, row in df.iterrows()]
+
+json_index = ListIndex.from_documents(documents)
+
+json_data = df.to_dict(orient = "records")
+
+tickers = sorted([row["symbol"] for row in json_data])
+
+print("Tickers from last 10 seconds with close &gt; 500:")
+print(tickers)
+
+query = (
+    "Using the latest timestamp in the tick table as the reference, "
+    "return all tickers from the 10 seconds before that timestamp "
+    "where the close price is above 500 and sort the results alphabetically by ticker."
+)
+
+response = json_index.as_query_engine().query(query)
+
+print("\nLLM / Document Query Response (for reasoning / summary purposes):")
+print(response.response)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Tickers from last 10 seconds with close &gt; 500:
+['BBRQ-FX', 'BBYX-FX', 'BKCZ-FX', 'BMJH-FX', 'BPDZ-FX', 'BPKV-FX', 'BTSP-FX', 'CCMN-FX', 'CGHY-FX', 'CHWP-FX', 'CMJH-FX', 'CPNQ-FX', 'CQNW-FX', 'CRGY-FX', 'CRKV-FX', 'CRYZ-FX', 'CZWQ-FX', 'DBQS-FX', 'DGJR-FX', 'DJMM-FX', 'DJWS-FX', 'DPCV-FX', 'DPHQ-FX', 'DSPZ-FX', 'DWWH-FX', 'DYJN-FX', 'FDPZ-FX', 'FJND-FX', 'FMLH-FX', 'FNDN-FX', 'FPPC-FX', 'FPPT-FX', 'FRGJ-FX', 'FSLV-FX', 'FSQG-FX', 'FTFK-FX', 'FTVP-FX', 'FVMS-FX', 'GDYP-FX', 'GQJT-FX', 'GQVB-FX', 'GTHL-FX', 'GVKX-FX', 'GZKB-FX', 'HBVK-FX', 'HDGG-FX', 'HDTN-FX', 'HHBV-FX', 'HKHY-FX', 'HMWC-FX', 'HWMV-FX', 'HZPN-FX', 'JBPW-FX', 'JJSK-FX', 'JSZL-FX', 'JZPM-FX', 'KBKT-FX', 'KDZD-FX', 'KKVT-FX', 'KLPQ-FX', 'KMYW-FX', 'KQVR-FX', 'KZHV-FX', 'LBCX-FX', 'LCLR-FX', 'LFMD-FX', 'LJDL-FX', 'LKNK-FX', 'LMRZ-FX', 'LQNY-FX', 'MGMX-FX', 'MHHR-FX', 'MHSN-FX', 'MHTD-FX', 'MJBG-FX', 'MJJZ-FX', 'MLSG-FX', 'MNDG-FX', 'MPHX-FX', 'MQRM-FX', 'MSCP-FX', 'MYCD-FX', 'NFYX-FX', 'NMZC-FX', 'NRJZ-FX', 'NVHZ-FX', 'PCZW-FX', 'PHQX-FX', 'PHTG-FX', 'PMTL-FX', 'PPMJ-FX', 'PQCJ-FX', 'PQGG-FX', 'PTFJ-FX', 'PXWS-FX', 'PYLY-FX', 'PYSD-FX', 'QNJQ-FX', 'QPLR-FX', 'QSGD-FX', 'QWPW-FX', 'QXXM-FX', 'RBHG-FX', 'RBLP-FX', 'RBWJ-FX', 'RFFC-FX', 'RFMZ-FX', 'RJMQ-FX', 'RKKG-FX', 'RTYG-FX', 'RVLR-FX', 'RWCV-FX', 'RWRX-FX', 'RWSM-FX', 'RXRF-FX', 'RYWC-FX', 'SBGJ-FX', 'SHBY-FX', 'SHRN-FX', 'SPPW-FX', 'SQWY-FX', 'SXJS-FX', 'TCJT-FX', 'TCSR-FX', 'TFLD-FX', 'TJJL-FX', 'TSKC-FX', 'TTXB-FX', 'TVDL-FX', 'TVKL-FX', 'VBTS-FX', 'VFCN-FX', 'VGBG-FX', 'VMNM-FX', 'VNDN-FX', 'VNNN-FX', 'VNTT-FX', 'VRFZ-FX', 'VSKF-FX', 'VVQT-FX', 'VXBG-FX', 'VXWH-FX', 'WFSB-FX', 'WJKC-FX', 'WKYZ-FX', 'WLRW-FX', 'WNCS-FX', 'WQNM-FX', 'WQVT-FX', 'WQXQ-FX', 'WSQZ-FX', 'WVVF-FX', 'WXBK-FX', 'XLZN-FX', 'XMCS-FX', 'XMSX-FX', 'XNGZ-FX', 'XNXQ-FX', 'XXHV-FX', 'XXKF-FX', 'XYKS-FX', 'XZWX-FX', 'YCCQ-FX', 'YSXQ-FX', 'YWMG-FX', 'YWRV-FX', 'YXTC-FX', 'YZSH-FX', 'ZGKC-FX', 'ZHZY-FX', 'ZJZR-FX', 'ZKCD-FX', 'ZPZX-FX', 'ZQPT-FX', 'ZYMD-FX', 'ZYWF-FX']
+
+LLM / Document Query Response (for reasoning / summary purposes):
+VBTS-FX, VFCN-FX, VGBG-FX, VMNM-FX, VNDN-FX, VNNN-FX, VNTT-FX, VRFZ-FX, VSKF-FX, VVQT-FX
+</code></pre>
+<p>In the SQL code, we’re using the greater-than-or-equal operator (<code>&gt;=</code>), rather than the equality operator (<code>=</code>) that LangChain generated for the same query, as we discussed in the previous chapter. In the LlamaIndex example, we obtain a deterministic list of tickers using SQL. However, for the natural language query, we obtain a smaller non-deterministic result.</p>
+<p>Deterministic results come directly from SQL or DataFrame queries, always returning the exact same rows because the logic is precise and explicit. Non-deterministic results occur when using an LLM over JSON or documents, where the model interprets and summarizes the data, which can omit, reorder or hallucinate entries. Deterministic queries are best when exact numbers or lists are needed, while non-deterministic queries are useful for summaries, explanations or reasoning over the data.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>This chapter demonstrated three powerful patterns for integrating LlamaIndex with SingleStore, each addressing different aspects of building intelligent data applications.</p>
+<p>The first section showed how LlamaIndex can translate natural language questions into SQL queries. This capability eliminates the barrier between non-technical users and database insights, making data accessible through conversational interfaces. The example also demonstrated that we can pass raw SQL queries directly to the engine, providing flexibility to either let the LLM generate queries or provide our own when precision is required.</p>
+<p>The RAG implementation showcased how to enhance LLMs with external knowledge stored as vector embeddings in SingleStore. By creating a <code>company_knowledge</code> table with text embeddings, we enabled semantic search over company descriptions. The <code>company_knowledge</code> table stored both the text content and its vector representation, along with metadata linking each entry to its stock symbol. This structure enables efficient semantic retrieval while maintaining connections to structured data in the <code>tick</code> table.</p>
+<p>The final section demonstrated building stateful chat interfaces. This pattern showed how to maintain context across multiple related queries. The memory buffer retained the full conversation history, enabling the system to resolve pronouns, understand temporal references and provide contextually appropriate responses without requiring users to repeat information.</p>
+<p>The chapter concluded with an advanced example showing how to query JSON documents. By converting SQL query results into JSON documents and indexing them with LlamaIndex, we enabled complex filtering and sorting operations expressed in natural language.</p>
+<p>To summarize the benefits:</p>
+<ul>
+<li>
+<p><strong>Unified Data Platform:</strong> SingleStore serves as both a high-performance SQL database and a vector store, eliminating the need for separate systems and simplifying our architecture.</p>
+</li>
+<li>
+<p><strong>Progressive Enhancement:</strong> We can start with simple natural language queries and progressively add vector search, conversational memory and document retrieval as our application needs grow.</p>
+</li>
+<li>
+<p><strong>Production-Ready Patterns:</strong> All three patterns – natural language to SQL, RAG and conversational memory - are approaches used in production AI applications across industries.</p>
+</li>
+<li>
+<p><strong>Developer Productivity:</strong> LlamaIndex abstracts the complexity of prompt engineering, embedding management and context handling, allowing developers to focus on application logic rather than LLM infrastructure.</p>
+</li>
+</ul>
+<p>LlamaIndex’s abstraction layer provides a powerful foundation for building the next generation of data-driven AI applications, from customer support chatbots to financial analysis tools to enterprise search systems.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../part-ai/using-langchain-to-build-intelligent-data-applications.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../part-ai/multimodal-rag-working-with-text-images-and-audio.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../part-ai/using-langchain-to-build-intelligent-data-applications.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../part-ai/multimodal-rag-working-with-text-images-and-audio.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-c22b7243.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,955 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Chapter 11: Fraud Detection - The SingleStore Cookbook</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Recipes for Multi-Model, Machine Learning and AI Data Engineering">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-0392ca55.css">
+        <link rel="stylesheet" href="../css/chrome-fc474251.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-7ad5f1bc.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-e2854824.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The SingleStore Cookbook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/singlestore-cookbook/singlestore-cookbook.github.io" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/singlestore-cookbook/singlestore-cookbook.github.io/edit/main/src/part-ml/fraud-detection.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="chapter-11-fraud-detection"><a class="header" href="#chapter-11-fraud-detection">Chapter 11: Fraud Detection</a></h1>
+<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<p>In an earlier chapter we looked at a dataset consisting of genuine and fraudulent transactions. We performed data loading, data analysis and modeling using Apache Spark. However, we didn’t connect to a database to save our original dataset or the train and test data. We’ll address these previous limitations in this chapter. We’ll also undertake a more comprehensive analysis of the dataset and use <code>scikit-learn</code> to create a linear regression model, as well as consider some additional techniques to help us create a better model.</p>
+<p>Since the original dataset is highly imbalanced and the number of fraudulent transactions is very small we’ll, again, oversample the fraudulent transactions and take 1% of the genuine transactions.</p>
+<h2 id="create-the-database"><a class="header" href="#create-the-database">Create the Database</a></h2>
+<p>We’ll begin by using the <strong>SQL Editor</strong> to create a new database, as follows:</p>
+<pre><code class="language-sql">CREATE DATABASE IF NOT EXISTS creditcard_db;
+</code></pre>
+<h2 id="fill-out-the-notebook"><a class="header" href="#fill-out-the-notebook">Fill out the Notebook</a></h2>
+<p>Now let’s create a new notebook. Call it <strong>fraud_detection_2</strong>.</p>
+<p>First, let’s read in the full dataset:</p>
+<pre><code class="language-python">creditcard_csv_url = ...
+
+creditcard_df = pd.read_csv(creditcard_csv_url)
+</code></pre>
+<p>Next, let’s count how many times each class appears:</p>
+<pre><code class="language-python">creditcard_df["Class"].value_counts()
+</code></pre>
+<p>The output should be:</p>
+<pre><code class="language-text">Class
+0    284315
+1       492
+Name: count, dtype: int64
+</code></pre>
+<p>So, we have <code>284315</code> genuine transactions and <code>492</code> fraudulent transactions.</p>
+<p>Let’s save the full dataset to SingleStore for further analysis later. First, we’ll create a connection:</p>
+<pre><code class="language-python">from sqlalchemy import *
+
+db_connection = create_engine(connection_url)
+</code></pre>
+<p>Next, we’ll ensure that any existing data in the table are deleted:</p>
+<pre><code class="language-python">with db_connection.begin() as conn:
+    conn.execute(text(f"DROP TABLE IF EXISTS creditcard;"))
+</code></pre>
+<p>Then we’ll write the DataFrame to SingleStore:</p>
+<pre><code class="language-python">creditcard_df.to_sql(
+    "creditcard",
+    con = db_connection,
+    if_exists = "replace",
+    index = False,
+    chunksize = 1000
+)
+</code></pre>
+<p>We’ll come back to the <code>creditcard</code> table later.</p>
+<p>Now, let’s do some plots. But, first, we’ll ensure that we exclude the <code>Time</code> and <code>Class</code> columns:</p>
+<pre><code class="language-python">X_numeric = creditcard_df[
+    [c for c in creditcard_df.select_dtypes(include = "number").columns if c not in ["Time", "Class"]]
+]
+</code></pre>
+<p>We’ll now create a correlation matrix and render a heatmap:</p>
+<pre><code class="language-python">corr_matrix = X_numeric.corr()
+
+plt.figure(figsize = (12, 10))
+
+sns.heatmap(
+    corr_matrix,
+    annot = False,
+    fmt = ".2f",
+    cmap = "RdBu_r",
+    center = 0,
+    square = False,
+    cbar = True,
+    linewidths = 0.5
+)
+
+plt.xticks(rotation = 45, ha = "right")
+plt.yticks(rotation = 0)
+
+plt.title("Correlation Heatmap")
+plt.tight_layout()
+plt.show()
+</code></pre>
+<p>Example output is shown in Figure 11-1.</p>
+<p><img src="fraud-detection-media/image1.png" alt=""></p>
+<p><em>Figure 11-1. Correlation Heatmap.</em></p>
+<p>The correlation heatmap provides a visual overview of how the numerical features in the dataset relate to one another. Each cell in the grid represents the correlation between a pair of features, with red tones indicating positive relationships, blue tones showing negative relationships and lighter shades suggesting little or no linear relationship. While these anonymized PCA-derived <code>V</code> features cannot be directly interpreted, the heatmap is still valuable for identifying where two or more features move together and for revealing broader patterns within the data.</p>
+<p>We can try another way and produce a correlation bar chart that shows how strongly each numerical feature in the credit card dataset is correlated with the fraud label (Class = 1), as follows:</p>
+<pre><code class="language-python">feature_corr = (X_numeric
+    .join(creditcard_df["Class"])
+    .corr()["Class"]
+    .drop("Class")
+    .sort_values(key = abs, ascending = False)
+)
+
+cmap = sns.color_palette("RdBu_r", as_cmap = True)
+normed = (feature_corr - feature_corr.min()) / (feature_corr.max() - feature_corr.min())
+colors = [cmap(x) for x in normed]
+
+plt.figure(figsize = (14, 6))
+plt.bar(feature_corr.index, feature_corr.values, color = colors)
+plt.axhline(0, color = "black", linewidth = 1, linestyle = "--")
+plt.xticks(rotation = 45, ha = "right")
+
+plt.ylabel("Correlation with Fraud (Class = 1)")
+plt.title("Feature Correlations with Fraud Label")
+plt.tight_layout()
+plt.show()
+</code></pre>
+<p>Example output is shown in Figure 11-2.</p>
+<p><img src="fraud-detection-media/image2.png" alt=""></p>
+<p><em>Figure 11-2. Feature Correlations with Fraud Label.</em></p>
+<p>The analysis highlights that certain features show the strongest positive correlations with fraudulent transactions. This suggests that higher values of these features are more likely to be associated with fraud. Although the <code>V</code> features are anonymized principal components, their statistical relationship to the fraud label makes them powerful signals for detection. Features with strong negative correlations are equally valuable as they help the model distinguish normal transactions from suspicious ones. Together, both sets of features provide complementary insights: positively correlated features point toward what fraud looks like, while negatively correlated features capture what typical, non-fraudulent behavior looks like.</p>
+<p>We’ll now create our reduced sampled dataset:</p>
+<pre><code class="language-python">SEED = 42
+
+sampled_df = pd.concat([
+    creditcard_df[creditcard_df["Class"] == 1],
+    creditcard_df[creditcard_df["Class"] == 0].sample(frac = 0.01, random_state = SEED)
+]).sort_values("Time").reset_index(drop = True)
+</code></pre>
+<p>This produces a smaller, more manageable dataset containing all fraud cases plus 1% of non-fraud cases, ordered by transaction time. It preserves fraud signals while reducing the imbalance and dataset size, making it easier to analyze and model.</p>
+<p>Let’s take a look at the count:</p>
+<pre><code class="language-python">sampled_df["Class"].value_counts()
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Class
+0    2843
+1     492
+Name: count, dtype: int64
+</code></pre>
+<p>Now, let’s prepare our train and test sets:</p>
+<pre><code class="language-python">X = sampled_df.drop(columns = ["Time", "Class"])
+y = sampled_df["Class"].astype(int)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size = 0.3, random_state = SEED, stratify = y
+)
+</code></pre>
+<p>We’ll scale the features:</p>
+<pre><code class="language-python">scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+</code></pre>
+<p>Scaling the features ensures that all variables in the dataset contribute fairly to the modeling process, regardless of their original ranges. Each feature is transformed to have a mean of <code>0</code> and a standard deviation of <code>1</code>. This step is particularly important in the credit card fraud dataset, where variables such as <code>Amount</code> can be on a very different scale compared to the PCA-derived <code>V</code> features. Without scaling, features with larger numeric ranges could dominate the learning process, leading to biased models and slower convergence during training. By standardizing the data, we create a level playing field across all features, allowing algorithms to detect meaningful patterns more effectively.</p>
+<p>Now we’ll train and fit a regression model:</p>
+<pre><code class="language-python">model = LogisticRegression(
+    max_iter = 1000,
+    class_weight = "balanced",
+    random_state = SEED
+)
+model.fit(X_train_scaled, y_train)
+</code></pre>
+<p>Let’s try probability-based predictions with a threshold (which we can change):</p>
+<pre><code class="language-python">y_proba = model.predict_proba(X_test_scaled)[:, 1]
+
+threshold = 0.9
+y_pred_threshold = (y_proba &gt; threshold).astype(int)
+</code></pre>
+<p>We’ll apply these sample weights for downsampling:</p>
+<ul>
+<li>
+<p>Genuine transactions (Class = 0) are assigned a weight of 100, since only 1% are retained.</p>
+</li>
+<li>
+<p>Fraudulent transactions (Class = 1) are assigned a weight of 1, as all of them are kept.</p>
+</li>
+</ul>
+<pre><code class="language-python">sample_weights = y_test.apply(lambda x: 100 if x == 0 else 1)
+</code></pre>
+<p>Now, we’ll print out our metrics:</p>
+<pre><code class="language-python">accuracy = metrics.accuracy_score(y_test, y_pred_threshold, sample_weight = sample_weights)
+precision = metrics.precision_score(y_test, y_pred_threshold, pos_label = 1, sample_weight = sample_weights)
+recall = metrics.recall_score(y_test, y_pred_threshold, pos_label = 1, sample_weight = sample_weights)
+f1 = metrics.f1_score(y_test, y_pred_threshold, pos_label = 1, sample_weight = sample_weights)
+
+print(f"Weighted Accuracy: {accuracy:.4f}")
+print(f"Weighted Precision: {precision:.4f}")
+print(f"Weighted Recall: {recall:.4f}")
+print(f"Weighted F1-score: {f1:.4f}")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Weighted Accuracy: 0.9974
+Weighted Precision: 0.3808
+Weighted Recall: 0.8311
+Weighted F1-score: 0.5223
+</code></pre>
+<p>The evaluation metrics reveal the strengths and limitations of the fraud detection model. At first glance, the weighted accuracy is extremely high, but this figure is deceptive due to the class imbalance, since most transactions are genuine. A more meaningful picture comes from precision and recall. The model achieves a high recall, meaning it successfully identifies the majority of fraudulent transactions. However, its precision is lower, indicating that many legitimate transactions are incorrectly flagged as fraud. The weighted F1-score, balances these two measures, reflecting the trade-off between catching fraud and avoiding false alarms. In practice, fraud detection systems often prioritize recall, since failing to detect fraudulent activity is far more costly than occasionally inconveniencing a customer with a false alert.</p>
+<p>Now we’ll print our unweighted and weighted classification reports:</p>
+<pre><code class="language-python">print("Classification Report (Unweighted):")
+print(metrics.classification_report(
+    y_test,
+    y_pred_threshold,
+    target_names = ["Genuine", "Fraud"])
+)
+
+print("Classification Report (Weighted):")
+print(metrics.classification_report(
+    y_test,
+    y_pred_threshold,
+    target_names = ["Genuine", "Fraud"],
+    sample_weight = sample_weights)
+)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Classification Report (Unweighted):
+              precision    recall  f1-score   support
+
+     Genuine       0.97      1.00      0.98       853
+       Fraud       0.98      0.83      0.90       148
+
+    accuracy                           0.97      1001
+   macro avg       0.98      0.91      0.94      1001
+weighted avg       0.97      0.97      0.97      1001
+
+Classification Report (Weighted):
+              precision    recall  f1-score   support
+
+     Genuine       1.00      1.00      1.00   85300.0
+       Fraud       0.38      0.83      0.52     148.0
+
+    accuracy                           1.00   85448.0
+   macro avg       0.69      0.91      0.76   85448.0
+weighted avg       1.00      1.00      1.00   85448.0
+</code></pre>
+<p>The classification reports show how evaluation changes between a balanced sample and the full imbalanced dataset. On the sample, the model performs well for both classes, but when weighted for imbalance, precision for fraud drops while recall remains high. Overall accuracy appears near perfect, yet this hides the challenge of detecting the minority class, highlighting why class-specific metrics are important in fraud detection.</p>
+<p>Let’s see the weighted confusion matrix:</p>
+<pre><code class="language-python">class_order = [1, 0]
+cm = metrics.confusion_matrix(y_test, y_pred_threshold, labels = class_order, sample_weight = sample_weights)
+display_labels = ["Fraud", "Genuine"]
+
+disp = metrics.ConfusionMatrixDisplay(confusion_matrix = cm, display_labels = display_labels)
+disp.plot(cmap = "Reds", values_format = ".0f")
+plt.title(f"Confusion Matrix - Logistic Regression (Threshold = {threshold})")
+plt.show()
+</code></pre>
+<p>Example output is shown in Figure 11-3.</p>
+<p><img src="fraud-detection-media/image3.png" alt=""></p>
+<p><em>Figure 11-3. Confusion Matrix.</em></p>
+<p>We’ll also plot the precision-recall curve:</p>
+<pre><code class="language-python">precision_vals, recall_vals, thresholds = metrics.precision_recall_curve(y_test, y_proba)
+
+plt.figure(figsize = (10, 6))
+plt.plot(recall_vals, precision_vals, marker = ".", label = "PR Curve")
+
+closest_idx = (np.abs(thresholds - threshold)).argmin()
+
+plt.scatter(
+    recall_vals[closest_idx],
+    precision_vals[closest_idx],
+    color = "red",
+    s = 100,
+    zorder = 5,
+    label = f"Threshold = {threshold}"
+)
+
+plt.xlabel("Recall")
+plt.ylabel("Precision")
+plt.title("Precision-Recall Curve")
+plt.legend()
+plt.grid(True)
+plt.show()
+</code></pre>
+<p>Example output is shown in Figure 11-4.</p>
+<p><img src="fraud-detection-media/image4.png" alt=""></p>
+<p><em>Figure 11-4. Precision-Recall Curve.</em></p>
+<p>The precision-recall curve plots precision on the y-axis against recall on the x-axis. In this chart, precision stays at 1.0 for low recall values, meaning the model is perfectly accurate when it flags a few fraud cases. As the threshold decreases and recall increases toward 1.0, precision eventually drops, showing that capturing more fraud comes at the cost of including some false positives. The sharp drop near 0.9 illustrates the point where expanding detection begins to reduce precision.</p>
+<p>Next, we plot the Receiver Operating Characteristic (ROC) curve and compute the Area Under the Curve (AUC):</p>
+<pre><code class="language-python">fpr, tpr, roc_thresholds = metrics.roc_curve(y_test, y_proba)
+
+auc_score = metrics.roc_auc_score(y_test, y_proba)
+
+closest_idx = (np.abs(roc_thresholds - threshold)).argmin()
+
+plt.figure(figsize = (10, 6))
+plt.plot(fpr, tpr, color = "blue", lw = 2, label = f"ROC curve (AUC = {auc_score:.3f})")
+plt.plot([0, 1], [0, 1], color = "gray", lw = 1, linestyle = "--", label = "Random guess")
+
+plt.scatter(
+    fpr[closest_idx],
+    tpr[closest_idx],
+    color = "red",
+    s = 100,
+    zorder = 5,
+    label = f"Threshold = {threshold}"
+)
+
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate (Recall)")
+plt.title("ROC Curve - Logistic Regression")
+plt.legend(loc="lower right")
+plt.grid(True)
+plt.show()
+</code></pre>
+<p>Example output is shown in Figure 11-5.</p>
+<p><img src="fraud-detection-media/image5.png" alt=""></p>
+<p><em>Figure 11-5. ROC Curve.</em></p>
+<p>The ROC curve shows the trade-off between correctly identifying fraud (true positive rate) and mistakenly flagging genuine transactions (false positive rate). The curve rises sharply at the start, showing that the model captures most fraudulent transactions with few false alarms and then gradually flattens as it approaches the upper right, indicating that finding the remaining fraud comes with more false positives. The AUC summarizes this performance, with a higher value reflecting stronger overall discrimination between fraud and genuine transactions.</p>
+<p>Next, we’ll write the train and test data to SingleStore. First, we’ll drop any existing tables:</p>
+<pre><code class="language-python">tables = ["train_data", "test_data"]
+
+with db_connection.begin() as conn:
+    for table in tables:
+        conn.execute(text(f"DROP TABLE IF EXISTS {table};"))
+</code></pre>
+<p>Then, we’ll write the DataFrames to SingleStore:</p>
+<pre><code class="language-python">(X_train.join(y_train)).to_sql(
+    "train_data",
+    con = db_connection,
+    if_exists = "replace",
+    index = False,
+    chunksize = 1000
+)
+
+(X_test.join(y_test)).to_sql(
+    "test_data",
+    con = db_connection,
+    if_exists = "replace",
+    index = False,
+    chunksize = 1000
+)
+</code></pre>
+<h2 id="example-queries"><a class="header" href="#example-queries">Example Queries</a></h2>
+<p>SQL offers a flexible and efficient way to explore and analyze structured data. By running targeted queries, we can quickly summarize key patterns, uncover trends and gain deeper insights from the stored dataset.</p>
+<p>First, let’s find the average amount for fraudulent vs. genuine transactions for train data:</p>
+<pre><code class="language-sql">SELECT
+    CASE
+        WHEN Class = 1 THEN 'Fraud'
+        WHEN Class = 0 THEN 'Genuine'
+        ELSE 'Unknown'
+    END AS TransactionType,
+    ROUND(AVG(Amount), 2) AS AverageAmount,
+    COUNT(*) AS NumberOfTransactions
+FROM train_data
+GROUP BY TransactionType
+ORDER BY TransactionType;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+-----------------+---------------+----------------------+
+| TransactionType | AverageAmount | NumberOfTransactions |
++-----------------+---------------+----------------------+
+| Fraud           |        116.04 |                  344 |
+| Genuine         |         86.09 |                 1990 |
++-----------------+---------------+----------------------+
+</code></pre>
+<p>and let’s repeat this for test data:</p>
+<pre><code class="language-sql">SELECT
+    CASE
+        WHEN Class = 1 THEN 'Fraud'
+        WHEN Class = 0 THEN 'Genuine'
+        ELSE 'Unknown'
+    END AS TransactionType,
+    ROUND(AVG(Amount), 2) AS AverageAmount,
+    COUNT(*) AS NumberOfTransactions
+FROM test_data
+GROUP BY TransactionType
+ORDER BY TransactionType;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+-----------------+---------------+----------------------+
+| TransactionType | AverageAmount | NumberOfTransactions |
++-----------------+---------------+----------------------+
+| Fraud           |        136.55 |                  148 |
+| Genuine         |         85.92 |                  853 |
++-----------------+---------------+----------------------+
+</code></pre>
+<p>From these two sets of results, we can conclude that fraudulent transactions are, on average, higher in value than genuine ones, suggesting fraudsters tend to target larger amounts.</p>
+<p>Next, let’s look at fraud vs. genuine proportion in train data:</p>
+<pre><code class="language-sql">SELECT
+    CASE WHEN Class = 1 THEN 'Fraud' ELSE 'Genuine' END AS TransactionType,
+    COUNT(*) AS Count,
+    ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER(), 2) AS Percentage
+FROM train_data
+GROUP BY TransactionType;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+-----------------+-------+------------+
+| TransactionType | Count | Percentage |
++-----------------+-------+------------+
+| Genuine         |  1990 |      85.26 |
+| Fraud           |   344 |      14.74 |
++-----------------+-------+------------+
+</code></pre>
+<p>and let’s repeat this for test data:</p>
+<pre><code class="language-sql">SELECT
+    CASE WHEN Class = 1 THEN 'Fraud' ELSE 'Genuine' END AS TransactionType,
+    COUNT(*) AS Count,
+    ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER(), 2) AS Percentage
+FROM test_data
+GROUP BY TransactionType;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+-----------------+-------+------------+
+| TransactionType | Count | Percentage |
++-----------------+-------+------------+
+| Genuine         |   853 |      85.21 |
+| Fraud           |   148 |      14.79 |
++-----------------+-------+------------+
+</code></pre>
+<p>Both train and test splits show consistent class distribution after sampling.</p>
+<p>Next, let’s find the maximum and minimum amounts for fraudulent transactions:</p>
+<pre><code class="language-sql">SELECT
+    MAX(Amount) AS MaxFraudAmount,
+    MIN(Amount) AS MinFraudAmount
+FROM train_data
+WHERE Class = 1;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+----------------+----------------+
+| MaxFraudAmount | MinFraudAmount |
++----------------+----------------+
+|        2125.87 |              0 |
++----------------+----------------+
+</code></pre>
+<p>This confirms that fraud can occur at any value but sometimes involves large amounts.</p>
+<p>Now, let’s see quartiles for fraud vs. genuine transactions:</p>
+<pre><code class="language-sql">SELECT
+    CASE WHEN Class = 1 THEN 'Fraud' ELSE 'Genuine' END AS TransactionType,
+    PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY Amount) AS Q1,
+    PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY Amount) AS Median,
+    PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY Amount) AS Q3
+FROM train_data
+GROUP BY TransactionType;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+-----------------+------+--------------------+--------------------+
+| TransactionType | Q1   | Median             | Q3                 |
++-----------------+------+--------------------+--------------------+
+| Genuine         |    5 | 21.039999961853027 |  75.09499931335449 |
+| Fraud           |    1 |   8.59000015258789 | 104.00749969482422 |
++-----------------+------+--------------------+--------------------+
+</code></pre>
+<p>Genuine transactions are concentrated in moderate amounts, while fraudulent transactions, though often small, exhibit a wider spread and can reach much higher values.</p>
+<p>Let’s count fraudulent transactions within specific amount ranges:</p>
+<pre><code class="language-sql">SELECT
+    CASE
+        WHEN Amount &lt; 50 THEN 'Low'
+        WHEN Amount &gt;= 50 AND Amount &lt; 200 THEN 'Medium'
+    ELSE 'High'
+    END AS AmountRange,
+    COUNT(*) AS FraudCount
+FROM train_data
+WHERE Class = 1
+GROUP BY AmountRange
+ORDER BY FraudCount DESC;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+-------------+------------+
+| AmountRange | FraudCount |
++-------------+------------+
+| Low         |        216 |
+| Medium      |         72 |
+| High        |         56 |
++-------------+------------+
+</code></pre>
+<p>Most frauds occur in the “Low” range.</p>
+<p>Now, let’s look at the top 10 highest fraud amounts:</p>
+<pre><code class="language-sql">SELECT Amount
+FROM train_data
+WHERE Class = 1
+ORDER BY Amount DESC
+LIMIT 10;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+---------+
+| Amount  |
++---------+
+| 2125.87 |
+| 1504.93 |
+| 1389.56 |
+| 1354.25 |
+|    1335 |
+| 1218.89 |
+| 1096.99 |
+|  925.31 |
+|  824.83 |
+|  727.91 |
++---------+
+</code></pre>
+<p>Fraud reaches high values, showing a tail of outliers.</p>
+<p>Next, let’s look at the fraud ratio across amount ranges:</p>
+<pre><code class="language-sql">SELECT
+    CASE
+        WHEN Amount &lt; 50 THEN 'Low'
+        WHEN Amount &gt;= 50 AND Amount &lt; 200 THEN 'Medium'
+        ELSE 'High'
+    END AS AmountRange,
+    COUNT(*) AS TotalTransactions,
+    SUM(CASE WHEN Class = 1 THEN 1 ELSE 0 END) AS FraudCount,
+    ROUND(SUM(CASE WHEN Class = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS FraudPercentage
+FROM train_data
+GROUP BY AmountRange
+ORDER BY FraudPercentage DESC;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+-------------+-------------------+------------+-----------------+
+| AmountRange | TotalTransactions | FraudCount | FraudPercentage |
++-------------+-------------------+------------+-----------------+
+| High        |               251 |         56 |           22.31 |
+| Low         |              1535 |        216 |           14.07 |
+| Medium      |               548 |         72 |           13.14 |
++-------------+-------------------+------------+-----------------+
+</code></pre>
+<p>Fraud rates are highest in the “High” range, even though fewer transactions occur there, highlighting elevated risk at large values.</p>
+<p>Now let’s look at fraud likelihood by deciles of transaction amount:</p>
+<pre><code class="language-sql">WITH deciles AS (
+    SELECT
+        Amount,
+        Class,
+        NTILE(10) OVER (ORDER BY Amount) AS Decile
+    FROM train_data
+)
+SELECT
+    Decile,
+    COUNT(*) AS TotalTransactions,
+    SUM(CASE WHEN Class = 1 THEN 1 ELSE 0 END) AS FraudCount,
+    ROUND(SUM(CASE WHEN Class = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS FraudPercentage
+FROM deciles
+GROUP BY Decile
+ORDER BY Decile;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+--------+-------------------+------------+-----------------+
+| Decile | TotalTransactions | FraudCount | FraudPercentage |
++--------+-------------------+------------+-----------------+
+|      1 |               234 |         80 |           34.19 |
+|      2 |               234 |         59 |           25.21 |
+|      3 |               234 |         20 |            8.55 |
+|      4 |               234 |         22 |            9.40 |
+|      5 |               233 |         14 |            6.01 |
+|      6 |               233 |          9 |            3.86 |
+|      7 |               233 |         20 |            8.58 |
+|      8 |               233 |         33 |           14.16 |
+|      9 |               233 |         33 |           14.16 |
+|     10 |               233 |         54 |           23.18 |
++--------+-------------------+------------+-----------------+
+</code></pre>
+<p>Fraud is concentrated in the lowest deciles (small amounts) and the top decile (large amounts), with much lower rates in the middle.</p>
+<p>Now we’ll run some queries on the full dataset. First, let’s see overall fraud prevalence:</p>
+<pre><code class="language-sql">SELECT
+    COUNT(*) AS TotalTransactions,
+    SUM(CASE WHEN Class = 1 THEN 1 ELSE 0 END) AS FraudCount,
+    ROUND(SUM(CASE WHEN Class = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 4) AS FraudPercentage
+FROM creditcard;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+-------------------+------------+-----------------+
+| TotalTransactions | FraudCount | FraudPercentage |
++-------------------+------------+-----------------+
+|            284807 |        492 |          0.1727 |
++-------------------+------------+-----------------+
+</code></pre>
+<p>Fraud is rare overall at just 0.17% of all transactions, showing the severe class imbalance.</p>
+<p>Now, let’s look at fraud vs. genuine by amount ranges:</p>
+<pre><code class="language-sql">SELECT
+    CASE
+        WHEN Amount &lt; 50 THEN 'Low'
+        WHEN Amount &gt;= 50 AND Amount &lt; 200 THEN 'Medium'
+        ELSE 'High'
+    END AS AmountRange,
+    COUNT(*) AS TotalTransactions,
+    SUM(CASE WHEN Class = 1 THEN 1 ELSE 0 END) AS FraudCount,
+    ROUND(SUM(CASE WHEN Class = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 4) AS FraudPercentage
+FROM creditcard
+GROUP BY AmountRange
+ORDER BY FraudPercentage DESC;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+-------------+-------------------+------------+-----------------+
+| AmountRange | TotalTransactions | FraudCount | FraudPercentage |
++-------------+-------------------+------------+-----------------+
+| High        |             29315 |         85 |          0.2900 |
+| Low         |            189704 |        305 |          0.1608 |
+| Medium      |             65788 |        102 |          0.1550 |
++-------------+-------------------+------------+-----------------+
+</code></pre>
+<p>High-value transactions have the greatest fraud percentage, although most frauds still occur in low-value transactions simply because they are far more frequent.</p>
+<p>Now, let’s look at fraud by deciles of transaction amount:</p>
+<pre><code class="language-sql">WITH deciles AS (
+    SELECT
+        Amount,
+        Class,
+        NTILE(10) OVER (ORDER BY Amount) AS Decile
+    FROM creditcard
+)
+SELECT
+    Decile,
+    COUNT(*) AS TotalTransactions,
+    SUM(CASE WHEN Class = 1 THEN 1 ELSE 0 END) AS FraudCount,
+    ROUND(SUM(CASE WHEN Class = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 4) AS FraudPercentage
+FROM deciles
+GROUP BY Decile
+ORDER BY Decile;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+--------+-------------------+------------+-----------------+
+| Decile | TotalTransactions | FraudCount | FraudPercentage |
++--------+-------------------+------------+-----------------+
+|      1 |             28481 |        165 |          0.5793 |
+|      2 |             28481 |         43 |          0.1510 |
+|      3 |             28481 |         36 |          0.1264 |
+|      4 |             28481 |         13 |          0.0456 |
+|      5 |             28481 |         14 |          0.0492 |
+|      6 |             28481 |         17 |          0.0597 |
+|      7 |             28481 |         24 |          0.0843 |
+|      8 |             28480 |         50 |          0.1756 |
+|      9 |             28480 |         45 |          0.1580 |
+|     10 |             28480 |         85 |          0.2985 |
++--------+-------------------+------------+-----------------+
+</code></pre>
+<p>Fraud clusters in the lowest decile and the highest decile, echoing the U-shaped risk seen in the sample.</p>
+<p>We’ll now look at extreme fraud amounts (90th, 95th, 99th percentiles):</p>
+<pre><code class="language-sql">SELECT
+    PERCENTILE_CONT(0.90) WITHIN GROUP (ORDER BY Amount) AS P90,
+    PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY Amount) AS P95,
+    PERCENTILE_CONT(0.99) WITHIN GROUP (ORDER BY Amount) AS P99
+FROM creditcard
+WHERE Class = 1;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+-------------------+-------------------+--------------------+
+| P90               | P95               | P99                |
++-------------------+-------------------+--------------------+
+| 346.7460021972656 | 640.9049865722657 | 1357.4279052734375 |
++-------------------+-------------------+--------------------+
+</code></pre>
+<p>The top 1% of fraud attempts involve large sums.</p>
+<p>Now let’s look at the top 10 highest fraud amounts:</p>
+<pre><code class="language-sql">SELECT Amount
+FROM creditcard
+WHERE Class = 1
+ORDER BY Amount DESC
+LIMIT 10;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+---------+
+| Amount  |
++---------+
+| 2125.87 |
+| 1809.68 |
+| 1504.93 |
+| 1402.16 |
+| 1389.56 |
+| 1354.25 |
+|    1335 |
+| 1218.89 |
+| 1096.99 |
+|  996.27 |
++---------+
+</code></pre>
+<p>There are some high-value attacks.</p>
+<p>Now, let’s look at fraud vs. genuine counts by quartile of transaction amount:</p>
+<pre><code class="language-sql">SELECT AmountQuartile, COUNT(*) AS TransactionCount
+FROM (
+    SELECT 
+        CASE 
+            WHEN Amount &lt; 50 THEN 'Low'
+            WHEN Amount BETWEEN 50 AND 200 THEN 'Medium'
+            WHEN Amount BETWEEN 200 AND 500 THEN 'High'
+            ELSE 'Very High'
+        END AS AmountQuartile
+    FROM creditcard
+) t
+GROUP BY AmountQuartile;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+----------------+------------------+
+| AmountQuartile | TransactionCount |
++----------------+------------------+
+| Medium         |            66266 |
+| Low            |           189704 |
+| High           |            19695 |
+| Very High      |             9142 |
++----------------+------------------+
+</code></pre>
+<p>Most transactions are in the “Low” range, but meaningful fraud also appears in higher quartiles.</p>
+<p>Let’s look at the distribution of fraud on a daily basis:</p>
+<pre><code class="language-sql">SELECT
+    FLOOR(Time/86400) AS DayNumber,
+    COUNT(*) AS TotalTransactions,
+    SUM(CASE WHEN Class = 1 THEN 1 ELSE 0 END) AS FraudCount,
+    ROUND(SUM(CASE WHEN Class = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 4) AS FraudPercentage
+FROM creditcard
+GROUP BY DayNumber
+ORDER BY DayNumber;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+-----------+-------------------+------------+-----------------+
+| DayNumber | TotalTransactions | FraudCount | FraudPercentage |
++-----------+-------------------+------------+-----------------+
+|         0 |            144786 |        281 |          0.1941 |
+|         1 |            140021 |        211 |          0.1507 |
++-----------+-------------------+------------+-----------------+
+</code></pre>
+<p>Fraud prevalence is stable across days, showing no strong spikes.</p>
+<p>Finally, let’s look at the daily fraud distribution by amount range:</p>
+<pre><code class="language-sql">SELECT
+    FLOOR(Time/86400) AS DayNumber,
+    CASE
+        WHEN Amount &lt; 50 THEN 'Low'
+        WHEN Amount &gt;= 50 AND Amount &lt; 200 THEN 'Medium'
+        ELSE 'High'
+    END AS AmountRange,
+    COUNT(*) AS TotalTransactions,
+    SUM(CASE WHEN Class = 1 THEN 1 ELSE 0 END) AS FraudCount,
+    ROUND(SUM(CASE WHEN Class = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 4) AS FraudPercentage
+FROM creditcard
+GROUP BY DayNumber, AmountRange
+ORDER BY DayNumber, AmountRange;
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">+-----------+-------------+-------------------+------------+-----------------+
+| DayNumber | AmountRange | TotalTransactions | FraudCount | FraudPercentage |
++-----------+-------------+-------------------+------------+-----------------+
+|         0 | High        |             15321 |         49 |          0.3198 |
+|         0 | Low         |             94918 |        168 |          0.1770 |
+|         0 | Medium      |             34547 |         64 |          0.1853 |
+|         1 | High        |             13994 |         36 |          0.2573 |
+|         1 | Low         |             94786 |        137 |          0.1445 |
+|         1 | Medium      |             31241 |         38 |          0.1216 |
++-----------+-------------+-------------------+------------+-----------------+
+</code></pre>
+<p>Fraud percentages are consistently higher for “High” amount transactions across both days, while “Low” and “Medium” transactions make up the majority of the total volume.</p>
+<p>Overall, when examining fraud by transaction amount, a clear pattern emerges. Small purchases dominate the dataset, yet they rarely involve fraud. Medium-sized purchases show a modest increase in fraud, but it remains uncommon. The real signal comes from high-value transactions, where the fraud rate rises sharply. Across days, this pattern is consistent: fraud is concentrated in higher-value transactions and is distributed fairly evenly over time rather than clustering on specific days. This suggests that while most transactions are low-risk, focusing monitoring and controls on larger amounts could provide the greatest benefit in fraud detection.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>We began by bringing in the credit card transaction data and carefully preparing it for analysis. Splitting it into training and testing sets allowed us to explore patterns without biasing the results. Early statistics revealed a clear imbalance: genuine transactions vastly outnumbered fraudulent ones. Diving deeper, we examined transaction amounts and discovered a trend that most purchases were small and low-risk, while high-value transactions, though rare, carried a much higher likelihood of fraud. Looking at temporal patterns, we saw that fraudulent attempts were spread fairly evenly over time, without obvious spikes on particular days or hours. By combining statistical summaries with charts and visualizations, we were able to map the landscape of fraud clearly, showing where attention and monitoring would be most valuable. In conclusion, this journey from raw data to insight highlighted a simple but powerful message: while most transactions are low-risk, focusing controls on higher-value activity offers the greatest potential for preventing fraud.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../part-ml/building-predictive-analytics-for-loan-approvals.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../part-ml/image-classification.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../part-ml/building-predictive-analytics-for-loan-approvals.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../part-ml/image-classification.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-c22b7243.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

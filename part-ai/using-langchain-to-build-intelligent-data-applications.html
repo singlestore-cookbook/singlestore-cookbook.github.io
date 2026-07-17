@@ -1,0 +1,974 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Chapter 18: Using LangChain to Build Intelligent Data Applications - The SingleStore Cookbook</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Recipes for Multi-Model, Machine Learning and AI Data Engineering">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-0392ca55.css">
+        <link rel="stylesheet" href="../css/chrome-fc474251.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-7ad5f1bc.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-e2854824.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The SingleStore Cookbook</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/singlestore-cookbook/singlestore-cookbook.github.io" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/singlestore-cookbook/singlestore-cookbook.github.io/edit/main/src/part-ai/using-langchain-to-build-intelligent-data-applications.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="chapter-18-using-langchain-to-build-intelligent-data-applications"><a class="header" href="#chapter-18-using-langchain-to-build-intelligent-data-applications">Chapter 18: Using LangChain to Build Intelligent Data Applications</a></h1>
+<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<p>Modern applications increasingly require the ability to interact with data using natural language, maintain conversational context and retrieve relevant information intelligently. LangChain, a framework for developing applications powered by language models, provides the building blocks to create these capabilities. When combined with SingleStore’s high-performance database, we can build production-ready applications that handle real-time data with sophisticated AI-powered features.</p>
+<p>This chapter demonstrates how to use LangChain’s integration with SingleStore to create a simple intelligent stock market analysis system. We’ll explore five key patterns that form the foundation of most AI-powered data applications:</p>
+<ul>
+<li>
+<p><strong>Natural Language Querying:</strong> Transform conversational questions into SQL queries, allowing users to ask questions like “What is the average trading volume for &lt;stock symbol&gt;?” without writing a single line of SQL.</p>
+</li>
+<li>
+<p><strong>Retrieval-Augmented Generation (RAG):</strong> Combine vector similarity search with language models to provide contextually relevant answers from a knowledge base about company information.</p>
+</li>
+<li>
+<p><strong>Conversational Memory:</strong> Maintain conversation history across multiple interactions, enabling follow-up questions that reference previous context, like “Now compare &lt;stock symbol 1&gt; with &lt;stock symbol 2&gt; for the same period.”</p>
+</li>
+<li>
+<p><strong>Multi-Tool Orchestration:</strong> Intelligently route queries between structured data (SQL) and unstructured knowledge (vector search), automatically determining which data source best answers each question.</p>
+</li>
+<li>
+<p><strong>Semantic Caching:</strong> Improve response times and reduce API costs by caching semantically similar queries, recognizing that “What factors influence &lt;company name&gt;’s stock price?” and “Why does &lt;company name&gt;’s stock move up or down?” are essentially the same question.</p>
+</li>
+</ul>
+<p>The stock ticker scenario provides an ideal demonstration environment as it combines trading data in a time-series table with background company information in a vector store, representing the data challenges often seen in production applications. By the end of this chapter, we’ll see how to architect LangChain applications that seamlessly integrate with SingleStore.</p>
+<h2 id="stockticker-data"><a class="header" href="#stockticker-data">Stockticker Data</a></h2>
+<h3 id="create-the-database-and-tick-table"><a class="header" href="#create-the-database-and-tick-table">Create the Database and Tick Table</a></h3>
+<p>In the SingleStore Portal, we’ll use the <strong>SQL Editor</strong> to create a new database. Call this <code>stockticker_db</code>, as follows:</p>
+<pre><code class="language-sql">CREATE DATABASE IF NOT EXISTS stockticker_db;
+</code></pre>
+<p>We’ll also create a table, as follows:</p>
+<pre><code class="language-sql">USE stockticker_db;
+
+DROP TABLE IF EXISTS tick;
+CREATE TABLE IF NOT EXISTS tick (
+    symbol VARCHAR(10),
+    ts     DATETIME SERIES TIMESTAMP,
+    open   NUMERIC(18, 2),
+    high   NUMERIC(18, 2),
+    low    NUMERIC(18, 2),
+    close  NUMERIC(18, 2),
+    volume INT,
+    PRIMARY KEY (symbol, ts)
+);
+
+DROP TABLE IF EXISTS chat_history;
+</code></pre>
+<h3 id="fill-out-the-notebook"><a class="header" href="#fill-out-the-notebook">Fill out the Notebook</a></h3>
+<p>Let’s now create a new Python notebook. We’ll call it <strong>data_loader_for_stockticker</strong>.</p>
+<p>We’ll create a new DataFrame for the tick data, as follows:</p>
+<pre><code class="language-python">tick_csv_url = ...
+
+tick_df = pd.read_csv(tick_csv_url)
+</code></pre>
+<p>This reads the CSV file and creates a DataFrame called <code>tick_df</code>.</p>
+<p>In the next code cell, we’ll remove incomplete rows:</p>
+<pre><code class="language-python">tick_df = tick_df.dropna()
+</code></pre>
+<p>and also remove one extreme outlier:</p>
+<pre><code class="language-python">tick_df = tick_df[tick_df["volume"] &lt;= 2_147_483_647]
+</code></pre>
+<p>Next, let’s get the number of rows:</p>
+<pre><code class="language-python">tick_df.count()
+</code></pre>
+<p>Executing this will return the value <code>379764</code>.</p>
+<p>We’ll rename some columns to match our table schema, as follows:</p>
+<pre><code class="language-python">tick_df = tick_df.rename(columns = {"date": "ts", "Name": "symbol"})
+</code></pre>
+<p>and sort the data:</p>
+<pre><code class="language-python">tick_df = tick_df.sort_values(by = ["ts", "symbol"])
+</code></pre>
+<p>In the next code cell, we’ll take a look at the structure of the DataFrame:</p>
+<pre><code class="language-python">tick_df.head()
+</code></pre>
+<p>It should look like this:</p>
+<pre><code class="language-text">              ts    open    high     low   close    volume   symbol
+0     2013-01-02  743.98  756.93  736.15  745.68   9142645  BBRQ-FX
+755   2013-01-02  418.92  426.82  415.64  420.77   2281501  BBYX-FX
+1510  2013-01-02  192.05  192.73  190.29  192.03    194074  BFDS-FX
+2265  2013-01-02  108.47  109.55  107.06  108.30   6371511  BGRP-FX
+3020  2013-01-02  188.60  191.23  187.27  187.60  12854613  BJBY-FX
+</code></pre>
+<p>We are now ready to write the DataFrame to SingleStore. First, we’ll create a connection:</p>
+<pre><code class="language-python">from sqlalchemy import *
+
+db_connection = create_engine(connection_url)
+</code></pre>
+<p>Next, we’ll ensure that all the table is empty:</p>
+<pre><code class="language-python">with db_connection.begin() as conn:
+    conn.execute(text("TRUNCATE TABLE tick;"))
+</code></pre>
+<p>Finally, we’ll write the DataFrame to SingleStore:</p>
+<pre><code class="language-python">tick_df.to_sql(
+    "tick",
+    con = db_connection,
+    if_exists = "append",
+    index = False,
+    chunksize = 1000
+)
+</code></pre>
+<p>This gives us a dataset that we can use with LangChain in the next section.</p>
+<h2 id="langchain"><a class="header" href="#langchain">LangChain</a></h2>
+<p>In this section. we’ll use LangChain with SingleStore and test the key capabilities we discussed earlier.</p>
+<h3 id="fill-out-the-notebook-1"><a class="header" href="#fill-out-the-notebook-1">Fill out the Notebook</a></h3>
+<p>Let’s now create a new Python notebook. We’ll call it <strong>langchain</strong>.</p>
+<p>First, we’ll set our models and retrieve our OpenAI API Key from the secrets vault. We’ll need the OpenAI API Key for generating vector embeddings. We’ll access the OpenAI API Key using <code>get_secret</code>:</p>
+<pre><code class="language-python">LLM_MODEL = ...
+EMBEDDING_MODEL = ...
+
+os.environ["OPENAI_API_KEY"] = get_secret("OPENAI_API_KEY")
+</code></pre>
+<p>Next, we’ll set our OpenAI model:</p>
+<pre><code class="language-python">llm = ChatOpenAI(
+    model = LLM_MODEL,
+    temperature = 0
+)
+</code></pre>
+<h4 id="natural-language"><a class="header" href="#natural-language">Natural Language</a></h4>
+<p>Let’s start with natural language. First, we’ll connect to SingleStore:</p>
+<pre><code class="language-python">try:
+    db = SQLDatabase.from_uri(
+        connection_url,
+        include_tables = ["tick"]
+    )
+except SQLAlchemyError as e:
+    print(f"Error connecting to the database: {e}")
+    exit()
+</code></pre>
+<p>Now, we’ll create our SQL Agent using the previous information:</p>
+<pre><code class="language-python">sql_agent_executor = create_sql_agent(
+    llm = llm,
+    db = db,
+    agent_type = "openai-tools",
+    verbose = False
+)
+</code></pre>
+<p>To query the database, we’ll create a helper function and tool, as follows:</p>
+<pre><code class="language-python">def query_tick(question: str) -&gt; str:
+    """
+    Ask a natural language question to the SQL agent and return only the text output.
+    """
+    try:
+        result = sql_agent_executor.invoke({"input": question})
+        return result.get("output", "").strip()
+    except Exception as e:
+        return f"Tool Error: Could not execute SQL query: {e}"
+
+tick_tool = Tool(
+    name = "TickTable",
+    func = query_tick,
+    description = "Use this to query the tick table in natural language about stock prices, volumes and time."
+)
+</code></pre>
+<p>Now, we’ll can ask some questions. First, let’s look for a specific stock symbol and ask for tabular output:</p>
+<pre><code class="language-python">print(query_tick(
+    "Show me the last 5 ticks for BBRQ-FX. Present the result as a table."
+    )
+)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Here are the last 5 ticks for BBRQ-FX:
+
+| ts                  | open    | high    | low     | close   | volume   |
+|---------------------|---------|---------|---------|---------|----------|
+| 2015-11-24 00:00:00 | 999.83  | 1017.41 | 985.60  | 1004.39 | 2066982  |
+| 2015-11-23 00:00:00 | 1020.74 | 1039.59 | 1010.85 | 1019.04 | 2005610  |
+| 2015-11-20 00:00:00 | 991.68  | 992.87  | 977.93  | 990.32  | 1995583  |
+| 2015-11-19 00:00:00 | 1001.18 | 1008.44 | 992.92  | 1003.77 | 33279776 |
+| 2015-11-18 00:00:00 | 1037.09 | 1052.68 | 1023.30 | 1042.63 | 5600879  |
+</code></pre>
+<p>Next, let’s try a broader question:</p>
+<pre><code class="language-python">print(query_tick(
+    "Which ticker had the highest close price?"
+    )
+)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">The ticker with the highest close price is WVVF-FX with a close price of 6301.59.
+</code></pre>
+<p>Next, let’s try something that requires some calculation:</p>
+<pre><code class="language-python">print(query_tick(
+    "What is the average trading volume for BJBY-FX?"
+    )
+)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">The average trading volume for BJBY-FX is approximately 6,702,839.
+</code></pre>
+<p>Finally, let’s try something a little more complex:</p>
+<pre><code class="language-python">print(query_tick(
+    "Using the latest timestamp in the tick table as the reference, "
+    "return all tickers from the 10 seconds before that timestamp "
+    "where the close price is above 500 and sort the results alphabetically by ticker."
+    )
+)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">The tickers from the 10 seconds before the latest timestamp in the tick table where the close price is above 500, sorted alphabetically, are:
+
+1. BBRQ-FX
+2. BBYX-FX
+3. BKCZ-FX
+4. BMJH-FX
+5. BPDZ-FX
+6. BPKV-FX
+7. BTSP-FX
+8. CCMN-FX
+9. CGHY-FX
+10. CHWP-FX
+
+All these ticks have the latest timestamp of 2015-11-24 00:00:00.
+</code></pre>
+<p>All the results appear plausible, but should be checked carefully. Switching verbose mode to <code>True</code> in the SQL Agent would show us more details about each query. For example, in the last query above, LangChain uses an equality operator (<code>=</code>) for comparison, but timestamps often include fractional seconds, so using a range (<code>&gt;=</code> and <code>&lt;=</code>) would be safer.</p>
+<h4 id="retrieval-aaugmented-rgeneration-rag"><a class="header" href="#retrieval-aaugmented-rgeneration-rag">Retrieval Aaugmented Rgeneration (RAG)</a></h4>
+<p>Let’s now create a small knowledge base that stores some information about the key demo tickers that we created earlier, as follows:</p>
+<pre><code class="language-python">company_info = {
+    "BBRQ-FX": "BBRQ Corp is a global technology conglomerate known for its enterprise software platforms, cloud infrastructure services and a dominant position in business productivity tools.",
+    "BJBY-FX": "BJBY Dynamics is a consumer electronics and devices company renowned for its flagship smartphone line, wearable technology and a fast-growing digital services ecosystem.",
+    "YWMG-FX": "YWMG Group is an e-commerce and logistics powerhouse with expanding interests in cloud computing, digital advertising and subscription-based media streaming.",
+    "HRPD-FX": "HRPD Technologies is a semiconductor and hardware manufacturer supplying chips and processing units to the automotive, aerospace and artificial intelligence industries."
+}
+</code></pre>
+<p>We’ll extract the information and store the stock symbol as metadata and the text as the page content:</p>
+<pre><code class="language-python">documents = [
+    Document(page_content = text, metadata = {"symbol": sym})
+    for sym, text in company_info.items()
+]
+</code></pre>
+<p>We’ll use an OpenAI embedding model and determine the length of the vectors that it returns using a test string:</p>
+<pre><code class="language-python">embeddings = OpenAIEmbeddings(
+    model = EMBEDDING_MODEL
+)
+
+dimensions = len(embeddings.embed_query("test"))
+</code></pre>
+<p>Next, we’ll ensure that we have a connection to SingleStore:</p>
+<pre><code class="language-python">from sqlalchemy import *
+
+db_connection = create_engine(connection_url)
+</code></pre>
+<p>and then drop the company knowledge table if it already exists, so we start with a clean state:</p>
+<pre><code class="language-python">with db_connection.begin() as conn:
+    conn.execute(text("DROP TABLE IF EXISTS company_knowledge;"))
+</code></pre>
+<p>Now we’re ready to use the SingleStore LangChain integration to store the company data:</p>
+<pre><code class="language-python">vector_store = SingleStoreVectorStore(
+    embeddings,
+    table_name = "company_knowledge",
+    distance_strategy = "DOT_PRODUCT",
+    use_vector_index = True,
+    vector_size = dimensions
+)
+
+vector_store.add_documents(documents);
+</code></pre>
+<p>We’ll quickly check what was stored by retrieving the data from the database into a Pandas DataFrame:</p>
+<pre><code class="language-python">df = pd.read_sql(
+    """
+    SELECT LEFT(content, 30) AS content, LEFT(vector :&gt; JSON, 30) AS vector, metadata::symbol AS metadata
+    FROM company_knowledge
+    """,
+    db_connection
+)
+</code></pre>
+<p>and then check the DataFrame:</p>
+<pre><code class="language-python">df.head()
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">                          content                          vector metadata
+0  HRPD Technologies is a semicon  [-0.010345459,-0.0561523438,0.  HRPD-FX
+1  BJBY Dynamics is a consumer el  [0.0344238281,0.000962734222,0  BJBY-FX
+2  BBRQ Corp is a global technolo  [0.0343017578,-0.0219573975,0.  BBRQ-FX
+3  YWMG Group is an e-commerce an  [-0.00539016724,0.0135269165,0  YWMG-FX
+</code></pre>
+<p>We’ll also quickly check that the semantic search works for the four key demo stocks we stored. First, BBRQ.</p>
+<pre><code class="language-python">print(vector_store.similarity_search(
+    "What are the most popular consumer devices and services that BBRQ sells?",
+    k = 1
+)[0].page_content)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">BBRQ Corp is a global technology conglomerate known for its enterprise software platforms, cloud infrastructure services and a dominant position in business productivity tools.
+</code></pre>
+<p>Next, BJBY.</p>
+<pre><code class="language-python">print(vector_store.similarity_search(
+    "Describe BJBY's main contributions to consumer electronics.",
+    k = 1
+)[0].page_content)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">BJBY Dynamics is a consumer electronics and devices company renowned for its flagship smartphone line, wearable technology and a fast-growing digital services ecosystem.
+</code></pre>
+<p>Next, YWMG.</p>
+<pre><code class="language-python">print(vector_store.similarity_search(
+    "Can you detail the core technologies and services provided by YWMG?",
+    k = 1
+)[0].page_content)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">YWMG Group is an e-commerce and logistics powerhouse with expanding interests in cloud computing, digital advertising and subscription-based media streaming.
+</code></pre>
+<p>Finally, HRPD.</p>
+<pre><code class="language-python">print(vector_store.similarity_search(
+    "What are the primary sectors in which HRPD operates?",
+    k = 1
+)[0].page_content)
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">HRPD Technologies is a semiconductor and hardware manufacturer supplying chips and processing units to the automotive, aerospace and artificial intelligence industries.
+</code></pre>
+<p>All is working well with the semantic search. Next, we’ll explore how to use LangChain to store the full transcript of conversations.</p>
+<h4 id="conversational-memory-in-memory"><a class="header" href="#conversational-memory-in-memory">Conversational Memory (in-memory)</a></h4>
+<p>Let’s now create a temporary (non-persistent) conversational memory buffer and attach it to an agent so that the agent can recall earlier messages during a session. The memory lives only in RAM and disappears when the program ends.</p>
+<pre><code class="language-python">print("\n--- In-Memory Agent (No Persistence) ---")
+
+in_memory = ConversationBufferMemory(
+    memory_key = "chat_history",
+    return_messages = False
+)
+
+agent_memory = initialize_agent(
+    tools = [tick_tool],
+    llm = llm,
+    agent = "zero-shot-react-description",
+    memory = in_memory,
+    verbose = False,
+    max_iterations = 6,
+    handle_parsing_errors = True
+)
+</code></pre>
+<p>We’ll ask a few questions to fill the buffer. First, let’s ask for the tick values for a particular stock symbol:</p>
+<pre><code class="language-python">print(agent_memory.invoke(
+    "Show me the last 5 ticks for BBRQ-FX. Present the result as a table."
+)["output"])
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">| Date       | Open    | High    | Low     | Close   | Volume     |
+|------------|---------|---------|---------|---------|------------|
+| 2015-11-24 | 999.83  | 1017.41 | 985.60  | 1004.39 | 2,066,982  |
+| 2015-11-23 | 1020.74 | 1039.59 | 1010.85 | 1019.04 | 2,005,610  |
+| 2015-11-20 | 991.68  | 992.87  | 977.93  | 990.32  | 1,995,583  |
+| 2015-11-19 | 1001.18 | 1008.44 | 992.92  | 1003.77 | 33,279,776 |
+| 2015-11-18 | 1037.09 | 1052.68 | 1023.30 | 1042.63 | 5,600,879  |
+</code></pre>
+<p>Next, let’s compare tick values from two different stock symbols:</p>
+<pre><code class="language-python">print(agent_memory.invoke(
+    "Now compare BBRQ-FX with BJBY-FX for the last 5 ticks."
+)["output"])
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">BBRQ-FX consistently shows higher prices than BJBY-FX over the last 5 ticks. Volume for BBRQ-FX is generally higher except on 2015-11-24 when BJBY-FX had more than double the volume.
+</code></pre>
+<p>Finally, let’s compare the last close price for two stock symbols:</p>
+<pre><code class="language-python">print(agent_memory.invoke(
+    "Which had the higher last close, BBRQ-FX or BJBY-FX?"
+)["output"])
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">BBRQ-FX had the higher last close price.
+</code></pre>
+<p>Let’s now output the complete conversation history:</p>
+<pre><code class="language-python">print("\nCurrent conversation memory (in-memory buffer):\n")
+
+for msg in in_memory.chat_memory.messages:
+    role = msg.type.upper()
+    print(f"{role}: {msg.content}")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Current conversation memory (in-memory buffer):
+
+HUMAN: Show me the last 5 ticks for BBRQ-FX. Present the result as a table.
+AI: | Date       | Open    | High    | Low     | Close   | Volume     |
+|------------|---------|---------|---------|---------|------------|
+| 2015-11-24 | 999.83  | 1017.41 | 985.60  | 1004.39 | 2,066,982  |
+| 2015-11-23 | 1020.74 | 1039.59 | 1010.85 | 1019.04 | 2,005,610  |
+| 2015-11-20 | 991.68  | 992.87  | 977.93  | 990.32  | 1,995,583  |
+| 2015-11-19 | 1001.18 | 1008.44 | 992.92  | 1003.77 | 33,279,776 |
+| 2015-11-18 | 1037.09 | 1052.68 | 1023.30 | 1042.63 | 5,600,879  |
+HUMAN: Now compare BBRQ-FX with BJBY-FX for the last 5 ticks.
+AI: BBRQ-FX consistently shows higher prices than BJBY-FX over the last 5 ticks. Volume for BBRQ-FX is generally higher except on 2015-11-24 when BJBY-FX had more than double the volume.
+HUMAN: Which had the higher last close, BBRQ-FX or BJBY-FX?
+AI: BBRQ-FX had the higher last close price.
+</code></pre>
+<p>and we can clear this conversation history, as follows:</p>
+<pre><code class="language-python">in_memory.clear()
+</code></pre>
+<h4 id="conversational-memory-persistent"><a class="header" href="#conversational-memory-persistent">Conversational Memory (persistent)</a></h4>
+<p>Now, let’s persist the conversation history in SingleStore. First, we’ll connect to SingleStore:</p>
+<pre><code class="language-python">from sqlalchemy import *
+
+db_connection = create_engine(connection_url)
+</code></pre>
+<p>Next, let’s create a function that consolidates the creation of persistent memory:</p>
+<pre><code class="language-python">def create_singlestore_agent_memory(
+    session_id: str,
+    table_name: str = "chat_history",
+    clear_history: bool = True
+) -&gt; ConversationBufferMemory:
+    """
+    Consolidates the creation of SingleStore-backed memory for a LangChain Agent.
+
+    Args:
+        session_id: The unique ID for the conversation thread.
+        table_name: The name of the table in SingleStore.
+        clear_history: If True, clears the session's history before returning.
+
+    Returns:
+        A ConversationBufferMemory object ready for use in initialize_agent.
+    """
+    chat_history = SingleStoreChatMessageHistory(
+        session_id = session_id,
+        table_name = table_name,
+    )
+
+    if clear_history:
+        chat_history.clear()
+
+    memory = ConversationBufferMemory(
+        memory_key = "chat_history",
+        chat_memory = chat_history,
+        return_messages = True
+    )
+
+    return memory
+</code></pre>
+<p>Let’s now create a persistent conversational memory buffer and attach it to an agent so that the agent can recall earlier messages during a session.</p>
+<pre><code class="language-python">print("\n--- Persistent Agent (SingleStore Only) ---")
+
+session_id = "persistent"
+persistent_memory = create_singlestore_agent_memory(
+    session_id = session_id,
+    table_name = "chat_history",
+    clear_history = True
+)
+
+agent_persistent = initialize_agent(
+    tools = [tick_tool],
+    llm = llm,
+    agent = "zero-shot-react-description",
+    memory = persistent_memory,
+    verbose = False,
+    max_iterations = 6,
+    handle_parsing_errors = True
+)
+</code></pre>
+<p>We’ll test this now with the same queries we used earlier. First, let’s ask for the tick values for a particular stock symbol:</p>
+<pre><code class="language-python">print(agent_persistent.invoke(
+    "Show me the last 5 ticks for BBRQ-FX. Present the result as a table."
+)["output"])
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">| Date       | Open    | High    | Low     | Close   | Volume    |
+|------------|---------|---------|---------|---------|-----------|
+| 2015-11-24 | 999.83  | 1017.41 | 985.60  | 1004.39 | 2,066,982 |
+| 2015-11-23 | 1020.74 | 1039.59 | 1010.85 | 1019.04 | 2,005,610 |
+| 2015-11-20 | 991.68  | 992.87  | 977.93  | 990.32  | 1,995,583 |
+| 2015-11-19 | 1001.18 | 1008.44 | 992.92  | 1003.77 | 33,279,776|
+| 2015-11-18 | 1037.09 | 1052.68 | 1023.30 | 1042.63 | 5,600,879 |
+</code></pre>
+<p>Next, let’s compare tick values from two different stock symbols:</p>
+<pre><code class="language-python">print(agent_persistent.invoke(
+    "Now compare BBRQ-FX with BJBY-FX for the last 5 ticks."
+)["output"])
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Over the last 5 ticks, BBRQ-FX has consistently higher prices (more than double) compared to BJBY-FX. Volume for BBRQ-FX is generally higher, notably on 2015-11-19 where it is significantly larger. BJBY-FX has lower prices and somewhat lower or comparable volumes on other days.
+</code></pre>
+<p>Finally, let’s compare the last close price for two stock symbols:</p>
+<pre><code class="language-python">print(agent_persistent.invoke(
+    "Which had the higher last close, BBRQ-FX or BJBY-FX?"
+)["output"])
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">BBRQ-FX had the higher last close price.
+</code></pre>
+<p>Let’s now output the complete persistent history:</p>
+<pre><code class="language-python">with db_connection.connect() as conn:
+    rows = conn.execute(
+        text("SELECT id, session_id, message FROM chat_history WHERE session_id = :sid ORDER BY id"),
+        {"sid": session_id}
+    ).fetchall()
+
+print(f"Current conversation memory (persistent-memory buffer) for session: '{session_id}':\n")
+for r in rows:
+    msg = r.message
+    role = msg.get("type", "unknown").upper()
+    content = msg.get("data", {}).get("content", "")
+    print(f"{role}: {content}")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">Current conversation memory (persistent-memory buffer) for session: 'persistent':
+
+HUMAN: Show me the last 5 ticks for BBRQ-FX. Present the result as a table.
+AI: | Date       | Open    | High    | Low     | Close   | Volume    |
+|------------|---------|---------|---------|---------|-----------|
+| 2015-11-24 | 999.83  | 1017.41 | 985.60  | 1004.39 | 2,066,982 |
+| 2015-11-23 | 1020.74 | 1039.59 | 1010.85 | 1019.04 | 2,005,610 |
+| 2015-11-20 | 991.68  | 992.87  | 977.93  | 990.32  | 1,995,583 |
+| 2015-11-19 | 1001.18 | 1008.44 | 992.92  | 1003.77 | 33,279,776|
+| 2015-11-18 | 1037.09 | 1052.68 | 1023.30 | 1042.63 | 5,600,879 |
+HUMAN: Now compare BBRQ-FX with BJBY-FX for the last 5 ticks.
+AI: Over the last 5 ticks, BBRQ-FX has consistently higher prices (more than double) compared to BJBY-FX. Volume for BBRQ-FX is generally higher, notably on 2015-11-19 where it is significantly larger. BJBY-FX has lower prices and somewhat lower or comparable volumes on other days.
+HUMAN: Which had the higher last close, BBRQ-FX or BJBY-FX?
+AI: BBRQ-FX had the higher last close price.
+</code></pre>
+<h4 id="natural-language-and-rag"><a class="header" href="#natural-language-and-rag">Natural Language and RAG</a></h4>
+<p>We’ll combine natural language and RAG. First, let’s create a vector store retriever, define the RAG prompt and create the document and RAG chains, as follows:</p>
+<pre><code class="language-python">company_retriever = vector_store.as_retriever(search_kwargs = {"k": 1})
+
+rag_prompt = ChatPromptTemplate.from_template(
+    """
+    You are a helpful assistant. Use the following context to answer the user's question.
+    If the context does not contain the answer, politely state that the information is not in your knowledge base.
+
+    Context: {context}
+
+    Question: {input}
+    """
+)
+
+document_chain = create_stuff_documents_chain(llm, rag_prompt)
+
+rag_chain = create_retrieval_chain(company_retriever, document_chain)
+</code></pre>
+<p>We’ll define a function that queries a RAG chain for company background information and returns the answer, then wraps that function into a LangChain Tool so agents can call it to look up company info.</p>
+<pre><code class="language-python">def query_company_info_lcel(question: str) -&gt; str:
+    """Use this to get background info about a company."""
+    result = rag_chain.invoke({"input": question})
+    return result["answer"]
+
+company_tool = Tool(
+    name = "CompanyKnowledge",
+    func = query_company_info_lcel,
+    description = "Use this to get background info about a company using its stock symbol or company name."
+)
+</code></pre>
+<p>Next, let’s create a new session with persistent SingleStore-backed conversational memory and build an agent that can use both tools (tick data and company info) while retaining conversation history across runs.</p>
+<pre><code class="language-python">print("\n--- Natural Language and RAG Agent (Combined) ---")
+
+session_id = "combined"
+combined_memory = create_singlestore_agent_memory(
+    session_id = session_id,
+    table_name = "chat_history",
+    clear_history = True
+)
+
+agent_combined = initialize_agent(
+    tools = [tick_tool, company_tool],
+    llm = llm,
+    agent = "zero-shot-react-description",
+    memory = combined_memory,
+    verbose = False,
+    max_iterations = 6,
+    handle_parsing_errors = True
+)
+</code></pre>
+<p>Let’s test the combined agent. First, let’s get tick data for a stock symbol:</p>
+<pre><code class="language-python">print(agent_combined.invoke(
+    "Show me the last 5 ticks for BBRQ-FX. Present the result as a table."
+)["output"])
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">| Date       | Open    | High    | Low     | Close   | Volume     |
+|------------|---------|---------|---------|---------|------------|
+| 2015-11-24 | 999.83  | 1017.41 | 985.60  | 1004.39 | 2,066,982  |
+| 2015-11-23 | 1020.74 | 1039.59 | 1010.85 | 1019.04 | 2,005,610  |
+| 2015-11-20 | 991.68  | 992.87  | 977.93  | 990.32  | 1,995,583  |
+| 2015-11-19 | 1001.18 | 1008.44 | 992.92  | 1003.77 | 33,279,776 |
+| 2015-11-18 | 1037.09 | 1052.68 | 1023.30 | 1042.63 | 5,600,879  |
+</code></pre>
+<p>Now, we’ll try a RAG query:</p>
+<pre><code class="language-python">print(agent_combined.invoke(
+    "What products does BJBY make?"
+)["output"])
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">BJBY makes consumer electronics and devices, including a flagship smartphone line, wearable technology, and provides a fast-growing digital services ecosystem.
+</code></pre>
+<p>and a follow-on query:</p>
+<pre><code class="language-python">print(agent_combined.invoke(
+    "Now do the same for HRPD."
+)["output"])
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">HRPD Technologies is a semiconductor and hardware manufacturer supplying chips and processing units to the automotive, aerospace, and artificial intelligence industries. However, there is no recent stock price, volume, or time data available for HRPD in the tick table. If you need information on another company or symbol, please let me know.
+</code></pre>
+<h4 id="semantic-caching"><a class="header" href="#semantic-caching">Semantic Caching</a></h4>
+<p>Finally, let’s see how we could benefit from semantic caching. We’ll create a SingleStore-backed semantic cache that stores and retrieves LLM responses using embeddings and then sets it as the global cache so repeated or similar queries can run without re-calling the model.</p>
+<pre><code class="language-python">semantic_cache = SingleStoreSemanticCache(
+    embedding = embeddings,
+    search_threshold = 0.75,
+    distance_strategy = DistanceStrategy.DOT_PRODUCT
+)
+
+set_llm_cache(semantic_cache)
+print("SingleStore Semantic Cache initialized and set globally.")
+</code></pre>
+<p>We’ll use a patch that replaces the cache’s lookup method so it first tries semantic vector search to find a similar past prompt and if that fails or scores too low, it falls back to exact string matching. This ensures more reliable cache hits by combining embedding-based retrieval with strict equality as a backup.</p>
+<pre><code class="language-python">def semantic_lookup(self, prompt: str, llm_string: str):
+    """
+    Lookup using embeddings similarity with exact-match fallback.
+    Vector search is attempted first, then exact-match if needed.
+    """
+    llm_cache = self._get_llm_cache(llm_string)
+
+    try:
+        vector = self.embedding.embed_query(prompt)
+        results = llm_cache.similarity_search_by_vector(
+            vector = vector,
+            k = 1,
+            embedding = self.embedding
+        )
+        if results:
+            doc, score = results[0]
+            if ((llm_cache.distance_strategy == DistanceStrategy.DOT_PRODUCT and score &gt;= self.search_threshold) or
+                (llm_cache.distance_strategy == DistanceStrategy.EUCLIDEAN_DISTANCE and score &lt;= self.search_threshold)):
+                return loads(doc.metadata["return_val"])
+    except Exception as e:
+        pass
+
+    for doc in getattr(llm_cache, "docs", []):
+        if doc.page_content == prompt:
+            return loads(doc.metadata["return_val"])
+
+    return None
+
+SingleStoreSemanticCache.lookup = semantic_lookup
+</code></pre>
+<p>Now, we’ll write a function that checks the semantic cache for a matching response and returns it instantly if found. Otherwise, it times a real LLM call, stores the new result in the cache and returns both the output and how long the uncached call took.</p>
+<pre><code class="language-python">def timed_llm_call(llm, prompt, semantic_cache):
+    llm_string = llm._get_llm_string()
+
+    cached_result = semantic_cache.lookup(prompt, llm_string)
+    if cached_result:
+        return cached_result[0].text, 0.0
+
+    start_time = time.time()
+    result = llm.invoke(prompt)
+    elapsed = time.time() - start_time
+
+    semantic_cache.update(
+        prompt = prompt,
+        llm_string = llm_string,
+        return_val = [Generation(text = result.content)]
+    )
+    return result.content, elapsed
+</code></pre>
+<p>Before we run any queries, we’ll clear the cache:</p>
+<pre><code class="language-python">semantic_cache.clear(llm_string = llm._get_llm_string())
+print("Cache cleared for a fresh run.")
+</code></pre>
+<p>First, let’s start with a cache miss:</p>
+<pre><code class="language-python">print("\n--- First Call (Cache Miss) ---")
+prompt1 = "Explain the key factors influencing BBRQ’s stock price."
+result1, time1 = timed_llm_call(llm, prompt1, semantic_cache)
+print(f"Prompt: {prompt1}\nTime: {time1:.2f}s\nResult: {result1[:80]}...")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">--- First Call (Cache Miss) ---
+Prompt: Explain the key factors influencing BBRQ’s stock price.
+Time: 7.11s
+Result: To explain the key factors influencing BBRQ’s stock price, it’s important to con...
+</code></pre>
+<p>Now, let’s try a query similar to the previous query which should use the cached result:</p>
+<pre><code class="language-python">print("\n--- Second Call (Semantic Hit - Expect faster response) ---")
+prompt2 = "What are the main reasons for BBRQ’s stock price moving up or down?"
+result2, time2 = timed_llm_call(llm, prompt2, semantic_cache)
+print(f"Prompt: {prompt2}\nTime: {time2:.2f}s\nResult: {result2[:80]}...")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">--- Second Call (Semantic Hit - Expect faster response) ---
+Prompt: What are the main reasons for BBRQ’s stock price moving up or down?
+Time: 3.66s
+Result: To provide an accurate answer about the main reasons for BBRQ’s stock price move...
+</code></pre>
+<p>We see that the cached result is faster.</p>
+<p>Finally, let’s try an unrelated query, which would be another cache miss:</p>
+<pre><code class="language-python">print("\n--- Third Call (Cache Miss - Expect slow response) ---")
+prompt3 = "What is the process of nuclear fusion?"
+result3, time3 = timed_llm_call(llm, prompt3, semantic_cache)
+print(f"Prompt: {prompt3}\nTime: {time3:.2f}s\nResult: {result3[:80]}...")
+</code></pre>
+<p>Example output:</p>
+<pre><code class="language-text">--- Third Call (Cache Miss - Expect slow response) ---
+Prompt: What is the process of nuclear fusion?
+Time: 6.19s
+Result: Nuclear fusion is the process by which two light atomic nuclei combine to form a...
+</code></pre>
+<p>We see that the result is slightly slower than the previous query.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>This chapter demonstrated the power of combining LangChain with SingleStore to build AI-powered data applications. Through a stock market analysis use case, we explored five distinct patterns that solve common challenges in modern application development.</p>
+<p>The chapter illustrated several architectural patterns worth noting:</p>
+<ul>
+<li>
+<p><strong>Separation of Concerns:</strong> The <code>tick</code> table handled high-frequency time-series data while the vector store managed semi-static knowledge, demonstrating SingleStore’s versatility in handling different data modalities within a single database.</p>
+</li>
+<li>
+<p><strong>Session Management:</strong> The <code>SingleStoreChatMessageHistory</code> implementation showed how to structure conversational sessions using unique session IDs, allowing concurrent users and conversation isolation.</p>
+</li>
+<li>
+<p><strong>Tool Abstraction:</strong> By wrapping database operations in LangChain Tools, we created reusable components that can be composed into more complex agents as our application grows.</p>
+</li>
+<li>
+<p><strong>Caching Strategy:</strong> The semantic cache implementation demonstrated the trade-off between search threshold and cache hit rate, a critical tuning parameter for production deployments.</p>
+</li>
+</ul>
+<p>While the examples focused on core functionality, several considerations emerge for production deployments:</p>
+<ul>
+<li>
+<p><strong>Error Handling:</strong> The code includes try-catch blocks around LLM calls and database operations, but production systems should implement comprehensive retry logic and fallback strategies.</p>
+</li>
+<li>
+<p><strong>Rate Limiting:</strong> The semantic cache helps reduce LLM API calls, but we should also implement request throttling to manage costs and prevent abuse.</p>
+</li>
+<li>
+<p><strong>Security:</strong> The SQL agent was restricted to read-only operations and specific tables. Production systems require additional safeguards including query validation, result filtering and user authorization.</p>
+</li>
+<li>
+<p><strong>Monitoring:</strong> Instrumenting cache hit rates, query latencies and LLM token usage provides visibility into system performance and cost optimization opportunities.</p>
+</li>
+</ul>
+<p>The patterns demonstrated in this chapter can form the foundation for more advanced applications. For example, we could extend this implementation to include:</p>
+<ul>
+<li>
+<p>Real-time alerting when specific stock conditions are met.</p>
+</li>
+<li>
+<p>Multi-step reasoning chains that combine technical analysis with fundamental data.</p>
+</li>
+<li>
+<p>Custom tool development for specialized financial calculations.</p>
+</li>
+<li>
+<p>Integration with external data sources through LangChain’s extensive connector ecosystem.</p>
+</li>
+</ul>
+<p>By mastering these core patterns – natural language querying, vector-based retrieval, conversational memory, multi-tool orchestration and semantic caching – we’ve acquired the essential building blocks for creating intelligent, data-driven applications that feel natural to users while using the full power of distributed SQL and vector capabilities.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../part-ml/feature-store-with-feast.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../part-ai/using-llamaindex-workflows.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../part-ml/feature-store-with-feast.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../part-ai/using-llamaindex-workflows.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-c22b7243.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
