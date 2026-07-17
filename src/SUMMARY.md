@@ -43,4 +43,7 @@
 - [Chapter 21: Running Local LLMs with Ollama](part-ai/running-local-llms-with-ollama.md)
 - [Chapter 22: Using MCP for Real-Time Data Access](part-ai/using-mcp-for-real-time-data-access.md)
 - [Chapter 23: Agentic Patterns with SingleStore](part-ai/agentic-patterns-with-singlestore.md)
+
+# Conclusions
+
 - [Chapter 24: Conclusions](part-back/conclusions.md)
