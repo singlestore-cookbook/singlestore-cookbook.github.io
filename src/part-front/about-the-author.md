@@ -10,6 +10,6 @@ Today, Akmal works in developer education at Neo4j, where he focuses on technica
 
 Based in the United Kingdom, Akmal continues to work at the intersection of databases, AI and developer tooling, helping developers build modern data-driven applications.
 
-For book updates, code samples and additional resources, visit [GitHub](https://singlestore-cookbook.github.io).
+For book updates, code samples and additional resources, visit the [Book website](https://singlestore-cookbook.github.io).
 
 To connect professionally or follow his latest work, visit [LinkedIn](https://www.linkedin.com/in/akmalchaudhri/).
