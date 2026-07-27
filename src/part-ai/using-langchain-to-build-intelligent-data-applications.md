@@ -898,7 +898,7 @@ First, let's start with a cache miss:
 
 ```python
 print("\n--- First Call (Cache Miss) ---")
-prompt1 = "Explain the key factors influencing BBRQ’s stock price."
+prompt1 = "Explain the key factors influencing BBRQ's stock price."
 result1, time1 = timed_llm_call(llm, prompt1, semantic_cache)
 print(f"Prompt: {prompt1}\nTime: {time1:.2f}s\nResult: {result1[:80]}...")
 ```
@@ -907,16 +907,16 @@ Example output:
 
 ```text
 --- First Call (Cache Miss) ---
-Prompt: Explain the key factors influencing BBRQ’s stock price.
+Prompt: Explain the key factors influencing BBRQ's stock price.
 Time: 7.11s
-Result: To explain the key factors influencing BBRQ’s stock price, it’s important to con...
+Result: To explain the key factors influencing BBRQ's stock price, it's important to con...
 ```
 
 Now, let's try a query similar to the previous query which should use the cached result:
 
 ```python
 print("\n--- Second Call (Semantic Hit - Expect faster response) ---")
-prompt2 = "What are the main reasons for BBRQ’s stock price moving up or down?"
+prompt2 = "What are the main reasons for BBRQ's stock price moving up or down?"
 result2, time2 = timed_llm_call(llm, prompt2, semantic_cache)
 print(f"Prompt: {prompt2}\nTime: {time2:.2f}s\nResult: {result2[:80]}...")
 ```
@@ -925,9 +925,9 @@ Example output:
 
 ```text
 --- Second Call (Semantic Hit - Expect faster response) ---
-Prompt: What are the main reasons for BBRQ’s stock price moving up or down?
+Prompt: What are the main reasons for BBRQ's stock price moving up or down?
 Time: 3.66s
-Result: To provide an accurate answer about the main reasons for BBRQ’s stock price move...
+Result: To provide an accurate answer about the main reasons for BBRQ's stock price move...
 ```
 
 We see that the cached result is faster.
