@@ -744,7 +744,7 @@ hot_routes_map_html = "hot_routes_map.html"
 m.save(hot_routes_map_html)
 ```
 
-The map is saved locally and we’ll download it.
+The map is saved locally and we'll download it.
 
 ``` python
 mime_type, _ = mimetypes.guess_type(hot_routes_map_html)
