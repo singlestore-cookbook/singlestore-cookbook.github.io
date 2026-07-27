@@ -69,7 +69,7 @@ A new file called `pushwasm` should be written to `target/release` and this dire
 export PATH=/path/to/pushwasm/target/release:$PATH
 ```
 
-We’ll replace `/path/to/` with the actual path.
+We'll replace `/path/to/` with the actual path.
 
 We may also need to run the following to ensure a successful pushwasm build:
 
