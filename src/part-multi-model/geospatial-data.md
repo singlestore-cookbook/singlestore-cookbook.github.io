@@ -645,7 +645,7 @@ This produces the image shown in Figure 3-3.
 
 *Figure 3-3. Map of the London Underground.*
 
-We’ll download the map locally:
+We'll download the map locally:
 
 ```python
 mime_type, _ = mimetypes.guess_type(lu_map)
