@@ -50,7 +50,7 @@ This foundation applies to any PDF-based knowledge base, whether we're building 
 
 Let's now create a new Python notebook. We'll call it **pdf_qa**. We'll connect the notebook to the `multimodal_db` database.
 
-First, we’ll set our models and retrieve our OpenAI API Key from the secrets vault. We'll need the OpenAI API Key for generating vector embeddings. We'll access the OpenAI API Key using `get_secret`:
+First, we'll set our models and retrieve our OpenAI API Key from the secrets vault. We'll need the OpenAI API Key for generating vector embeddings. We'll access the OpenAI API Key using `get_secret`:
 
 ```python
 LLM_MODEL = ...
@@ -363,7 +363,7 @@ random.seed(SEED)
 np.random.seed(SEED)
 ```
 
-First, we’ll set our models and retrieve our OpenAI API Key from the secrets vault. We'll need the OpenAI API Key for generating vector embeddings. We'll access the OpenAI API Key using `get_secret`:
+First, we'll set our models and retrieve our OpenAI API Key from the secrets vault. We'll need the OpenAI API Key for generating vector embeddings. We'll access the OpenAI API Key using `get_secret`:
 
 ```python
 LLM_MODEL = ...
