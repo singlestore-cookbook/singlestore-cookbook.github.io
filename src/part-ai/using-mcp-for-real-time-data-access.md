@@ -467,7 +467,7 @@ The SingleStore MCP server uses `uvx`, so we'll first ensure that `uv` is instal
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-To use natural language, we’ll first define an OpenAI API Key in the environment:
+To use natural language, we'll first define an OpenAI API Key in the environment:
 
 ```shell
 export OPENAI_API_KEY='<OpenAI API Key>'
