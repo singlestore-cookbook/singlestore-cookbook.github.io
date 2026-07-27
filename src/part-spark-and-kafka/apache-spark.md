@@ -1042,7 +1042,7 @@ valid_stations = set(connections_df["from_station"]).union(set(connections_df["t
 stations_df = stations_df[stations_df["station"].isin(valid_stations)]
 ```
 
-For GraphFrames, we need to rename columns to include “src” and “dst” in the connections, as follows:
+For GraphFrames, we need to rename columns to include "src" and "dst" in the connections, as follows:
 
 ```python
 connections_df = connections_df.rename(
@@ -1050,7 +1050,7 @@ connections_df = connections_df.rename(
 )
 ```
 
-and rename a column to “id” in the stations, as follows:
+and rename a column to "id" in the stations, as follows:
 
 ```python
 stations_df = stations_df.rename(
