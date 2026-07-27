@@ -36,7 +36,7 @@ In this section. we'll use LlamaIndex with SingleStore and test the key capabili
 
 Let's now create a new Python notebook. We'll call it **llamaindex**.
 
-First, we’ll set our models and retrieve our OpenAI API Key from the secrets vault. We'll need the OpenAI API Key for generating vector embeddings. We'll access the OpenAI API Key using `get_secret`:
+First, we'll set our models and retrieve our OpenAI API Key from the secrets vault. We'll need the OpenAI API Key for generating vector embeddings. We'll access the OpenAI API Key using `get_secret`:
 
 ```python
 LLM_MODEL = ...
