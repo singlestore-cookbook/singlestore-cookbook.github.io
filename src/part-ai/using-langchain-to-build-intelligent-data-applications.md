@@ -986,4 +986,4 @@ The patterns demonstrated in this chapter can form the foundation for more advan
 
 - Integration with external data sources through LangChain's extensive connector ecosystem.
 
-By mastering these core patterns -- natural language querying, vector-based retrieval, conversational memory, multi-tool orchestration and semantic caching -- we've acquired the essential building blocks for creating intelligent, data-driven applications that feel natural to users while using the full power of distributed SQL and vector capabilities.
+By mastering these core patterns - natural language querying, vector-based retrieval, conversational memory, multi-tool orchestration and semantic caching - we've acquired the essential building blocks for creating intelligent, data-driven applications that feel natural to users while using the full power of distributed SQL and vector capabilities.
