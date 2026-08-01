@@ -34,7 +34,7 @@ Each record in this dataset includes:
 
 - Revolving credit utilization (0% to 100%).
 
-- High income -- low DTI is a binary indicator for strong financial health.
+- High income - low DTI is a binary indicator for strong financial health.
 
 - Interest impact combines loan size, income and interest rate.
 
