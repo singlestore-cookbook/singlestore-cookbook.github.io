@@ -334,7 +334,7 @@ Price Data: {context.price_data}
 Sentiment: {context.sentiment_data}
 Current Position: {context.position_data}
 
-Provide a trading recommendation (BUY, SELL, or HOLD) based on technical and sentiment analysis.
+Provide a trading recommendation (BUY, SELL or HOLD) based on technical and sentiment analysis.
 
 Respond ONLY with valid JSON in this exact format:
 {{"recommendation": "BUY", "confidence": 0.75, "reasoning": "Strong positive sentiment with price momentum"}}"""
@@ -390,7 +390,7 @@ Assess risk factors:
 - Are we trading too frequently?
 - Is the recommendation reasonable given recent activity?
 
-Approve, modify, or reject the recommendation.
+Approve, modify or reject the recommendation.
 
 Respond ONLY with valid JSON in this exact format:
 {{"recommendation": "BUY", "confidence": 0.80, "reasoning": "Approved with high confidence", "approved": true}}"""
@@ -776,7 +776,7 @@ To make the multi-agent trading system easy to explore and demonstrate, the samp
 
 - `YWMG-FX` is deliberately balanced: price moves sideways within a range and the mix of positive, negative and neutral headlines is kept even, so there's no dominant signal in either direction.
 
-Each agent in the chain draws on two pieces of market context: a price summary that includes the percentage change over the trading window alongside the current price, high, low and volume, and a sentiment summary that reports an average sentiment score together with a count of positive and negative headlines. Framing the price movement as a percentage change, rather than raw numbers alone, gives the language model a clear, unambiguous signal to reason over - a market that moved eight percent in a day reads very differently to a model than three numbers it has to compare itself.
+Each agent in the chain draws on two pieces of market context: a price summary that includes the percentage change over the trading window alongside the current price, high, low and volume and a sentiment summary that reports an average sentiment score together with a count of positive and negative headlines. Framing the price movement as a percentage change, rather than raw numbers alone, gives the language model a clear, unambiguous signal to reason over - a market that moved eight percent in a day reads very differently to a model than three numbers it has to compare itself.
 
 Example output:
 
@@ -1104,7 +1104,7 @@ YWMG-FX | HOLD |    65% |   0 shares
 
 Because the three tickers carry genuinely different signal strength, the pipeline produces a genuinely different outcome for each one.
 
-A clear uptrend paired with strongly positive sentiment leads to a confident buy recommendation, a clear downtrend paired with strongly negative sentiment leads to a confident sell, and a balanced, directionless market leads the system to hold, with lower confidence, since there is no strong case in either direction.
+A clear uptrend paired with strongly positive sentiment leads to a confident buy recommendation, a clear downtrend paired with strongly negative sentiment leads to a confident sell and a balanced, directionless market leads the system to hold, with lower confidence, since there is no strong case in either direction.
 
 This variation is also what lets the **Chain of Responsibility** pattern demonstrate its value, because each agent evaluates the same evidence independently, so a later agent can reach a different conclusion than the one before it - a Risk Manager, for instance, may be more willing to act decisively on strong sentiment than a Data Analyst.
 
