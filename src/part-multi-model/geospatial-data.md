@@ -565,7 +565,7 @@ final_df = df2.rename(columns = {
 })
 ```
 
-The next step calculates the distance (in kilometers) between each pair of connected stations using their latitude and longitude. This distance is stored in a new column. This distance measure is "as the crow flies" -- the shortest path over the earth's surface between two points. This is not the track length or travel time -- it's the straight-line distance, which is useful for graph weighting as we don't have track length or actual travel times available in this dataset.
+The next step calculates the distance (in kilometers) between each pair of connected stations using their latitude and longitude. This distance is stored in a new column. This distance measure is "as the crow flies" - the shortest path over the earth's surface between two points. This is not the track length or travel time - it's the straight-line distance, which is useful for graph weighting as we don't have track length or actual travel times available in this dataset.
 
 ```python
 final_df["distance"] = final_df.apply(
