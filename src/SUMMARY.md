@@ -48,3 +48,7 @@
 # Conclusions
 
 - [Chapter 24: Conclusions](part-back/conclusions.md)
+
+# Appendix
+
+- [Free Books](part-back/free-books.md)
