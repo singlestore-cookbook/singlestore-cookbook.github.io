@@ -358,7 +358,7 @@ fig_fmnist_tsne = px.scatter(
     render_mode = "webgl",
     color = "class_name",
     labels = {"class_name": "Classes"},
-    title = "t-SNE Visualization of Zalando Fashion MNIST"
+    title = "t-SNE Visualization of Zalando Fashion-MNIST"
 )
 
 fig_fmnist_tsne.update_layout(width = 700, height = 700)
@@ -369,7 +369,7 @@ This will render the image shown in Figure 6-3.
 
 ![](vector-data-media/image3.png)
 
-*Figure 6-3. t-SNE Visualization of Zalando Fashion MNIST.*
+*Figure 6-3. t-SNE Visualization of Zalando Fashion-MNIST.*
 
 The t-SNE visualization shows that many clothing categories form clearly separated clusters, demonstrating that the embeddings effectively capture distinguishing features between different types of clothing items. For example, items like trousers and sneakers are generally grouped in their own regions. However, we also see areas where clusters overlap or are less well-defined, such as between similar upper-body clothing items like shirts, pullovers and coats. This overlap suggests that the model's embeddings may sometimes struggle to perfectly differentiate between visually similar items, which could lead to misclassifications when performing similarity searches or tasks like image retrieval.
 
