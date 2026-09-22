@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Image classification can have many practical, valuable and life-saving benefits. The "Hello World" of image classification is often considered MNIST and, more recently, Fashion MNIST. In this chapter, we'll use Fashion MNIST, build an image classification model using Keras and TensorFlow and store the prediction results in SingleStore.
+Image classification can have many practical, valuable and life-saving benefits. The "Hello World" of image classification is often considered MNIST and, more recently, Fashion-MNIST. In this chapter, we'll use Fashion-MNIST, build an image classification model using Keras and TensorFlow and store the prediction results in SingleStore.
 
 ## Create the Database and Table
 
@@ -795,4 +795,4 @@ The results match the confusion matrix in the notebook.
 
 ## Summary
 
-In this chapter, we built and evaluated a Fashion MNIST image classifier, visualizing performance through accuracy, loss, precision, recall, F1-score and a confusion matrix heatmap. We created an interactive notebook to explore individual predictions alongside their probabilities and we used SQL queries to analyze overall accuracy, confident predictions and patterns of class-level confusion. Together, these visualizations and analyses provided a clear view of the model's strengths, weaknesses and opportunities for improvement, demonstrating how to combine machine learning and data exploration for deeper insight.
+In this chapter, we built and evaluated a Fashion-MNIST image classifier, visualizing performance through accuracy, loss, precision, recall, F1-score and a confusion matrix heatmap. We created an interactive notebook to explore individual predictions alongside their probabilities and we used SQL queries to analyze overall accuracy, confident predictions and patterns of class-level confusion. Together, these visualizations and analyses provided a clear view of the model's strengths, weaknesses and opportunities for improvement, demonstrating how to combine machine learning and data exploration for deeper insight.
