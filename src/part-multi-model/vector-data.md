@@ -2,7 +2,7 @@
 
 ## Introduction
 
-There are many forms of information that don't fit neatly into traditional rows and columns. For example, images, audio and video are all unstructured data forms that carry meaning, but can't be directly compared with integers or strings in a database table. Vector data is the bridge between the richness of the real-world and the precision of computational search and analysis.
+There are many forms of information that don't fit neatly into traditional rows and columns. For example, images, audio and video are all unstructured data forms that carry meaning, but can't be directly compared with integers or strings in a database table. Vector data are the bridge between the richness of the real-world and the precision of computational search and analysis.
 
 In this chapter, we'll explore what vectors are, how they're created and why they're becoming one of the most important building blocks in modern data systems.
 
