@@ -763,7 +763,7 @@ The output should be similar to Figure 4-1:
 
 *Figure 4-1. Index Page.*
 
-We can see the Items data correctly displayed for each item. The metadata is in JSON format. If we select **Show**, we can view the details about an item on a single page, as shown in Figure 4-2.
+We can see the Items data correctly displayed for each item. The metadata are in JSON format. If we select **Show**, we can view the details about an item on a single page, as shown in Figure 4-2.
 
 ![](json-data-media/image2.png)
 
