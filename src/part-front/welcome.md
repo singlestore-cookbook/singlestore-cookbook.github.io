@@ -1,4 +1,4 @@
-# The SingleStore Cookbook
+# Welcome
 
 ## How to Cite This Book
 
