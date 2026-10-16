@@ -1,4 +1,4 @@
-# Chapter 17: Feature Store with Feast
+# Chapter 17: Feature store with Feast
 
 ## Introduction
 
@@ -22,7 +22,7 @@ SingleStore is uniquely positioned to serve as a feature store backend due to it
 
 In this chapter, we'll explore how to build a complete feature store using Feast, an open-source feature store framework, with SingleStore as the online store backend. We'll work through a practical e-commerce use case, demonstrating how to define features, materialize them for fast serving and use them for real-time predictions.
 
-## Create the Database
+## Create the database
 
 In the SingleStore Portal, we'll use the **SQL Editor** to create a new database. Let's call this `feast_db`, as follows:
 
@@ -30,7 +30,7 @@ In the SingleStore Portal, we'll use the **SQL Editor** to create a new database
 CREATE DATABASE IF NOT EXISTS feast_db;
 ```
 
-## Fill out the Notebook
+## Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **feast**.
 

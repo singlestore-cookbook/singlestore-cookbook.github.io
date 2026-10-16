@@ -15,9 +15,9 @@ We'll start by creating a free account on Confluent Cloud and provisioning a Kaf
 
 using the default settings. Finally, we'll add the bootstrap server address to the SingleStore firewall to allow communication between the two systems.
 
-## Real-Time IoT Sensor Consumer
+## Real-time IoT sensor Consumer
 
-### Create the Database and Tables
+### Create the database and tables
 
 In the SingleStore Portal, we'll use the **SQL Editor** to create a new database. Let's call this `sensor_readings_db`, as follows:
 
@@ -51,7 +51,7 @@ We'll upload data for 1,000 sensors into the `sensors` table. The sensors are gl
 
 We'll stream data into the `temperatures` table. This table contains three columns consisting of a unique **id**, a **temperature** reading and a **timestamp**.
 
-### Fill out the Notebook
+### Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **data_loader_for_kafka**.
 
@@ -323,7 +323,7 @@ After a short time, we'll run the following command to check if the data are bei
 SELECT COUNT(*) FROM temperatures;
 ```
 
-### Create a Dashboard
+### Create a dashboard
 
 We'll create a simple dashboard that shows the sensors on a map, similar to Figure 8-1, but with the sensors and dashboard updated every few seconds.
 
@@ -431,9 +431,9 @@ Example output is shown in Figure 8-2.
 
 *Figure 8-2. Live Sensor Temperature Readings.*
 
-## Stock Market Data Producer
+## Stock market data Producer
 
-### Create the Database and Table
+### Create the database and table
 
 In the SingleStore Portal, we'll use the **SQL Editor** to create a new database. Let's call this `timeseries_db`, as follows:
 
@@ -498,7 +498,7 @@ CREDENTIALS '{
 
 We'll replace `<bootstrap_server>`, `<api_key>` and `<api_secret>` with the values we previously saved. The data will be sent in a JSON format.
 
-### Fill out the Notebook
+### Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **kafka_consumer**.
 

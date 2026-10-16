@@ -1,4 +1,4 @@
-# Chapter 6: Vector Data
+# Chapter 6: Vector data
 
 ## Introduction
 
@@ -32,7 +32,7 @@ By the end, we'll see how unstructured data can be represented, searched and ana
 
 In this chapter, we'll use the Fashion-MNIST[^1] dataset from Zalando. This dataset, released under the MIT License and available for commercial use, contains 70,000 labeled images of clothing items. It's perfect for an introduction to vector search, as each grayscale image can be represented as a vector, making it both realistic and computationally manageable. The vectors in this dataset are naturally occurring, meaning the numerical values are directly derived from the image pixels. In later chapters, we'll explore how to generate vectors from other types of data, such as text, enabling us to apply vector search more broadly.
 
-## Create the Database and Tables
+## Create the database and tables
 
 In the SingleStore Portal, let's use the **SQL Editor** to create a new database. Call this `vector_db`, as follows:
 
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS test_data (
 
 Note the use of the `VECTOR` data type. We set its value to 784 because each image is 28 by 28 pixels and flattening the image into a one-dimensional array results in 784 values. Historically, SingleStore supported storing vectors for many years, but these were stored using the `BLOB` data type. With SingleStore version 8.5, the new native `VECTOR` type was introduced along with vector indexing capabilities, offering more efficient and robust support for vector data.
 
-## Fill out the Notebook
+## Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **data_loader_for_vector**.
 
@@ -373,7 +373,7 @@ This will render the image shown in Figure 6-3.
 
 The t-SNE visualization shows that many clothing categories form clearly separated clusters, demonstrating that the embeddings effectively capture distinguishing features between different types of clothing items. For example, items like trousers and sneakers are generally grouped in their own regions. However, we also see areas where clusters overlap or are less well-defined, such as between similar upper-body clothing items like shirts, pullovers and coats. This overlap suggests that the model's embeddings may sometimes struggle to perfectly differentiate between visually similar items, which could lead to misclassifications when performing similarity searches or tasks like image retrieval.
 
-## Example Queries
+## Example queries
 
 Before running any queries, we'll create vector indexes on the two tables. The vector indexes enable efficient similarity searches on the vector columns.
 

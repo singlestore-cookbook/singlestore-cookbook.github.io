@@ -1,4 +1,4 @@
-# Chapter 15: Crime Analytics with SingleStore Kai
+# Chapter 15: Crime analytics with SingleStore Kai
 
 ## Introduction
 
@@ -26,7 +26,7 @@ For Bakerloo line data, we'll use some pre-prepared files:
 
 For the British Transport Police (BTP) crime data, we'll use a pre-prepared file for data from 2024-01 to 2025-01, originally generated from Data Downloads[^3]. The data contains public sector information licensed under the UK Open Government License v3.0.
 
-## Data Loader for Hot Routes
+## Data loader for hot routes
 
 Let's now create a new notebook. We'll call it **data_loader_for_hot_routes**.
 
@@ -1073,7 +1073,7 @@ Example output is shown in Figure 15-12.
 
 The crime clustering analysis provides law enforcement agencies with a visual map of spatial hotspots along the Bakerloo Line. By aggregating all recorded crimes and identifying clusters using KMeans, agencies can quickly see where criminal activity tends to concentrate, independent of specific stations. The size of each cluster reflects the relative frequency of incidents, allowing planners to prioritize patrols, allocate resources and target interventions more effectively. The overlay of stations, line routes and buffer areas adds context, helping officers understand which parts of the transit network are most at risk. Over time, repeated analyses can reveal emerging trends or shifts in crime patterns, supporting strategic planning and proactive policing.
 
-## Example Queries
+## Example queries
 
 Before running any queries, we'll first ensure that we load the Bakerloo Line buffer.
 

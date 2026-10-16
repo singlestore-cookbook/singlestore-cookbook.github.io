@@ -4,7 +4,7 @@
 
 When we started this book, we set out a simple premise: rather than stitching together multiple specialized systems to support a modern, data-intensive application, SingleStore could serve as the single, unified platform underneath it all. Over the preceding chapters, we put that premise to the test across time series, geospatial, JSON, full-text and vector data, streaming pipelines, machine learning workflows and, finally, AI and agentic systems. Looking back across all of it, the premise holds up well.
 
-## What We Covered
+## What we covered
 
 **Part 1** grounded us in SingleStore's multi-model foundations. We worked with time series stock data, geospatial data for the London Underground, JSON-based library inventories, full-text search over synthetic journal articles and vector embeddings for Fashion-MNIST images. Each chapter made the same underlying point in a different way: SingleStore didn't need a separate specialized engine bolted on for each of these data types. The same distributed SQL engine handled all of them, with dedicated functions and indexes for each.
 
@@ -14,7 +14,7 @@ When we started this book, we set out a simple premise: rather than stitching to
 
 **Part 4** brought everything together around large language models and AI agents. We used LangChain and LlamaIndex to build natural language interfaces over stock market data, explored multimodal RAG across PDFs, images and voice, ran fully local LLMs with Ollama, connected agents to real-time data through MCP and, in our final chapter, built a multi-agent trading system where SingleStore served simultaneously as feature store, memory layer, coordination mechanism and audit log for a Chain of Responsibility pipeline of cooperating agents.
 
-## Recurring Themes
+## Recurring themes
 
 A few ideas surfaced again and again across this book, regardless of the specific technology in play:
 
@@ -26,7 +26,7 @@ A few ideas surfaced again and again across this book, regardless of the specifi
 
 - **Real-time as the default, not the exception.** Pipelines, Change Data Capture, streaming sentiment scores and live agent decision logs all point to the same underlying capability: SingleStore is built to keep data current, not just to store it.
 
-## Where to Go from Here
+## Where to go from here
 
 The code, notebooks and datasets for every chapter are available in the book's GitHub repo, [singlestore-cookbook.github.io](https://singlestore-cookbook.github.io). Each chapter's examples are generally self-contained. If a particular pattern in this book, be it vector search, agentic pipelines or feature stores, maps onto a problem in front of you, that's a good place to start experimenting further.
 

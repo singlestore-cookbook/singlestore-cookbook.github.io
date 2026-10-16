@@ -1,4 +1,4 @@
-# Chapter 5: Full-Text Index and Search
+# Chapter 5: Full-text index and search
 
 ## Introduction
 
@@ -40,7 +40,7 @@ Each record in this dataset includes:
 
 The content is entirely artificial, created using text-generation techniques, yet follows the style and tone of actual research papers. This ensures we can demonstrate realistic search and indexing scenarios while avoiding copyright or licensing restrictions. We'll store these journal articles in SingleStore, create a `FULLTEXT` index and then perform some queries using the full-text capabilities of SingleStore.
 
-## Create the Database and Table
+## Create the database and table
 
 In the SingleStore Portal, let's use the **SQL Editor** to create a new database. Call this `fulltext_db`, as follows:
 
@@ -75,7 +75,7 @@ The article contents are stored in the body column using `LONGTEXT`. We also cre
 a, an, and, are, as, at, be, but, by, for, if, in, into, is, it, no, not, of, on, or, such, that, the, their, then, there, these, they, this, to, was, will, with
 ```
 
-## Fill out the Notebook
+## Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **data_loader_for_fulltext**.
 
@@ -126,7 +126,7 @@ OPTIMIZE TABLE articles FLUSH;
 
 When inserting new rows, SingleStore may delay updating the full-text index until later, so running `OPTIMIZE TABLE <table_name> FLUSH` makes the new data searchable immediately.
 
-## Example Queries
+## Example queries
 
 Now that we have built our system, we can run some queries. SingleStore supports two main functions for use with full-text:
 

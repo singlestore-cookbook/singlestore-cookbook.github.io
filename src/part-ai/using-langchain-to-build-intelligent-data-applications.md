@@ -1,4 +1,4 @@
-# Chapter 18: Using LangChain to Build Intelligent Data Applications
+# Chapter 18: Using LangChain to build intelligent data applications
 
 ## Introduction
 
@@ -18,9 +18,9 @@ This chapter demonstrates how to use LangChain's integration with SingleStore to
 
 The stock ticker scenario provides an ideal demonstration environment as it combines trading data in a time-series table with background company information in a vector store, representing the data challenges often seen in production applications. By the end of this chapter, we'll see how to architect LangChain applications that seamlessly integrate with SingleStore.
 
-## Stockticker Data
+## Stockticker data
 
-### Create the Database and Tick Table
+### Create the database and tick table
 
 In the SingleStore Portal, we'll use the **SQL Editor** to create a new database. Call this `stockticker_db`, as follows:
 
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS tick (
 DROP TABLE IF EXISTS chat_history;
 ```
 
-### Fill out the Notebook
+### Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **data_loader_for_stockticker**.
 
@@ -144,7 +144,7 @@ This gives us a dataset that we can use with LangChain in the next section.
 
 In this section. we'll use LangChain with SingleStore and test the key capabilities we discussed earlier.
 
-### Fill out the Notebook
+### Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **langchain**.
 
@@ -166,7 +166,7 @@ llm = ChatOpenAI(
 )
 ```
 
-#### Natural Language
+#### Natural language
 
 Let's start with natural language. First, we'll connect to SingleStore:
 
@@ -297,7 +297,7 @@ All these ticks have the latest timestamp of 2015-11-24 00:00:00.
 
 All the results appear plausible, but should be checked carefully. Switching verbose mode to `True` in the SQL Agent would show us more details about each query. For example, in the last query above, LangChain uses an equality operator (`=`) for comparison, but timestamps often include fractional seconds, so using a range (`>=` and `<=`) would be safer.
 
-#### Retrieval Aaugmented Rgeneration (RAG)
+#### Retrieval augmented generation (RAG)
 
 Let's now create a small knowledge base that stores some information about the key demo tickers that we created earlier, as follows:
 
@@ -448,7 +448,7 @@ HRPD Technologies is a semiconductor and hardware manufacturer supplying chips a
 
 All is working well with the semantic search. Next, we'll explore how to use LangChain to store the full transcript of conversations.
 
-#### Conversational Memory (in-memory)
+#### Conversational memory (in-memory)
 
 Let's now create a temporary (non-persistent) conversational memory buffer and attach it to an agent so that the agent can recall earlier messages during a session. The memory lives only in RAM and disappears when the program ends.
 
@@ -554,7 +554,7 @@ and we can clear this conversation history, as follows:
 in_memory.clear()
 ```
 
-#### Conversational Memory (persistent)
+#### Conversational memory (persistent)
 
 Now, let's persist the conversation history in SingleStore. First, we'll connect to SingleStore:
 
@@ -707,7 +707,7 @@ HUMAN: Which had the higher last close, BBRQ-FX or BJBY-FX?
 AI: BBRQ-FX had the higher last close price.
 ```
 
-#### Natural Language and RAG
+#### Natural language and RAG
 
 We'll combine natural language and RAG. First, let's create a vector store retriever, define the RAG prompt and create the document and RAG chains, as follows:
 
@@ -816,7 +816,7 @@ Example output:
 HRPD Technologies is a semiconductor and hardware manufacturer supplying chips and processing units to the automotive, aerospace, and artificial intelligence industries. However, there is no recent stock price, volume, or time data available for HRPD in the tick table. If you need information on another company or symbol, please let me know.
 ```
 
-#### Semantic Caching
+#### Semantic caching
 
 Finally, let's see how we could benefit from semantic caching. We'll create a SingleStore-backed semantic cache that stores and retrieves LLM responses using embeddings and then sets it as the global cache so repeated or similar queries can run without re-calling the model.
 

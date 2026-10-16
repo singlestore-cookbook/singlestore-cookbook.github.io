@@ -1,4 +1,4 @@
-# Chapter 1: Getting Started with SingleStore
+# Chapter 1: Getting started with SingleStore
 
 > **Note:** The code, instructions and screenshots in this book reflect the state of SingleStore and related tools and libraries as of July 2026. Cloud platforms and APIs change frequently, so if you encounter a discrepancy between what's described here and what you see in practice, check the relevant vendor's current documentation.
 
@@ -8,51 +8,51 @@ Over the last decade, the data infrastructure landscape has expanded into a patc
 
 SingleStore takes a fundamentally different approach. It provides a unified, distributed, cloud-native engine capable of handling transactional, analytical, time-series, vector and unstructured workloads within a single system. The value proposition is simple: instead of building and maintaining a variety of purpose-built data engines, SingleStore is designed to serve as the primary platform for modern, data-intensive applications.
 
-## Evolution of the SingleStore Engine
+## Evolution of the SingleStore engine
 
-### Rowstore for Low-Latency OLTP
+### Rowstore for low-latency OLTP
 
 SingleStore's earliest design goal was to support high-speed transactional workloads through an in-memory rowstore engine. This made it attractive for operational applications requiring sub-millisecond access patterns.
 
-### Columnstore for Real-Time Analytics
+### Columnstore for real-time analytics
 
 As customers began developing hybrid workloads, SingleStore introduced a distributed columnstore engine designed for fast scans, aggregations and analytical queries. The key was not just performance, but the ability to run OLTP and OLAP on the same dataset without ETL.
 
-### UDFs, Pipelines and Extensibility
+### UDFs, pipelines and extensibility
 
 To meet the needs of data engineering teams, SingleStore added User-Defined Functions (UDFs) and native pipelines that ingest data from Kafka or cloud storage directly into a database. This turned SingleStore into an ingestion engine as well as a query engine.
 
-### Native JSON and Multi-Model Storage
+### Native JSON and multi-model storage
 
 Next, SingleStore introduced JSON data support. This allowed it to function as both a relational engine and a scalable document store, eliminating the need for MongoDB-like systems when semi-structured data was required.
 
-### Vectors, Similarity Search and AI Workloads
+### Vectors, similarity search and AI workloads
 
 With the rise of Large Language Models (LLMs) and embedding-based retrieval, SingleStore integrated native vector types, vector indexes and optimized similarity search. Unlike standalone vector databases, these features run alongside SQL, JSON, time-series and full-text search. The result is a truly multi-model architecture built for AI agents, Retrieval-Augmented Generation (RAG) systems and real-time decision systems.
 
-## How SingleStore Differs from Other Database Systems
+## How SingleStore differs from other database systems
 
-### Versus Other Relational Databases
+### Versus other relational databases
 
 Many Relational Systems today provide extensible general-purpose database capabilities but struggle with distributed workloads, columnstore analytics, high-volume ingestion and real-time vector search. SingleStore offers these capabilities natively and at scale.
 
-### Versus Other Columnstores
+### Versus other columnstores
 
 Many Columnstores offer exceptional analytical performance but limited support for transactions, JSON operations, machine learning pipelines or AI/LLM workflows. SingleStore extends beyond analytics into full multi-model and operational workloads.
 
-### Versus Data Warehouses
+### Versus data warehouses
 
 Data Warehouses excel at analytical processing but are not designed for operational workloads, low-latency queries, streaming ingestion, real-time pipelines or high-frequency vector search. SingleStore handles both operational and analytical workloads concurrently.
 
-### Versus Document Databases
+### Versus document databases
 
 Document Stores provide flexibility for document data but lack strong SQL, large-scale analytics and a unified architecture for mixed workloads. SingleStore provides both document and relational capabilities in a single engine.
 
-### Versus Standalone Vector Databases
+### Versus standalone vector databases
 
 These systems excel at similarity search but require external orchestration for SQL, metadata joins, time filtering or real-time pipelines. SingleStore co-locates vector search with structured data, enabling RAG, agents and multimodal retrieval without external systems.
 
-## Multi-Model Architecture Without External Stitching
+## Multi-model architecture without external stitching
 
 Where most architectures require three to eight systems to support the full lifecycle of an AI or data-driven application such as an RDBMS, analytics warehouse, caching layer, streaming engine, vector database, document store and full-text search, SingleStore integrates all of these capabilities into a distributed SQL engine.
 
@@ -68,7 +68,7 @@ This eliminates:
 
 SingleStore is architected from the ground up to support multiple data models with shared durability, storage and execution layers.
 
-## Combining Real-Time Vector Search, SQL and Pipelines
+## Combining real-time vector search, SQL and pipelines
 
 SingleStore's unified feature set allows teams to build applications such as:
 
@@ -86,11 +86,11 @@ Pipeline ingestion brings data into the database continuously, vectors can be co
 
 For practitioners building modern AI-driven systems combining streaming ETL, multimodal retrieval, agentic workflows or real-time analytics, SingleStore simplifies the architecture and accelerates development.
 
-## Prerequisites and Environment Setup
+## Prerequisites and environment setup
 
 To ensure readers can run all examples in the book without friction, this section outlines the required tools, environments and configurations used. While many recipes can be run independently, having a consistent baseline environment significantly improves reproducibility.
 
-### SingleStore Installation Options
+### SingleStore installation options
 
 SingleStore can be deployed in several different ways. For example:
 
@@ -104,7 +104,7 @@ In this book, the recommended approach for readers is to use SingleStore Cloud. 
 
 A notebook environment is also built into the SingleStore Cloud Portal and we'll use this environment to run the vast majority of code examples in this book. The GitHub repo for this book, [singlestore-cookbook.github.io](https://singlestore-cookbook.github.io), contains all the notebooks and support files.
 
-### Create a Free SingleStore Cloud Account
+### Create a free SingleStore cloud account
 
 We'll start by navigating to the SingleStore Cloud Portal:
 
@@ -168,7 +168,7 @@ In the SingleStore Portal, on the extreme left-hand side will be a sidebar (navi
 
 Clicking on the icon will expand the sidebar.
 
-### Connection Details
+### Connection details
 
 Once the sidebar has expanded, we'll select **Workspaces** and this will show us the workspace we previously provisioned. From the workspace, we'll select **Connect \> CLI Client**.
 
@@ -222,15 +222,15 @@ www.ipcc.ch
 
 Normally, the notebook environment will prompt if it needs access to an external site. The Kafka example in a later chapter is created using the free tier on the Confluent Cloud and the AWS address shown in the above list may be different, so adjust as required.
 
-### Provision Compute
+### Provision compute
 
 Just above the notebook menu bar (**Edit**, **View**, **Run**, **Kernel**) select **Small \> Start Session** if no compute resources have been provisioned. Once this is done, a pulldown will appear where the workspace and database (if available) can be selected.
 
-### Notebooks and SQL Scripts
+### Notebooks and SQL scripts
 
 The notebooks and SQL scripts used in this book can be uploaded using **Editor \> My Files \> New \> Import From File**. Use the file browser to locate the file to upload. Once uploaded, ensure that you connect to the workspace from the pull-down just above the notebook or SQL file.
 
-### Troubleshooting Common Errors
+### Troubleshooting common errors
 
 - **JWT token expired**. Run `db_connection = create_engine(connection_url)` in your notebook to refresh.
 
@@ -242,7 +242,7 @@ The notebooks and SQL scripts used in this book can be uploaded using **Editor \
 
 With our environment set up, we're ready to start exploring SingleStore.
 
-## What's Ahead
+## What's ahead
 
 This book is organized into four parts, each building on the foundation we introduced in this chapter.
 

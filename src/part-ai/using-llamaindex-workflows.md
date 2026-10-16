@@ -1,4 +1,4 @@
-# Chapter 19: Using LlamaIndex Workflows
+# Chapter 19: Using LlamaIndex workflows
 
 ## Introduction
 
@@ -24,7 +24,7 @@ By the end of this chapter, we'll understand how to:
 
 - Combine structured SQL data with unstructured knowledge bases.
 
-## Stockticker Data
+## Stockticker data
 
 We'll use the same dataset that was previously generated in the chapter on LangChain. Using the same dataset will also provide us with the opportunity to compare LlamaIndex with LangChain.
 
@@ -32,7 +32,7 @@ We'll use the same dataset that was previously generated in the chapter on LangC
 
 In this section. we'll use LlamaIndex with SingleStore and test the key capabilities we discussed earlier.
 
-### Fill out the Notebook
+### Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **llamaindex**.
 
@@ -54,7 +54,7 @@ llm = OpenAI(
 )
 ```
 
-#### Natural Language
+#### Natural language
 
 Let's start with natural language. First, we'll connect to SingleStore:
 
@@ -117,7 +117,7 @@ The stock with the highest closing price is WVVF-FX, with a closing price of $63
 
 There is also an important consideration with natural language to SQL - when there are ties in the data, different SQL formulations could return different, but equally valid, answers. The LLM doesn't know there's a tie unless we explicitly ask it to check or handle duplicates.
 
-#### Retrieval Augmented Generation (RAG)
+#### Retrieval augmented generation (RAG)
 
 Let's now create a small knowledge base that stores some information about the key demo tickers that we created earlier, as follows:
 
@@ -270,7 +270,7 @@ HRPD operates primarily in the automotive, aerospace, and artificial intelligenc
 
 All is working well with the semantic search. Next, we'll explore how to use LlamaIndex to store the full transcript of conversations.
 
-#### Conversational Memory (in-memory)
+#### Conversational memory (in-memory)
 
 Let's now create a conversational interface that remembers previous questions and answers. When we ask a follow-up question, the chat engine understands and maintains context across the conversation, enabling natural multi-turn dialogues with our database.
 

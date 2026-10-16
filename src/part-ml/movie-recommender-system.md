@@ -1,4 +1,4 @@
-# Chapter 13: Movie Recommender System
+# Chapter 13: Movie recommender system
 
 ## Introduction
 
@@ -16,7 +16,7 @@ Throughout, we'll include sanity checks (e.g., probability normalization, minimu
 
 This synthetic dataset serves as a drop-in replacement for MovieLens in our recommender system examples: large enough to feel realistic, rich with structure, yet free of licensing restrictions.
 
-## Create the Database and Tables
+## Create the database and tables
 
 In the SingleStore Portal, let's use the **SQL Editor** to create a new database. Call this `movies_db`, as follows:
 
@@ -58,7 +58,7 @@ CREATE TABLE ratings (
 
 We'll use SingleStore's `VECTOR` data type in the **users** and **movies** tables.
 
-## Fill out the Notebook
+## Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **movies**.
 
@@ -593,7 +593,7 @@ ratings_df.to_sql(
 )
 ```
 
-## Example Queries
+## Example queries
 
 Let's now run some queries on the database.
 

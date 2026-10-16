@@ -1,4 +1,4 @@
-# Chapter 14: Agriculture Analytics Using R
+# Chapter 14: Agriculture analytics using R
 
 ## Introduction
 
@@ -12,7 +12,7 @@ In this chapter, we'll walk through a practical example of applying R for agricu
 
 For this chapter, we'll use a synthetic agricultural dataset that has been generated to resemble real-world farming data, modeled on Indonesia. Indonesia is one of the world's largest agricultural producers, with a diverse range of crops such as rice, maize and palm oil grown across its many islands. The dataset includes information such as major crop types, yield per hectare and rainfall levels. By basing our synthetic dataset on this context, we capture the complexity of working with multiple crops and varying environmental conditions, while keeping the data lightweight, reproducible and free from concerns around availability, privacy or licensing.
 
-## Create the Database
+## Create the database
 
 In the SingleStore Portal, let's use the **SQL Editor** to create a new database. Call this `agriculture_db`, as follows:
 
@@ -20,7 +20,7 @@ In the SingleStore Portal, let's use the **SQL Editor** to create a new database
 CREATE DATABASE IF NOT EXISTS agriculture_db;
 ```
 
-## Fill out the Notebook
+## Fill out the notebook
 
 We'll need to install R. We'll do this using Conda, as follows:
 
@@ -450,7 +450,7 @@ and then write the DataFrame:
 dbWriteTable(conn, "agriculture", agri_df, overwrite = TRUE)
 ```
 
-## Example Queries
+## Example queries
 
 Let's now run some SQL queries against the database.
 

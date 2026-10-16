@@ -1,4 +1,4 @@
-# Chapter 4: JSON Data
+# Chapter 4: JSON data
 
 ## Introduction
 
@@ -6,7 +6,7 @@ In this chapter, we'll discuss SingleStore's support for JavaScript Object Notat
 
 We'll build a small inventory system to manage a library's collection of books, journals and multimedia materials. This example is inspired by an excellent tutorial by Noman Ur Rehman available on DigitalOcean[^1]. We'll see that it is effortless to store, retrieve and query JSON data using SingleStore. We'll also build a quick visual front-end to our inventory system using Laravel and PHP.
 
-## Create the Database and Tables
+## Create the database and tables
 
 In the SingleStore Portal, let's use the **SQL Editor** to create a new database. Call this `library_db`, as follows:
 
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS items (
 
 There is a one-to-many (1:m) relationship between `publishers` and `items`, where each publisher can produce multiple books, journals or multimedia content. The schema uses a flexible `metadata` column to store item-specific attributes in JSON format. By using `NOT NULL` on the column, SingleStore will raise an error if there is an attempt to store invalid JSON.
 
-## Populate Database Tables
+## Populate database tables
 
 Let's now populate the tables. First, the `authors` table:
 
@@ -213,7 +213,7 @@ We have nested contributors. For example:
 
 From these examples, we can see that we may need to store our JSON data in various ways and the structure of the data may vary depending upon the attributes we wish to store. SingleStore can handle these different requirements and comes with a wide range of JSON functions[^2] that can help.
 
-## Example Queries
+## Example queries
 
 Now that our data are safely inside SingleStore, let's look at ways to query that data.
 
@@ -436,7 +436,7 @@ Running the commands in the previous sections using the SQL Editor in our Single
 
 We'll delete the existing database and recreate it to have the original dataset.
 
-### Install the Required Software
+### Install the required software
 
 We'll build our web interface using Laravel and PHP. Before continuing, ensure that the following software is installed on your system:
 
@@ -499,7 +499,7 @@ The `<host>` and `<password>` should be replaced with the values obtained from t
 
 > **Note:** If you downloaded or cloned the completed project from the book's GitHub repository, the following files have already been created and you can skip this step.
 
-### Create Files
+### Create files
 
 The following commands are only required when starting from a clean Laravel installation:
 
@@ -565,7 +565,7 @@ public function up(): void
 }
 ```
 
-### Models (app/Models)
+### Models (app/models)
 
 We'll edit the **Publisher** model file, so that we have the 1:m relationship with **Item**:
 
@@ -620,7 +620,7 @@ use App\Models\Item;
 use Illuminate\Http\Request;
 ```
 
-#### index()
+#### Index()
 
 We need to retrieve all the item data for the items index page and ensure that we have each item's publisher name. This will require joins across the respective tables. We'll also control the output by showing just five records per page using `simplePaginate()`.
 
@@ -636,7 +636,7 @@ public function index()
 }
 ```
 
-#### show()
+#### Show()
 
 To show a single item, we'll perform a query similar to the query for `index()` but we'll use `first()` to get an individual item record.
 
@@ -652,7 +652,7 @@ public function show(Item $item)
 }
 ```
 
-#### edit()
+#### Edit()
 
 To edit an existing item, we'll need to find the item to edit and we'll also need to get all the publishers to be offered in a drop-down menu if the user wishes to change this item attribute.
 
@@ -666,7 +666,7 @@ public function edit($id)
 }
 ```
 
-#### update()
+#### Update()
 
 We'll allow updates to the item name, publisher and the JSON attributes in this first application development iteration.
 
@@ -696,7 +696,7 @@ public function update(Request $request, $id)
 }
 ```
 
-####  destroy()
+####  Destroy()
 
 We can remove an item very easily by just using `delete()`.
 
@@ -743,7 +743,7 @@ Route::resource(
 
 The three blade files for the **index** page, **show** page and **edit** page can be found on GitHub. In those files, there will be code for formatting the data using HTML, presentation and editing using PHP. Also, from the GitHub repo we'll copy the `index.blade.php` file to `resources/views`.
 
-### Run the Code
+### Run the code
 
 We'll run the application from the e-library directory, as follows:
 

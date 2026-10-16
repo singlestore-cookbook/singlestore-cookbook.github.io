@@ -1,4 +1,4 @@
-# Chapter 21: Running Local LLMs with Ollama
+# Chapter 21: Running local LLMs with Ollama
 
 ## Introduction
 
@@ -10,7 +10,7 @@ In this chapter, we'll learn how to set up Ollama in our local environment, conf
 
 In the examples in this chapter, we'll use a local installation of Ollama but connect securely to a SingleStore instance in the cloud. SingleStore can also be installed locally but using it in the cloud provides a quick and easy way to test Ollama without requiring any further local software installations.
 
-## Create the Database
+## Create the database
 
 In the SingleStore Portal, we'll use the **SQL Editor** to create a new database. Call this `ollama_db`, as follows:
 
@@ -18,7 +18,7 @@ In the SingleStore Portal, we'll use the **SQL Editor** to create a new database
 CREATE DATABASE IF NOT EXISTS ollama_db;
 ```
 
-## Create the Environment Variables
+## Create the environment variables
 
 From our running SingleStore cloud instance, we'll note down the `host` and `password` from the connection string and create two environment variables on our local machine called `SINGLESTOREDB_HOST` and `SINGLESTOREDB_PASSWORD`. For example, on Linux, we would use the following, replacing `<host>` and `<password>`, respectively:
 
@@ -27,7 +27,7 @@ export SINGLESTOREDB_HOST='<host>'
 export SINGLESTOREDB_PASSWORD='<password>'
 ```
 
-## Install the Required Tools
+## Install the required tools
 
 We'll need several tools installed on our local machine:
 
@@ -37,7 +37,7 @@ We'll need several tools installed on our local machine:
 
 ## Using Ollama with LangChain
 
-### Fill out the Notebook
+### Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **ollama_langchain**.
 
@@ -211,9 +211,9 @@ These products and services are some of the most well-known and widely used amon
 
 Let's now use the same example but without LangChain.
 
-## Using Ollama with Direct API Calls
+## Using Ollama with direct API calls
 
-### Fill out the Notebook
+### Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **ollama_direct_api**.
 

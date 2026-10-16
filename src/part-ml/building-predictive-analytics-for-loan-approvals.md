@@ -1,4 +1,4 @@
-# Chapter 10: Building Predictive Analytics for Loan Approvals
+# Chapter 10: Building predictive analytics for loan approvals
 
 ## Introduction
 
@@ -52,7 +52,7 @@ To make the dataset more realistic, several design choices were introduced durin
 
 - Finally, categorical variables such as home ownership and loan purpose were assigned using weighted probabilities to reflect plausible population distributions and interaction features like "high income with low DTI" were created to capture the nuanced patterns often found in credit risk modeling.
 
-## Create the Database
+## Create the database
 
 In the SingleStore Portal, let's use the **SQL Editor** to create a new database. Call this `loans_db`, as follows:
 
@@ -60,7 +60,7 @@ In the SingleStore Portal, let's use the **SQL Editor** to create a new database
 CREATE DATABASE IF NOT EXISTS loans_db;
 ```
 
-## Fill out the Notebook
+## Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **loan_approvals**.
 
@@ -531,7 +531,7 @@ Then we'll write the data, as follows:
 
 We've used the SingleStore notebook environment to perform data loading, data analysis and visualization, model building and interpretation of predictions using explainable AI techniques such as SHAP and LIME, but we can go further by running SQL queries.
 
-## Example Queries
+## Example queries
 
 Now that the data are stored in SingleStore, let's run some SQL queries using the **SQL Editor**.
 

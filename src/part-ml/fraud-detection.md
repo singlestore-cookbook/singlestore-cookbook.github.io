@@ -1,4 +1,4 @@
-# Chapter 11: Fraud Detection
+# Chapter 11: Fraud detection
 
 ## Introduction
 
@@ -6,7 +6,7 @@ In an earlier chapter we looked at a dataset consisting of genuine and fraudulen
 
 Since the original dataset is highly imbalanced and the number of fraudulent transactions is very small we'll, again, oversample the fraudulent transactions and take 1% of the genuine transactions.
 
-## Create the Database
+## Create the database
 
 We'll begin by using the **SQL Editor** to create a new database, as follows:
 
@@ -14,7 +14,7 @@ We'll begin by using the **SQL Editor** to create a new database, as follows:
 CREATE DATABASE IF NOT EXISTS creditcard_db;
 ```
 
-## Fill out the Notebook
+## Fill out the notebook
 
 Now let's create a new notebook. Call it **fraud_detection_2**.
 
@@ -418,7 +418,7 @@ Then, we'll write the DataFrames to SingleStore:
 )
 ```
 
-## Example Queries
+## Example queries
 
 SQL offers a flexible and efficient way to explore and analyze structured data. By running targeted queries, we can quickly summarize key patterns, uncover trends and gain deeper insights from the stored dataset.
 

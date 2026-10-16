@@ -1,4 +1,4 @@
-# Chapter 20: Multimodal RAG - Working with Text, Images and Audio
+# Chapter 20: Multimodal RAG - working with text, images and audio
 
 ## Introduction
 
@@ -6,7 +6,7 @@ Modern applications often rely on different modalities of data. Documents, image
 
 Whether it's navigating dense scientific reports, comparing images in a catalog or querying a database hands-free, multimodal RAG extends the reach of traditional text-based systems. By layering embeddings, vector search and lightweight orchestration, we turn different forms of unstructured data into a coherent, queryable knowledge space. This chapter shows how these techniques come together in practical, end-to-end workflows powered by SingleStore.
 
-## Create the Database and Tables
+## Create the database and tables
 
 In the SingleStore Portal, we'll use the **SQL Editor** to create a new database. Call this `multimodal_db`, as follows:
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS clip_images (
 
 We'll use this `multimodal_db` database for the PDF question-answering system and the image search system with CLIP. For the building a voice-controlled data assistant, we'll reuse the `stockticker_db` database we previously created.
 
-## Building a RAG PDF Question-Answering System
+## Building a RAG PDF question-answering system
 
 ### Introduction
 
@@ -46,7 +46,7 @@ With our chunks ready, we'll transform them into vector embeddings using a sente
 
 This foundation applies to any PDF-based knowledge base, whether we're building internal documentation search, legal document analysis or research paper exploration systems.
 
-### Fill out the Notebook
+### Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **pdf_qa**. We'll connect the notebook to the `multimodal_db` database.
 
@@ -256,7 +256,7 @@ def answer_question(question, vector_store, max_chunk_chars = 600, k = 2):
 
 Now we're ready to ask questions of the stored data.
 
-### Example Queries
+### Example queries
 
 First, a fairly broad question:
 
@@ -342,7 +342,7 @@ The report advises policymakers to urgently implement ambitious and immediate cl
 
 This example showed a production-ready RAG system that successfully navigated the complexities of a scientific climate report to answer nuanced questions. The answers weren't simply copied from the document - they were synthesized from multiple chunks to provide coherent, contextual responses.
 
-## Building a Graph RAG PDF Question-Answering System
+## Building a graph RAG PDF question-answering system
 
 ### Introduction
 
@@ -350,7 +350,7 @@ In an earlier chapter, we used GraphFrames with SingleStore. Let's utilize this 
 
 We'll implement a full Graph RAG pipeline using LLM-based knowledge graph extraction, relational storage with vector embeddings and distributed graph traversal via GraphFrames. Semantic integrity is enforced at the application layer, which is standard practice for LLM-generated knowledge graphs. GraphFrames provides scalable, explainable multi-hop retrieval, making it a strong backend for large Graph RAG workloads.
 
-### Fill out the Notebook
+### Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **pdf_graph_qa**. We'll connect the notebook to the `multimodal_db` database.
 
@@ -1048,7 +1048,7 @@ Provide a clear, concise answer (2-3 sentences) based on the entities and relati
 
 The function begins by embedding the user's question and performing a vector search against the entity table to identify the most semantically relevant seed entities. Using their IDs, it performs a bidirectional neighborhood expansion with GraphFrames, gathering incoming and outgoing relationships to build a focused subgraph around the query. It then constructs a structured text context containing the seed entities and their connected relationships. Finally, it provides this context to an LLM, which synthesizes a short, grounded answer. The result is a concise natural-language response supported by both embeddings and graph structure.
 
-### Example Queries
+### Example queries
 
 First, climate change impacts:
 
@@ -1483,7 +1483,7 @@ This example showed how to build a fully functional Graph RAG pipeline using sta
 
 We then reconstructed the knowledge graph with Spark and GraphFrames, enabling graph traversal, neighborhood expansion and lightweight analytics. By combining vector search from SingleStore's embedding capabilities with graph context from GraphFrames, we implemented a hybrid retrieval strategy that grounds answers in both semantic similarity and structural relationships. The final step of summarizing the retrieved subgraph with an LLM, illustrated the core value of Graph RAG: producing more accurate and context-aware answers by augmenting embeddings with explicit knowledge structure.
 
-## Building an Image Search System with CLIP
+## Building an image search system with CLIP
 
 ### Introduction
 
@@ -1495,7 +1495,7 @@ In our example, we'll use a collection of images organized into categories from 
 
 Our example application supports two types of searches. For text-to-image search, we'll encode a natural language query like "a picture of a cat" into a vector and find the images whose embeddings are most similar. For image-to-image search, we'll encode a query image and retrieve visually similar images from our collection. Both search types use the same underlying similarity computation in SingleStore, showing the power of a unified multimodal embedding space.
 
-### Fill out the Notebook
+### Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **clip_qa**. We'll connect the notebook to the `multimodal_db` database.
 
@@ -1704,7 +1704,7 @@ def show_top_results(df):
 
 We're ready now to run some queries.
 
-### Example Queries
+### Example queries
 
 First, let's try a text query:
 
@@ -1859,7 +1859,7 @@ Example output is show in Figure 20-4.
 
 Our example demonstrated a working multimodal search system that successfully bridged the gap between text and images. Although our dataset was small, the approach we used can scale to much larger image collections - simply add more images, encode them and SingleStore will handle the increased search space efficiently. The same approach works for product catalogs, medical image databases or any scenario where we need to find images using either text descriptions or visual examples.
 
-## Building a Voice-Controlled Data Assistant
+## Building a voice-controlled data assistant
 
 ### Introduction
 
@@ -1873,7 +1873,7 @@ Our architecture centers around a custom agent running inside a LiveKit `AgentSe
 
 This pattern works for any database where we want natural language access. Whether we're building an internal analytics tool, a customer support system that needs to look up account information or a hands-free interface for warehouse workers who need to check inventory, the same architecture applies. The voice interface becomes a conversational layer over our existing data infrastructure.
 
-### Create a Free LiveKit Account
+### Create a free LiveKit account
 
 Before we start coding, we'll need to create a free LiveKit account.
 
@@ -1891,7 +1891,7 @@ Next, we'll select **Project API keys** and create a new API key. Let's call it 
 
 The environment variables should be copied and equivalent variables created in the SingleStore Secrets file vault, as we'll need these variables next.
 
-### Connect a Browser Tab Without a Backend
+### Connect a browser tab without a backend
 
 From the LiveKit Cloud dashboard, we'll select our voice-controlled project, open **Settings** in the left navigation and toggle on the **Token server**. LiveKit Cloud provisions a token server for the project immediately and a sandbox ID such as:
 
@@ -1899,7 +1899,7 @@ From the LiveKit Cloud dashboard, we'll select our voice-controlled project, ope
 
 appears below the toggle once it is on. That ID is all a frontend needs to fetch a join token directly from LiveKit Cloud, with no backend of our own to write or deploy. We pair it with a single self-contained HTML page, `voice-assistant.html`, that loads the LiveKit JavaScript SDK from a CDN, fetches a token using the sandbox ID and connects to a fresh room. There is no repository to clone, no build step and nothing to install locally - we just open the HTML file in a browser tab. All we need alongside it is an agent worker listening for jobs on the same project, which is what we build in the SingleStore notebook below.
 
-### Fill out the Notebook
+### Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **audio_qa**. We'll connect the notebook to the `stockticker_db` database used in earlier chapters.
 
@@ -2180,7 +2180,7 @@ We should also hear the assistant greet us out loud in the browser tab, confirmi
 
 Switching back to the `voice-assistant.html` tab, we can start asking questions.
 
-### Example Queries
+### Example queries
 
 ```text
 1. How many rows are in the tick table?
@@ -2259,7 +2259,7 @@ The technical implementation required careful orchestration of several component
 
 An earlier version of this chapter could only manage a voice-to-text loop, because our attempt to intercept LiveKit's language model pipeline directly also broke its text-to-speech stage. By working with the framework's tool-calling support instead of against its internals, the full voice loop now works end-to-end and the resulting architecture is both simpler to read and more resilient to future framework changes. The LiveKit infrastructure handled the audio streaming reliably and the integration between Whisper, the language model, LangChain, OpenAI's text-to-speech engine and SingleStore worked smoothly, giving users a genuinely hands-free way to ask questions and hear the answers.
 
-## Chapter Summary
+## Chapter summary
 
 This chapter demonstrated how multimodal RAG provides a unified approach to working with text, images and audio. Building a PDF question-answering system showed how document parsing, chunking and embedding produce a searchable knowledge base capable of synthesizing answers from large reports. The CLIP image search example extended the same vector-based principles to visual data, using a shared embedding space to support both text-to-image and image-to-image retrieval. Finally, the voice-controlled assistant illustrated how speech interfaces can sit on top of structured data, combining Whisper, LiveKit and a SQL-aware agent to translate natural language questions into accurate database queries.
 

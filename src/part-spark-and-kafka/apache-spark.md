@@ -4,7 +4,7 @@
 
 SingleStore integrates seamlessly with a variety of big data tools and services, including Apache Spark. In this chapter, we'll explore how easy it is to work with Spark in the SingleStore Cloud environment. Through examples, we'll walk through installing and using Spark, then demonstrate how to read from and write to a SingleStore database using the SingleStore Spark Connector. All the examples are standalone and can, therefore, be run independent of each other.
 
-## Simple Spark Example
+## Simple Spark example
 
 Let's start with a very simple example where we just install Spark and create a small DataFrame with several values. We'll create a new notebook called **spark_demo**.
 
@@ -52,7 +52,7 @@ spark.stop()
 
 From this simple example, we see that it is very easy to install the necessary tools and libraries and to configure and run a small Spark instance in the SingleStore Cloud.
 
-## Fraud Detection Example
+## Fraud detection example
 
 Let's now build a machine learning model for credit card fraud detection using Apache Spark. The data come from the Credit Card Fraud Detection dataset created by the Machine Learning Group (MLG) at Universit&eacute; Libre de Bruxelles (ULB). The dataset is distributed under the Open Database License (ODbL) v1.0 and the Database Contents License (DbCL) v1.0. A copy of the dataset is included in the companion GitHub repository and the original distribution is available from Kaggle[^1].
 
@@ -343,7 +343,7 @@ spark.stop()
 
 Overall, the model has made some good predictions on the sampled dataset without too many errors.
 
-## SingleStore Spark Connector Example
+## SingleStore Spark connector example
 
 In this section, we'll use a simple example to demonstrate how we can write a Spark DataFrame to SingleStore and read the data back from SingleStore into a new Spark DataFrame, using the SingleStore Spark Connector.
 
@@ -482,7 +482,7 @@ spark.stop()
 
 From this simple example, we see that configuring the SingleStore Spark Connector is straightforward. We successfully used the connector to write data to a SingleStore database and then read the data back. This process can easily be scaled to larger datasets.
 
-## Spark Connector Query Pushdown
+## Spark connector query pushdown
 
 The SingleStore Spark Connector supports the rewriting of Spark query execution plans into SingleStore queries, for both SQL and DataFrame operations. Computation is pushed into the SingleStore system automatically. In this section, we'll look at an example of query pushdown.
 
@@ -730,7 +730,7 @@ spark.stop()
 
 Using the SingleStore Spark Connector's query pushdown, filters, column selections and aggregations are executed in SingleStore rather than in Spark, reducing data transfer, improving performance and lowering memory usage. Spark UDFs can then be applied on the retrieved data, enabling custom transformations, like converting temperatures, without affecting database operations. This combination of pushdown and Spark-side computation provides a simple, efficient and scalable way to build analytics and ETL pipelines while keeping developer code clean and concise.
 
-## Spark Structured Streaming
+## Spark structured streaming
 
 Continuing our discussion on using Apache Spark with SingleStore, we'll now look at a simple example of how to read data in a set of local text files, create vector embeddings and save the file data and embeddings in SingleStore using Spark's Structured Streaming.
 
@@ -965,7 +965,7 @@ spark.stop()
 
 This simple example could be extended to a non-blocking version where Spark Streaming would read the files as they arrived and also continue to wait for new data files when all the files within a directory had been read.
 
-## Graph Analytics with GraphFrames
+## Graph analytics with GraphFrames
 
 In this chapter, we'll see how to use the Apache Spark GraphFrames package with SingleStore by using data about the London Underground network. We'll store the data as stations (vertices) and line connections (edges) in SingleStore and then load the data into a notebook environment and perform some queries on the data using GraphFrames. Using GraphFrames provides an alternative to the approach we used previously used in the Geospatial Data chapter.
 
@@ -1175,7 +1175,7 @@ Finally, we'll create the network using GraphFrames:
 underground = GraphFrame(stations, connections)
 ```
 
-### Example Queries
+### Example queries
 
 Let's check the vertices:
 

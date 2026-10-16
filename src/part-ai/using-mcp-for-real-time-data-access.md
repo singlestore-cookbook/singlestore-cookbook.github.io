@@ -1,4 +1,4 @@
-# Chapter 22: Using MCP for Real-Time Data Access
+# Chapter 22: Using MCP for real-time data access
 
 ## Introduction
 
@@ -12,7 +12,7 @@ Second, we'll turn to a production-grade implementation: the SingleStore MCP ser
 
 These two sections provide both a conceptual understanding and a practical foundation for using MCP in real-world applications.
 
-## Building a Custom MCP Server
+## Building a custom MCP server
 
 ### Introduction
 
@@ -20,7 +20,7 @@ An MCP server can be viewed as a standardized bridge between AI agents and our s
 
 The SingleStore MCP server is powerful for accessing a database and we'll configure and run it in the next section in this chapter. But what if we need to expose custom business logic, connect to external APIs or create domain-specific tools that combine multiple data sources? That's where building a custom MCP server would be useful.
 
-### Why Build a Custom MCP Server?
+### Why build a custom MCP server?
 
 Custom MCP servers are useful when we need to:
 
@@ -34,7 +34,7 @@ Custom MCP servers are useful when we need to:
 
 - **Enable offline work:** Run everything locally without external API dependencies.
 
-### Architecture Overview
+### Architecture overview
 
 An MCP server follows a simple client-server pattern. The MCP server is a lightweight process that listens for requests from an MCP host and works as follows:
 
@@ -50,7 +50,7 @@ An MCP server follows a simple client-server pattern. The MCP server is a lightw
 
 Communication happens over standard input/output (`stdio`), making it easy to run locally.
 
-### Building a Simple MCP Server
+### Building a simple MCP server
 
 We'll build a simple stock ticker data server. This has three practical tools that show different patterns:
 
@@ -62,7 +62,7 @@ We'll build a simple stock ticker data server. This has three practical tools th
 
 All are hardcoded so we can see the server works without any database setup.
 
-### Set up the Environment
+### Set up the environment
 
 We'll use Python with the FastMCP SDK, which simplifies server creation significantly.
 
@@ -80,7 +80,7 @@ mkdir stock-analyzer-mcp
 cd stock-analyzer-mcp
 ```
 
-### Install the Required Software
+### Install the required software
 
 We need to install the required Python packages before running the project. These are listed in the requirements.txt file included on GitHub. You can install them all at once with the following command:
 
@@ -88,7 +88,7 @@ We need to install the required Python packages before running the project. Thes
 pip install -r requirements.txt
 ```
 
-### Create the MCP Server
+### Create the MCP server
 
 We'll create a file called `server.py`, as follows:
 
@@ -243,7 +243,7 @@ and a configuration file `server_config.json` in the `stock-analyzer-mcp` direct
 
 Replace `/absolute/path/to` with the full directory path in your environment.
 
-### Example Queries
+### Example queries
 
 Let's test our tools. In the terminal window, we'll first use **interactive mode**:
 
@@ -451,7 +451,7 @@ If you need more detailed analysis or information on either stock, feel free to 
 
 The results show that the simple MCP server is working well. Let's now see how to use SingleStore's MCP server with an actual database system.
 
-## Using the SingleStore MCP Server
+## Using the SingleStore MCP server
 
 ### Introduction
 
@@ -459,7 +459,7 @@ While a custom MCP server is useful for exposing domain-specific logic, most app
 
 In this section, we configure the SingleStore MCP server and connect to it using a simple MCP client. The goal is not to build new tools, but to demonstrate how an agent can use MCP to access a database with zero additional integration work. Once the environment is set up, the MCP server handles connection management, authentication and tool discovery automatically, giving us a clean and reliable interface for executing SQL and exploring database metadata.
 
-### Set up the Environment
+### Set up the environment
 
 The SingleStore MCP server uses `uvx`, so we'll first ensure that `uv` is installed. The installation is global and not in a virtual (`venv`) environment.
 
@@ -494,7 +494,7 @@ The `server_config.json` file also needs to be updated:
 
 Replace `/absolute/path/to` with the full directory path in your environment.
 
-### Test the MCP Server
+### Test the MCP server
 
 Let's now test the server:
 
@@ -506,7 +506,7 @@ When run, it will first attempt to authenticate with the SingleStore Cloud using
 
 > **Note:** If you run into a stale or malformed authentication error with the SingleStore MCP server, delete the cached credentials file (`~/.singlestore/credentials.json`) and restart the server to trigger a fresh OAuth login.
 
-### Example Queries
+### Example queries
 
 Once authenticated, we'll run various commands using the supported tools. Let's test a few commands:
 

@@ -1,4 +1,4 @@
-# Chapter 23: Agentic Patterns with SingleStore
+# Chapter 23: Agentic patterns with SingleStore
 
 ## Introduction
 
@@ -28,7 +28,7 @@ The example demonstrates several reusable patterns:
 
 By the end of the chapter, we'll understand how to design agentic systems that are grounded in high-quality data, operate with traceability and can scale from proof-of-concept to production. More importantly, the architectural techniques shown here apply broadly: financial trading, fraud detection, customer support assistants, IoT orchestration and any domain where multi-agent collaboration requires a shared, low-latency data plane.
 
-## Create the Database
+## Create the database
 
 In the SingleStore Portal, we'll use the **SQL Editor** to create a new database. Call this `multi_agent_trading_db`, as follows:
 
@@ -36,7 +36,7 @@ In the SingleStore Portal, we'll use the **SQL Editor** to create a new database
 CREATE DATABASE IF NOT EXISTS multi_agent_trading_db;
 ```
 
-## Fill out the Notebook
+## Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **multi_agent_trading**. We'll connect the notebook to the `multi_agent_trading_db` database.
 
@@ -786,7 +786,7 @@ Loading sample sentiment data...
 Sample data loaded successfully!
 ```
 
-## Example Queries
+## Example queries
 
 Let's test the complete multi-agent trading pipeline in analysis-only mode.
 

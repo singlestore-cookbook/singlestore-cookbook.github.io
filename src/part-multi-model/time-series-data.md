@@ -1,4 +1,4 @@
-# Chapter 2: Time Series Data
+# Chapter 2: Time series data
 
 ## Introduction
 
@@ -38,7 +38,7 @@ The dataset consists of the following fields:
 
 For our initial exploration, we'll select **date**, **close** and **Name**.
 
-## Create the Database and Table
+## Create the database and table
 
 In the SingleStore Portal, we'll use the **SQL Editor** to create a new database. Let's call this `timeseries_db`, as follows:
 
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS tick (
 
 Each row has a time-valued attribute called `ts`. We'll use `DATETIME` rather than `DATETIME(6)`, since we are not working with fractional seconds in this example. `SERIES TIMESTAMP` specifies a table column as the default timestamp. We'll create a `KEY` on `ts` as this will allow us to efficiently filter on ranges of values.
 
-## Fill out the Notebook
+## Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **data_loader_for_time_series**.
 
@@ -154,11 +154,11 @@ tick_df.to_sql(
 
 This will write the DataFrame to the `tick` table in the `timeseries_db` database.
 
-## Example Queries
+## Example queries
 
 Now that we've built our system, we'll run some queries. SingleStore supports a range of useful functions[^6] for working with Time Series data. Let's look at some examples.
 
-### Average Aggregate
+### Average aggregate
 
 The following query illustrates how to compute a simple average aggregate over all time series values in the table:
 
@@ -189,7 +189,7 @@ The output should be:
 +--------+--------------+
 ```
 
-### Time Bucketing
+### Time bucketing
 
 Time bucketing can aggregate and group data for different time series by a fixed time interval. SingleStore supports several functions:
 
@@ -322,11 +322,11 @@ The output should be:
 
 Time series data may have gaps. We can interpolate missing points. The SingleStore documentation[^8] provides an example stored procedure that can be used for this purpose when working with tick data.
 
-## Streamlit Visualization
+## Streamlit visualization
 
 Earlier, candlestick charts were mentioned and it would be great to see these in a graphic rather than tabular format. We can do this quite easily with Streamlit.
 
-### Install the Required Software
+### Install the required software
 
 We need to install the required Python packages before running the project. These are listed in the `requirements.txt` file included on GitHub. You can install them all at once with the following command:
 
@@ -336,7 +336,7 @@ pip install -r requirements.txt
 
 > **Note:** This project has been tested with Python 3.12. Later Python versions may introduce compatibility issues with certain dependencies.
 
-### Example Application
+### Example application
 
 Here is the complete code listing for `streamlit_app.py`:
 
@@ -395,7 +395,7 @@ else:
 st.write(data)
 ```
 
-### Create a Secrets File
+### Create a secrets file
 
 Our local Streamlit application will read secrets from a file `.streamlit/secrets.toml` in our applications root directory. We need to create this file as follows:
 
@@ -413,7 +413,7 @@ password = "<password>"
 
 The `<host>` and `<password>` should be replaced with the values obtained from the SingleStore Portal.
 
-### Run the Code
+### Run the code
 
 We can run the Streamlit application as follows:
 

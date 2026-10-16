@@ -1,4 +1,4 @@
-# Chapter 9: Change Data Capture
+# Chapter 9: Change data capture
 
 ## Introduction
 
@@ -18,7 +18,7 @@ We'll temporarily allow access from anywhere (IP Address `0.0.0.0/0`) under:
 
 We'll also note down the **password** and **host** details.
 
-## Create the Database
+## Create the database
 
 In the SingleStore Portal, we'll use the **SQL Editor** to create a new database. Let's call this `crm_db`, as follows:
 
@@ -26,7 +26,7 @@ In the SingleStore Portal, we'll use the **SQL Editor** to create a new database
 CREATE DATABASE IF NOT EXISTS crm_db;
 ```
 
-## Fill out the Notebook
+## Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **cdc**.
 
@@ -335,7 +335,7 @@ SELECT COUNT(*) FROM orders;
 
 The values should be 55, 18 and 110, respectively. These match the values from MongoDB Atlas, reported earlier.
 
-## Example Queries
+## Example queries
 
 We'll run several queries on the data in SingleStore.
 

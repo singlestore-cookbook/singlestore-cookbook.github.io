@@ -1,10 +1,10 @@
-# Chapter 12: Image Classification
+# Chapter 12: Image classification
 
 ## Introduction
 
 Image classification can have many practical, valuable and life-saving benefits. The "Hello World" of image classification is often considered MNIST and, more recently, Fashion-MNIST. In this chapter, we'll use Fashion-MNIST, build an image classification model using Keras and TensorFlow and store the prediction results in SingleStore.
 
-## Create the Database and Table
+## Create the database and table
 
 In the SingleStore Portal, let's use the **SQL Editor** to create a new database. Call this `image_db`, as follows:
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS predictions (
 );
 ```
 
-## Fill out the Notebook
+## Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **image_classification**.
 
@@ -425,7 +425,7 @@ predictions_df.to_sql(
 )
 ```
 
-## Example Queries
+## Example queries
 
 Let's now run some queries on the Predictions table. We'll start by creating a View:
 

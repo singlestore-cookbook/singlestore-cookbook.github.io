@@ -1,4 +1,4 @@
-# Chapter 3: Geospatial Data
+# Chapter 3: Geospatial data
 
 ## Introduction
 
@@ -14,9 +14,9 @@ To summarize, we'll use:
 
 - Station and Train data from Doogal.
 
-## London Boroughs Data
+## London boroughs data
 
-### Convert London Boroughs Data
+### Convert London boroughs data
 
 The zip file from the London Datastore contains two folders: ESRI and MapInfo. Inside the ESRI folder, we're interested in the files beginning with `London_Borough_Excluding_MHW`. There will be various file extensions, as shown in Figure 3-1.
 
@@ -26,7 +26,7 @@ The zip file from the London Datastore contains two folders: ESRI and MapInfo. I
 
 The data in these files have been converted to the Well-Known Text (WKT)[^4] format for SingleStore and saved in a file called `London_Borough_Excluding_MHW.csv`. Any rows containing `MULTIPOLYGON` data have also been converted to `POLYGON` data.
 
-### Create the Database and London Boroughs Database Table
+### Create the database and London boroughs database table
 
 In the SingleStore Portal, we'll use the **SQL Editor** to create a new database. Call this `geo_db`, as follows:
 
@@ -51,7 +51,7 @@ CREATE ROWSTORE TABLE IF NOT EXISTS london_boroughs (
 
 SingleStore can store three main geospatial types: **Polygons**, **Paths** and **Points**. In the above code example, `GEOGRAPHY` can hold Polygon and Path data. `GEOGRAPHYPOINT` can hold Point data. In our example, the **geometry** column will contain the shape of each London Borough and **centroid** will contain the approximate central point of each borough. As shown above, we can store this geospatial data alongside other data types, such as `VARCHAR` and `FLOAT`.
 
-### Data loader for London Boroughs
+### Data loader for London boroughs
 
 Let's now create a new notebook. We'll call it **data_loader_for_london_boroughs**.
 
@@ -146,9 +146,9 @@ boroughs_geo_df.to_sql(
 
 This will write the DataFrame to the table called `london_boroughs` in the `geo_db` database.
 
-## London Underground Data
+## London Underground data
 
-### Create the London Underground Database Tables
+### Create the London Underground database tables
 
 Now we'll focus on the London Underground data. Let's use the **SQL Editor** to create several database tables, as follows:
 
@@ -308,7 +308,7 @@ stations_df.to_sql(
 )
 ```
 
-## Example Queries
+## Example queries
 
 Now that we've built our system, we'll run some queries. SingleStore supports a range of very useful functions[^5] for working with geospatial data. We'll work through each of these functions with a quick example.
 
@@ -430,7 +430,7 @@ The output should be:
 +------------------+
 ```
 
-### Intersects and Approx Intersects
+### Intersects and approx intersects
 
 This determines whether there is any overlap between two geospatial objects. A fast approximation is also available using `APPROX_GEOGRAPHY_INTERSECTS`.
 
@@ -724,7 +724,7 @@ This produces a map, as shown in Figure 3-4. We can scroll and zoom the map. Whe
 
 *Figure 3-4. Map using Folium.*
 
-## Shortest Path
+## Shortest path
 
 We can also use the graph for more practical purposes. For example, by finding the shortest path between two stations.
 
@@ -846,11 +846,11 @@ This produces a map, as shown in Figure 3-5. We can scroll and zoom the map. Whe
 
 *Figure 3-5. Shortest Path using Folium.*
 
-## Streamlit Visualization
+## Streamlit visualization
 
 We'll use Streamlit to create a small application that allows us to select start and end stations for a journey on the London Underground and the application will find the shortest path.
 
-### Install the Required Software
+### Install the required software
 
 We need to install the required Python packages before running the project. These are listed in the `requirements.txt` file included on GitHub. You can install them all at once with the following command:
 
@@ -860,7 +860,7 @@ pip install -r requirements.txt
 
 > **Note:** This project has been tested with Python 3.12. Later Python versions may introduce compatibility issues with certain dependencies.
 
-### Example Application
+### Example application
 
 Here is the complete code listing for `streamlit_app.py`:
 
@@ -958,7 +958,7 @@ except nx.NetworkXNoPath:
     st.error("No path found between the selected stations.")
 ```
 
-### Create a Secrets File
+### Create a secrets file
 
 Our local Streamlit application will read secrets from a file called .`streamlit/secrets.toml` in our applications root directory. We need to create this file as follows:
 
@@ -976,7 +976,7 @@ password = "<password>"
 
 The `<host>` and `<password>` should be replaced with the values obtained from the SingleStore Portal.
 
-### Run the Code
+### Run the code
 
 We'll run the Streamlit application as follows:
 

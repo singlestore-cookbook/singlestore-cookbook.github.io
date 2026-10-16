@@ -1,4 +1,4 @@
-# Chapter 16: Running Sentiment Analysis inside the Database with WebAssembly
+# Chapter 16: Running sentiment analysis inside the database with WebAssembly
 
 ## Introduction
 
@@ -6,11 +6,11 @@ WebAssembly (Wasm) is a binary instruction format for a stack-based virtual mach
 
 We'll need to perform a few steps to prepare our development environment and the following sections will show how to do this. We'll also use Rust to create our Wasm UDF.
 
-## Setup Local Wasm Development Environment
+## Setup local Wasm development environment
 
 We can quickly create a local Wasm development environment using a few steps. Let's work through these steps, one-by-one.
 
-### Install the Software
+### Install the software
 
 First, we'll download the wasi-sdk[^2]. We'll use `wasi-sdk-27.0...`, the latest version available when writing this book. Download the archive matching your platform from the wasi-sdk releases page.
 
@@ -77,7 +77,7 @@ We may also need to run the following to ensure a successful pushwasm build:
 sudo apt install libssl-dev
 ```
 
-### Initialize the Source Tree
+### Initialize the source tree
 
 Next, let's create a new directory called `workdir` in our home folder:
 
@@ -93,7 +93,7 @@ From the `workdir`, we'll now create a skeletal Rust source tree, as follows:
 cargo init --vcs none --lib
 ```
 
-### Create the wit File
+### Create the wit file
 
 In our `workdir`, we'll now create a file called `sentimentable.wit` that contains the interface definition. In this file, we'll add the following:
 
@@ -110,7 +110,7 @@ sentimentable: func(input: string) -> list<polarity-scores>
 
 We'll define a function `sentimentable` that will take a string, perform sentiment analysis on that string and return a list of polarity scores - numeric values indicating how positive, negative or neutral the text is.
 
-### Implement and Compile
+### Implement and compile
 
 In our workdir, we'll replace the existing contents of `Cargo.toml` with the following code:
 
@@ -213,7 +213,7 @@ Example output:
 +---------------------------+-----------------------+---------+-------------+--------------+------+---------+
 ```
 
-### Run in the Database
+### Run in the database
 
 We can quickly test our function, as follows:
 
@@ -249,7 +249,7 @@ Example output:
 
 We see that the values changed, showing a stronger positive sentiment expressed by capitalization.
 
-## Create the Database Tables
+## Create the database tables
 
 In the SingleStore Portal, we'll use the **SQL Editor** to create several database tables, as follows:
 
@@ -297,7 +297,7 @@ We'll also load synthetic data into the `raw_fictitious_headlines` table and app
 
 The synthetic dataset was generated using a random-walk model to simulate daily stock prices for fictitious stock symbols with open, high, low, close and volume values sampled from realistic distributions, to model market volatility and liquidity. News headlines were programmatically constructed from templated phrases combined with company names and market events, such as earnings surprises, regulatory actions and CEO comments, to ensure linguistic diversity.
 
-## Fill out the Notebook
+## Fill out the notebook
 
 Let's now create a new Python notebook. We'll call it **data_loader_for_sentiment**.
 
@@ -435,7 +435,7 @@ CREATE INDEX idx_stock_sentiment_symbol_ts ON stock_sentiment(symbol, ts);
 
 Now we're ready to run some queries.
 
-## Example Queries
+## Example queries
 
 First, a quick test:
 
