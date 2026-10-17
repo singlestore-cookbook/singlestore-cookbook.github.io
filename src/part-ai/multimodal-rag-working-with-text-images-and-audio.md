@@ -1,4 +1,4 @@
-# Chapter 20: Multimodal RAG - working with text, images and audio
+# Chapter 20: Multimodal RAG - Working with Text, Images and Audio
 
 ## Introduction
 

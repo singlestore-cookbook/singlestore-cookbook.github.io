@@ -1,4 +1,4 @@
-# Chapter 15: Crime analytics with SingleStore Kai
+# Chapter 15: Crime Analytics with SingleStore Kai
 
 ## Introduction
 

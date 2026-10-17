@@ -1,4 +1,4 @@
-# Chapter 16: Running sentiment analysis inside the database with WebAssembly
+# Chapter 16: Running Sentiment Analysis inside the Database with WebAssembly
 
 ## Introduction
 

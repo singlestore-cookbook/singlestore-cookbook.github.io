@@ -1,4 +1,4 @@
-# Chapter 17: Feature store with Feast
+# Chapter 17: Feature Store with Feast
 
 ## Introduction
 

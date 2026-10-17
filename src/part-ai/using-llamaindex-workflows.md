@@ -1,4 +1,4 @@
-# Chapter 19: Using LlamaIndex workflows
+# Chapter 19: Using LlamaIndex Workflows
 
 ## Introduction
 

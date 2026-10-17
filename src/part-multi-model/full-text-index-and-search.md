@@ -1,4 +1,4 @@
-# Chapter 5: Full-text index and search
+# Chapter 5: Full-Text Index and Search
 
 ## Introduction
 

@@ -1,4 +1,4 @@
-# Chapter 1: Getting started with SingleStore
+# Chapter 1: Getting Started with SingleStore
 
 > **Note:** The code, instructions and screenshots in this book reflect the state of SingleStore and related tools and libraries as of July 2026. Cloud platforms and APIs change frequently, so if you encounter a discrepancy between what's described here and what you see in practice, check the relevant vendor's current documentation.
 

@@ -1,4 +1,4 @@
-# Chapter 10: Building predictive analytics for loan approvals
+# Chapter 10: Building Predictive Analytics for Loan Approvals
 
 ## Introduction
 

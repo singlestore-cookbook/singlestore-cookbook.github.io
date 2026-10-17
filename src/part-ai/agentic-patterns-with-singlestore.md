@@ -1,4 +1,4 @@
-# Chapter 23: Agentic patterns with SingleStore
+# Chapter 23: Agentic Patterns with SingleStore
 
 ## Introduction
 

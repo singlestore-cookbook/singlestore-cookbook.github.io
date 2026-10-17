@@ -1,4 +1,4 @@
-# Chapter 13: Movie recommender system
+# Chapter 13: Movie Recommender System
 
 ## Introduction
 

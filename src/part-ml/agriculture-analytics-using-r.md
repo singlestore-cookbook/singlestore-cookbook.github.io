@@ -1,4 +1,4 @@
-# Chapter 14: Agriculture analytics using R
+# Chapter 14: Agriculture Analytics Using R
 
 ## Introduction
 

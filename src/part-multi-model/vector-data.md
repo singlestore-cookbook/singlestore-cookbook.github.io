@@ -1,4 +1,4 @@
-# Chapter 6: Vector data
+# Chapter 6: Vector Data
 
 ## Introduction
 

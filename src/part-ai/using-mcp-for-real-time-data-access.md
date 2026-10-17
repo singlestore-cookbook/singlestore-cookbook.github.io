@@ -1,4 +1,4 @@
-# Chapter 22: Using MCP for real-time data access
+# Chapter 22: Using MCP for Real-Time Data Access
 
 ## Introduction
 

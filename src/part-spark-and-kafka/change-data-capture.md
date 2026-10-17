@@ -1,4 +1,4 @@
-# Chapter 9: Change data capture
+# Chapter 9: Change Data Capture
 
 ## Introduction
 

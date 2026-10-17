@@ -1,4 +1,4 @@
-# Chapter 18: Using LangChain to build intelligent data applications
+# Chapter 18: Using LangChain to Build Intelligent Data Applications
 
 ## Introduction
 

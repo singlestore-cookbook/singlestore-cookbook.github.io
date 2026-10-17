@@ -1,4 +1,4 @@
-# Chapter 2: Time series data
+# Chapter 2: Time Series Data
 
 ## Introduction
 

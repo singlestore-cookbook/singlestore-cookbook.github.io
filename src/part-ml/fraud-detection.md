@@ -1,4 +1,4 @@
-# Chapter 11: Fraud detection
+# Chapter 11: Fraud Detection
 
 ## Introduction
 

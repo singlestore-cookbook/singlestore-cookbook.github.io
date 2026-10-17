@@ -1,4 +1,4 @@
-# Chapter 21: Running local LLMs with Ollama
+# Chapter 21: Running Local LLMs with Ollama
 
 ## Introduction
 

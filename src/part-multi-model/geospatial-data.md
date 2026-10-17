@@ -1,4 +1,4 @@
-# Chapter 3: Geospatial data
+# Chapter 3: Geospatial Data
 
 ## Introduction
 

@@ -1,4 +1,4 @@
-# Chapter 4: JSON data
+# Chapter 4: JSON Data
 
 ## Introduction
 

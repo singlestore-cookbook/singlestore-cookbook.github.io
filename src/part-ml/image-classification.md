@@ -1,4 +1,4 @@
-# Chapter 12: Image classification
+# Chapter 12: Image Classification
 
 ## Introduction
 
